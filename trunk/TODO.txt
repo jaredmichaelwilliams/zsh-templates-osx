@@ -1,0 +1,11 @@
+Completion functions:
+
+	_sips
+
+	_phenix.*
+
+Functions:
+
+	cd_ is broken for directories that have spaces.
+
+	Function to access paste buffer stack?

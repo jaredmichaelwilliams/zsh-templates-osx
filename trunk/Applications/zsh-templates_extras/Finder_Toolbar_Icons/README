@@ -1,0 +1,17 @@
+These are optional AppleScripts that are not installed by default.
+They are designed to facilitate Finder-Toolbar interactions.
+
+To make use of them:
+
+Unpack Finder_Toolbar_Applications.dmg
+
+Drag and drop the applications into /Applications/Utilities 
+or other suitable location.
+
+Then eject the virtual disk Finder_Toolbar_Applications.
+
+Now drag and drop one or both icons into the finder toolbar.
+When you then click on the icon, a Terminal or iTerm will open
+and will automatically cd into the directory corresponding to
+that Finder window.  (It uses the function posd which will be
+autoloaded by default in functions.local.)

@@ -1,0 +1,92 @@
+#!/bin/zsh -f
+
+
+# Obtained and modified from a bash shell script available at
+# http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
+
+# Delete a group.
+# Takes the group name and deletes it from NetInfo
+
+declare quiet="no"  # -q option not specified
+declare group       # hold te given group name
+declare gid         # hold the group id derived from the group name 
+declare ans         # reply from prompt
+
+thiscommand=$0
+
+function usage {
+  echo "Delete a group"
+  echo "Usage: $thiscommand [-q] groupname"
+  echo "       -q - quiet: no warnings or prompts for confirmation" 
+  echo "            otherwise a warning is issued if the group to"
+  echo "            be deleted is a user's primary group"
+  if [[ "$*" != "" ]]; then echo; echo "Error: $*"; fi
+  return 1
+}
+
+
+# The script must be run as root 
+#
+if [[ "$USER" != "root" ]]; then
+  echo "Must be run as root"
+  return 1
+fi
+
+
+# Check parameters
+#
+if [[ "$1" = "-q" ]]; then
+  quiet="yes"
+  shift
+fi
+
+if [[ $# -ne 1 ]]; then
+  usage
+  return 1
+fi
+
+group="$1"
+
+# search NetInfo for the given group - it should exist
+str="$(nifind /groups/$group .)"
+if [[ -z "$str" ]]; then
+  usage "Group $group does not exist"
+  return 1
+fi
+
+
+# Check if this is a primary group for some user and warn if so
+#   but not in quiet mode
+if [[ $quiet = "no" ]]; then
+  
+  # get the group number from the name
+  gid="$(nireport . /groups name gid | grep -w "^$group" | cut -f 2)"
+
+  # print a warning if it is any user's primary group
+  str="$(nireport . /users gid | grep -w $gid)"
+  if [[ ! -z "$str" ]]; then
+    echo "WARNING: this is a primary group:"
+    nireport . /users gid name | grep -w "^$gid"
+ 
+    print -n "Do you really want to do this? "
+    read -t 10 -A ans
+    if [[ "$ans" != (yes|Yes|y|Y|YES) ]]; then
+      print ""
+      print "Abandoning deletion of the group $group ."
+      print "Terminating with extreme prejudice."
+      return 100
+    fi
+  fi
+fi
+
+
+# Delete the group from NetInfo
+#
+# sanity check
+if [[ "$group" = "" ]]; then return 42; fi
+
+dscl . delete /groups/$group
+
+echo "Group $group deleted"
+return 0
+

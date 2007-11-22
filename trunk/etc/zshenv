@@ -1,0 +1,338 @@
+
+
+					#################################################
+					#################################################
+					#                                               #
+					#        /etc/zshenv    OR    ~/.zshenv         #
+					#                                               #
+					#################################################
+					#################################################
+
+
+
+
+# File  /etc/zshenv  (Use with the accompanying /etc/zshrc)
+# For systemwide install, copy zshenv and zshrc to /etc/zshenv and /etc/zshrc 
+# For individual users, you must install BOTH files as ~/.zshenv and ~/.zshrc
+# i.e, cp zshenv ~/.zshenv    and   cp zshrc  ~/.zshrc 
+
+# print "Running /etc/zshenv"  # Un-comment for debugging or verbose startup.
+
+# This is always run, even if zsh -f is used
+# So we don't put interactive shell stuff in here, but rather zshrc
+#
+# If fink is not installed in /sw, the alternative directory must be set here.
+# Fink installation does this automatically.
+
+
+# First, disable the zsh-newuser-install mechanism, as it can confuse the new
+# user of these files. Do this by creating an empty ~/.zshrc file if none
+# currently exists.
+
+if [[ ! -f  ~/.zshrc ]];then
+   touch ~/.zshrc
+fi
+
+
+if [[  $(uname) == Darwin ]]; then
+
+    if [[ -d /sw/fink ]]; then
+        export SWPREFIX='/sw'
+    else
+        export SWPREFIX='ALT_SWPREFIX'
+    fi
+
+fi
+
+# *******************************************************************************
+
+# Files in /etc and in the user directory are read by default on OS X.  
+# Files in $SWPREFIX/etc and in the user directory are read by default for the fink 
+# version of zsh. This file is designed to be compatable with both. Define path to
+# additional alias, environment and function files.  Canonically, the system-wide
+# files on OS X are in /Library/init/zsh.  
+
+# Files in /etc/zsh and in the user directory are read by default on Ubuntu linux.
+# We will assume the best place for files to go is /etc/zsh/init/zsh
+
+mkdir -p ~/.zsh
+
+
+if [[ $(uname) == Darwin ]];then
+	ZDOT='/Library/init/zsh'
+	ZDOT_USER="$HOME/Library/init/zsh"
+    ZDOT_TEMPLATE="$SWPREFIX/share/zsh/templates/Library/init/zsh"
+elif [[ $(uname) == Linux ]];then
+	ZDOT='/etc/zsh/init/zsh'	
+	ZDOT_USER='~/.zsh'
+fi
+
+
+# Only export those directories that really exist:
+
+if [[ -d $ZDOT ]];then
+	export ZDOT
+else
+	export ZDOT=""
+fi
+if [[ -d $ZDOT_USER ]];then
+	export ZDOT_USER
+else
+	export ZDOT_USER=""
+fi
+if [[ -d $ZDOT_TEMPLATE ]];then
+	export ZDOT_TEMPLATE
+else
+	export ZDOT_TEMPLATE=""
+fi
+
+
+
+
+# If the user installed everything in $ZDOT_USER and $ZDOTDIR is nonexistent, attempt
+# to globally adjust everything to accomidate this change. Likewise for the 
+# fink-installed version.
+
+
+
+if [[ ! -d $ZDOT && -d $ZDOT_TEMPLATE ]];then
+	ZDOT="$ZDOT_TEMPLATE"
+	export ZDOT
+	# Notify user of what is happening:
+	if [[ -z $SSH_CONNECTION && -o interactive ]];then 
+	    print "Using template files installed in $ZDOT"
+	fi
+elif [[ ! -d $ZDOT && -d $ZDOT_USER ]];then
+	ZDOT="$ZDOT_USER"
+	export ZDOT
+	# Notify user of what is happening:
+	if [[ -z $SSH_CONNECTION && -o interactive ]];then 
+		print "Using template files installed in $ZDOT"
+	fi
+fi
+
+
+
+# *******************************************************************************
+
+###################################
+#                                 #
+#  Initialize Fink if it exists:  #
+#                                 #
+###################################
+
+# Test prevents aborting this file if fink is absent
+# Note that programs in fink automatically export environment variables using this
+# file. These live in $SWPREFIX/etc/profile.d/foo.sh
+
+
+if [[ -f $SWPREFIX/bin/init.sh  &&  $(uname) == Darwin ]]; then
+      source $SWPREFIX/bin/init.sh
+      
+elif [[ ! -f ~/.zsh/finknowarn  &&  $(uname) == Darwin ]];then
+  print ""
+  print "\e[1m WARNING!!  Fink does not appear to be present and has not been initialized \e[0m"
+  print ""
+  print "\e[1m If you have not installed fink or you want to get rid of this warning message,\e[0m"
+  print "\e[1m please type \e[0m touch ~/.zsh/finknowarn \e[1m now.\e[0m"
+  print "" 
+fi
+
+
+
+# *******************************************************************************
+
+
+
+####################################
+#                                  #
+#  Export environment variables:   #
+#                                  #
+####################################
+
+
+#     First include Gary Kerbaugh's distribution (which I modified).
+
+# Look for customized file.  If that doesn't exist, use the one provided.
+
+if [[ -f $ZDOT/environment ]]; then
+      source $ZDOT/environment
+           
+elif [[ -f $ZDOT_TEMPLATE/environment  &&  $(uname) == Darwin ]]; then
+      source $ZDOT_TEMPLATE/environment   
+elif [[  $(uname) == Darwin ]]; then
+    print " WARNING!!  Fink zsh templates are absent."
+fi
+
+
+
+# Now our local environment and path variables (including host name completion):
+
+# moved to /etc/zshrc
+
+# *******************************************************************************
+
+
+
+###################################
+#                                 #
+#     Here we set the PATH:       #
+#                                 #
+###################################
+
+# You should, as a bare minimum, have these in your OS X $PATH:
+
+MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
+
+# Note that $SWPREFIX/bin and $SWPREFIX/sbin were *prepended* at the top of the file
+# if you installed fink in $SWPREFIX, so you don't need to add these again.  However,
+# to ensure the desired priority ordering, I do the following, which together with the
+# typeset -U command, allows fine-tuning of the order without either duplicating or
+# accidently deleting anything from $PATH :
+
+#### For Fink, if present
+if [[ -d $SWPREFIX/bin ]]; then
+    PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin
+fi
+
+
+# Then PREPEND or APPEND these to $PATH only if they exist:
+
+#### For user-installed python framework, if present
+if [[ -d /Library/Frameworks/Python.framework/Versions/Current/bin ]];then
+	PREPEND_PATH=$PREPEND_PATH:/Library/Frameworks/Python.framework/Versions/Current/bin
+fi
+
+#### For X11, if present
+if [[ -d /usr/X11/bin ]]; then
+    PREPEND_PATH=$PREPEND_PATH:/usr/X11/bin
+elif [[ -d /usr/X11R6/bin ]]; then
+    PREPEND_PATH=$PREPEND_PATH:/usr/X11R6/bin
+fi
+
+#### For Developer Tools, if present
+if [[ -d /Developer/Tools ]]; then
+    PREPEND_PATH=$PREPEND_PATH:/Developer/Tools
+fi
+
+#### For AquaTclTk, if present
+if [[ -d /Library/Tcl/bin ]]; then
+    PREPEND_PATH=$PREPEND_PATH:/Library/Tcl/bin
+fi
+
+#### For MacPorts, if present
+if [[ -d /opt/local/bin ]]; then
+    APPEND_PATH=$APPEND_PATH:/opt/local/bin
+fi
+
+#### For MacPorts, if present
+if [[ -d /opt/local/sbin ]]; then
+    APPEND_PATH=$APPEND_PATH:/opt/local/sbin
+fi
+
+#### For /usr/local, if present
+if [[ -d /usr/local/bin ]]; then
+    APPEND_PATH=$APPEND_PATH:/usr/local/bin
+fi
+
+#### For /usr/local, if present
+if [[ -d /usr/local/sbin ]]; then
+    APPEND_PATH=$APPEND_PATH:/usr/local/sbin
+fi
+
+#### For /usr/local/xtal, if present
+if [[ -d /usr/local/xtal/bin ]]; then
+    APPEND_PATH=$APPEND_PATH:/usr/local/xtal/bin
+fi
+
+#### For user's own bin directory, if present
+if [[ -d ~/bin ]]; then
+    APPEND_PATH=$APPEND_PATH:~/bin
+fi
+
+#### For user's own hidden bin directory, if present
+if [[ -d ~/.bin ]]; then
+    APPEND_PATH=$APPEND_PATH:~/.bin
+fi
+
+# Append current directory at the very end of the path, not the beginning.  
+# Some people consider this to be a minor security hazard.  Putting it at the
+# end of the path minimizes the potential hazard.  Comment it out if this
+# worries you.
+
+
+    APPEND_PATH=$APPEND_PATH:.
+
+
+# Now assemble and generate the ordered PATH:
+
+
+    PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
+
+#
+# Export PATH as separate command to avoid dollar signs in export line
+#
+
+        export PATH
+
+#
+#
+# Avoid repeats in the path
+#
+
+        typeset -U path
+
+
+
+# *******************************************************************************
+
+
+###################################
+#                                 #
+#     Here we set the FPATH:      #
+#                                 #
+###################################
+
+#
+# Set the function path to include local functions and/or my functions 
+# (The order of prepending is important.)
+# Some people add these to their $PATH as well.
+
+if [[ -d $ZDOT_TEMPLATE/local-functions ]]; then
+    FPATH=$ZDOT_TEMPLATE/local-functions:$FPATH
+fi
+
+
+if [[ -d $ZDOT/local-functions ]]; then
+    FPATH=$ZDOT/local-functions:$FPATH
+fi
+
+
+# Moved to /etc/zshrc to ensure that this will be prepended
+# to the $FPATH
+ 
+# if [[ -d $ZDOT_USER/my-functions ]]; then
+#  FPATH=$ZDOT_USER/my-functions:$FPATH
+# fi
+
+
+
+export FPATH
+
+typeset -U fpath
+
+# *******************************************************************************
+
+
+#################################################################################
+
+#
+# Don't kill background jobs upon logging out
+#
+
+setopt nohup
+
+
+# *******************************************************************************
+
+
