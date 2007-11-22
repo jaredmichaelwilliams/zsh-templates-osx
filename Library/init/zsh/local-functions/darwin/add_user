@@ -1,0 +1,148 @@
+#!/bin/zsh -f
+
+# Obtained and modified from a bash shell script available at
+# http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
+
+# Create a user.
+# Takes the user's username, fullname, uid, and staff|admin
+# and creates:
+#   a new user in NetInfo passwd
+#   a new /Users/username home directory
+
+declare first last uid accnt  # to hold the given first and last names, uid, and account type
+declare str                   # working
+
+thiscommand=$0
+
+function usage {
+  print "Create a new staff or admin user"
+  print "Usage: $thiscommand username \"Real Full Name\" uid staff|admin"
+  print "Be sure to wrap the Real Full Name in double quotes."
+  if [[ "$*" != "" ]]; then print; print "Error: $*"; fi
+  return 1
+}
+
+
+# The script must be run as root 
+#
+if [[ "$USER" != "root" ]]; then
+  print "Must be run as root (type \"sudo zsh\" )"
+  return 1
+fi
+
+
+# Check parameters
+#
+if [[ $# -ne 4 ]]; then
+    usage
+    return 1
+fi
+
+first="$1"; last="$2"; uid="$3"; accnt="$4"
+
+
+# check that the user id is numeric
+if [[ -z "$(print $uid | egrep "^[[:digit:]]+$")" ]]; then
+    usage "User ID must be numeric"
+    return 1
+fi
+
+# check that the users does not already have a home directory
+if [[ -e /Users/$first ]]; then
+    usage "User $first already exists at /Users/$first"
+    return 1
+fi
+
+# search NetInfo for the given user - it should not exist
+str="$(nifind /users/$first .)"
+if [[ ! -z "$str" ]]; then
+    usage "User $first already exists (but does not have a home directory)"
+    return 1
+fi
+
+# search NetInfo for the given uid - it should not exist
+str="$(nireport . /users uid | grep -w $uid)"
+if [[ ! -z "$str" ]]; then
+  usage "User ID $uid already exists"
+  return 1
+fi
+
+# search NetInfo for the given group - it should not exist
+str="$(nifind /groups/$first .)"
+if [[ ! -z "$str" ]]; then
+  usage "Group $first already exists"
+  return 1
+fi
+
+# search NetInfo for the given gid - it should not exist
+str="$(nireport . /groups gid | grep -w $uid)"
+if [[ ! -z "$str" ]]; then
+    usage "Group ID $uid already exists"
+  return 1
+fi
+
+# ensure either staff or admin is given
+if [[ $4 != staff ]] && [[ $4 != admin ]]; then
+  usage "Give account type as 'staff' or 'admin'"
+  return 1
+fi
+
+
+# Add the new user to NetInfo
+#
+# add user and essential properties
+dscl . create /users/$first
+dscl . create /users/$first name $first
+dscl . create /users/$first passwd "*"
+dscl . create /users/$first hint ""
+dscl . create /users/$first uid $uid
+dscl . create /users/$first gid $uid
+dscl . create /users/$first home /Users/$first
+dscl . create /users/$first shell /bin/zsh
+dscl . create /users/$first realname "$last"
+#dscl . create /users/$first picture "/Library/User Pictures/Fun/Smack.tif"
+dscl . create /users/$first sharedDir Public
+
+# add some other properties that are usually in NetInfo
+dscl . create /users/$first _shadow_passwd ""
+#dscl . create /users/$first _writers_hint $first
+#dscl . create /users/$first _writers_real_name $first
+
+# add the new group
+dscl . create /groups/$first
+dscl . create /groups/$first name $first
+dscl . create /groups/$first passwd "*"
+dscl . create /groups/$first gid $uid
+
+print "New user and group $first created for $last"
+
+
+# Add admin users to the admin group
+#
+if [[ $4 = admin ]]; then 
+  dscl . merge /groups/admin users $first 
+  dscl . merge /groups/appserverusr users $first 
+  dscl . merge /groups/appserveradm users $first 
+  print "User $first added to groups admin, appserverusr, appserveradm"
+fi
+
+# Create the home directory, populate from the template, and set owners
+#
+mkdir /Users/$first
+if [[ ! -d /Users/$first ]]; then
+  print "Unable to create the user's home directory /Users/$first"
+  return
+fi
+
+ditto -rsrc /System/Library/User\ Template/English.lproj/ /Users/$first
+chown -R ${first}:$first /Users/$first
+print "Home directory /Users/$first created and populated"
+
+
+# Now give the user a password
+#
+print "A password for this account must be given, it is currently blank"
+passwd $first
+
+return 0
+

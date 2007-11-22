@@ -1,0 +1,85 @@
+*******************************************************************************
+	
+  zsh-templates for Mac OS X (and now hopefully platform-independent in part)
+	
+*******************************************************************************
+
+ These are highly unofficial zsh configuration system files.  These files are 
+ NOT distributed nor are they endorsed by the good folks who bring you zsh.  
+ You must use this at your own risk.
+
+*******************************************************************************
+
+ MORE INFORMATION:  http://xanana.ucsc.edu/xtal/wiki/index.php/ZSH_on_OS_X
+
+*******************************************************************************
+
+ Copyright (C) 2004-2007 William Scott, Wataru Kagawa, Gary Kerbaugh and others
+ named in the individual function files.  
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+
+*******************************************************************************
+
+INSTALL:
+
+	tar xvfz zsh-templates-*.tgz
+	cd zsh-templates-*
+
+ON OS X, you can install for the system:
+
+	sudo cp -R Library/init  ~/Library/.
+	sudo cp  etc/zshenv  /etc/zshenv
+	sudo cp  etc/zshrc  /etc/zshrc
+
+	or for an individual user:
+
+	cp -R Library/init  ~/Library/.
+	cp  etc/zshenv ~/.zshenv
+	cp  etc/zshrc ~/.zshrc
+
+ON Linux, I've only tried it this way, and only on Ubuntu Linux:
+
+	sudo mkdir -p /etc/zsh
+	sudo cp -R Library/init /etc/zsh/.
+	sudo cp  etc/zshenv  /etc/zsh/zshenv
+	sudo cp  etc/zshrc  /etc/zsh/zshrc
+	
+depending on how zsh was built, you might need to 
+issue the following commands to get it to work:
+
+	sudo ln -s /etc/zsh/zshenv  /etc/zshenv
+	sudo ln -s /etc/zsh/zshrc  /etc/zshrc
+	
+it might be possible to set it up on Linux for the 
+individual user using a scheme similar to what was
+give for the Mac OS X example.
+
+*******************************************************************************
+
+ MORE INFORMATION:  http://xanana.ucsc.edu/xtal/wiki/index.php/ZSH_on_OS_X
+
+*******************************************************************************
+
+
+
+
+
+
+
+
+
+ 

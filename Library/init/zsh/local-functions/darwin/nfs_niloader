@@ -1,0 +1,28 @@
+#!/bin/zsh -f
+
+
+# This shell script needs to be run with sudo or as root
+
+#if [[ $(id -u) != 0 ]];then
+#        print "Invoke this with the command sudo $0"
+#        print "or run as root user"
+#        return 1
+#fi    
+
+sudo niload -m -v fstab . < /etc/fstab 
+
+
+print "Here are the currently mounted filesystems: "
+print ""
+df -h
+print ""
+print ""
+print "Here are the nfs mountable filesystems listed in /etc/fstab :"
+print ""
+grep " nfs " /etc/fstab | awk '{print $2}' 
+print ""
+
+print "To mount additional filesystems, type the command"
+print "sudo mount /filesystem  or sudo mount -a"
+print ""
+

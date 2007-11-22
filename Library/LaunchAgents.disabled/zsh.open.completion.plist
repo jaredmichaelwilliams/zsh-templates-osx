@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Disabled</key>
+	<true/>
+	<key>Label</key>
+	<string>zsh.open.completion</string>
+	<key>OnDemand</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/init/zsh/local-functions/etc/faster_open.zsh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+    <key>WorkingDirectory</key>
+        <string></string>
+	<key>ServiceDescription</key>
+	<string>Run mdfind to prep faster open -a completions in zsh</string>
+	<key>WatchPaths</key>
+	<array>
+		<string>.zrefresh</string>
+	</array>
+</dict>
+</plist>

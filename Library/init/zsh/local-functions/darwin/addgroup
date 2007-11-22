@@ -1,0 +1,84 @@
+#!/bin/zsh -f
+
+# Obtained and modified from a bash shell script available at
+# http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
+ 
+# Create a group.
+# Takes a group name and gid and creates a new group in NetInfo groups
+
+progname=$0
+
+declare group gid  # to hold the given group name and group id
+declare str        # working
+
+
+function usage
+    {
+      print "Create a new group"
+      print "Usage: $progname groupname gid"
+      if [[ "$*" != "" ]]; then 
+        print ""
+        print "Error: $*"
+      fi
+      return 1
+    }
+
+
+# The script must be run as root
+#
+if [[ "$USER" != "root" ]]; then
+  print "Must be run as root (type the command \"sudo zsh\")"
+  return 1
+fi
+
+
+# Check parameters
+#
+if [[ $# -ne 2 ]]; then
+  usage
+  return 1
+fi
+
+group="$1"; gid="$2"
+
+# check that the group id is numeric
+if [[ -z "$(echo $gid | egrep "^[[:digit:]]+$")" ]]; then
+    usage "Group ID must be numeric"
+    return 1
+fi
+
+# search NetInfo for the given group - it should not exist
+str="$(nifind /groups/$group .)"
+if [[ ! -z "$str" ]]; then
+    usage "Group $group already exists"
+    return 1
+fi
+
+# search NetInfo for the given gid - it should not exist
+str="$(nireport . /groups gid | grep -w $gid)"
+if [[ ! -z "$str" ]]; then
+  usage "Group ID $gid already exists"
+  return 10
+fi
+
+
+# Add the new group to NetInfo
+#
+# add group and essential properties
+dscl . create /groups/$group
+dscl . create /groups/$group name $group
+dscl . create /groups/$group passwd "*"
+dscl . create /groups/$group gid $gid
+#dscl . create /groups/$group users "" breaks add-user2group if added as a blank value
+
+print ""
+print "New group $group has been created with gid $gid"
+print ""
+print "Reality check: The following is gleaned from the netinfo database"
+print "The netinfo database now contains $(nifind /groups/$group | awk '{print $1}' )"
+print "with the gid assigned as $(nireport . /groups gid | grep -w $gid)"
+print ""
+print "Now add users to it with adduser2group"
+
+return 0
+

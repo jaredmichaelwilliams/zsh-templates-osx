@@ -1,0 +1,564 @@
+
+
+					#################################################
+					#################################################
+					#                                               #
+					#               $ZDOT/environment               #
+					#                                               #
+					#################################################
+					#################################################
+
+
+
+#      File "environment"
+
+#  set -x  # uncomment to de-bug
+
+#  This file *must* be sourced from /etc/zshenv or /sw/etc/zshenv
+#  zsh  custom evironment settings -- file inherited from Gary Kerbaugh and 
+#  altered by me.  I've moved some stuff to environment.local.
+#  Things you might want to change are indicated with {====>}
+
+
+	#  This file is designed to reside in $ZDOT=/Library/init/zsh.   
+	#  The following attempts to recover from a failure of zshenv
+	#  but if you see this warning, consider it a catastrophic failure
+	#  and immediately fix the problem! You should never see this warning.
+	
+		if [[ -z $ZDOT ]]; then
+		    export ZDOT='/Library/init/zsh'
+		    print "\e[1m WARNING:  file /etc/zshenv has not set $ZDOT \e[0m"
+			print "\e[1m Please fix this critical problem now.\e[0m"
+			sleep 10  # This will annoy the user into paying attention.
+		fi
+
+	# Also set $zdotdir to /Users/$USER if it is not already set.
+
+		if [[ -z $zdotdir && -d $HOME ]]; then
+		    zdotdir=$HOME
+		else
+		    zdotdir=/Users/$USER
+		fi
+
+
+###############################################################################
+
+if [[  $(uname) == Darwin && $(sw_vers -productVersion) < 10.5  && -z $SSH_CONNECTION && -o interactive ]]; then
+	
+	###########################################
+	#    Optional Startup of X11.app          #
+	###########################################
+
+	#  If you want Apple's X11 to be started up with "open -a X11" if it is 
+	#  notalready running, then comment out the line following the arrow:
+	
+	# {====>} 
+		export open_apple_x11='skip'
+		
+		# Allow a user to over-ride the default behavior by creating a file
+		# with either "export open_apple_x11='skip'" or
+		# export open_apple_x11='use'
+		if [[ -f ~/.zsh/skipxrc ]];then
+        	source ~/.zsh/skipxrc  
+    	fi
+
+		# Now open X11.app only if told to do so and it is not already running:
+		if [[ $open_apple_x11 != 'skip'  ]];then
+			already_running_x11=$(ps -wwx | grep -F X11.app | grep -v grep | head -n 1 | awk '{print $1}')
+			if [[  $already_running_x11 -gt 1 ]];then
+				:
+			else
+				command open -a X11
+				if [[ $? != 0 ]];then
+					print ""
+					print "Unable to open Apple's X11.  Is it installed?"
+				fi
+			fi
+		fi
+		
+	# End of X11.app startup part
+	#---------------------------------------------------
+
+    # Do not do this in 10.5 and above. cf: 
+    #  http://lists.apple.com/archives/X11-users/2007/Oct/msg00065.html
+
+	if [[ $(sw_vers -productVersion) < 10.5 ]]; then
+
+	
+		###########################################
+		#    X11 and $DISPLAY control             #
+		###########################################	
+		
+		# Now set the DISPLAY variable, if needed.  If X11.app is running,
+		# we deduce and construct the DISPLAY value from the process. If
+		# this doesn't work (no X11.app running), we give up and dumbly set the
+		# value to :0.0. Users who want to avoid the small ps overhead can 
+		# comment out the "disp_no" line.  This will simply set DISPLAY=:0.0  
+		
+	 	if [[ -z $DISPLAY && -z $SSH_CONNECTION ]]; then
+	
+		    disp_no=($( ps -wwx | grep -F X11.app | awk '{print $NF}' | grep -e ":[0-9]"  ))
+	
+		    if [[ -n $disp_no ]];then
+		        export DISPLAY=${disp_no}.0
+				# Colorful output tells us that the smart method has worked
+				print "\e[1mDISPLAY\e[0m \e[36mhas been set to\e[0m \e[1m$DISPLAY \e[0m"
+		    else
+				# FAILSAFE: dumb setting of DISPLAY gives a monochromatic message
+		        export DISPLAY=:0.0
+				print "DISPLAY has been set to $DISPLAY" 
+		    fi
+	
+		elif [[ -n $DISPLAY && -z $SSH_CONNECTION ]]; then
+		
+				# Inform that we have inherited the DISPLAY (as with an xterm)
+				print "\e[36minheriting\e[0m \e[1mDISPLAY\e[0m set to \e[1m$DISPLAY\e[0m"
+		fi
+	fi
+
+fi # [[  $(uname) == Darwin  && -z $SSH_CONNECTION ]]
+
+
+
+###############################################################################
+
+
+
+###########################################
+#    Add man pages to $MANPATH            #
+###########################################
+
+# Add /usr/local manpages
+
+	if [[ -d /usr/local/share/man ]];then
+	    MANPATH=$MANPATH:/usr/local/share/man
+	fi
+
+	if [[ -d /usr/local/man ]];then
+	    MANPATH=$MANPATH:/usr/local/man
+	fi
+
+# Add /opt/local/man for Darwinports
+
+	if [[ -d /opt/local/man ]]; then
+	    MANPATH=$MANPATH:/opt/local/man 
+	fi
+
+
+# Activate zsh-templates man pages 
+
+	if [[ -d $ZDOT/man ]];then
+	   MANPATH=$ZDOT/man:$MANPATH
+	elif [[ -d $ZDOT_TEMPLATE/man ]];then
+	   MANPATH=$MANPATH:$ZDOT_TEMPLATE/man
+	fi
+
+	export MANPATH
+
+	typeset -U manpath
+
+#########################################
+
+
+
+###########################################
+#    Add HELPDIR                          #
+###########################################
+
+	if [[ -d /usr/share/zsh/$ZSH_VERSION/Help ]];then
+
+	  if [[ -z $HELPDIR ]];then
+	    HELPDIR=/usr/share/zsh/$ZSH_VERSION/Help
+	  else
+	    HELPDIR=/usr/share/zsh/$ZSH_VERSION/Help:$HELPDIR
+	  fi
+
+	elif [[ -d /usr/share/zsh/$ZSH_VERSION/help ]];then
+
+	  if [[ -z $HELPDIR ]];then
+	    HELPDIR=/usr/share/zsh/$ZSH_VERSION/help
+	  else
+	    HELPDIR=/usr/share/zsh/$ZSH_VERSION/help:$HELPDIR
+	  fi
+
+	elif [[ -d $SWPREFIX/share/zsh/$ZSH_VERSION/Help ]];then
+
+	  if [[ -z $HELPDIR ]];then
+	    HELPDIR=$SWPREFIX/share/zsh/$ZSH_VERSION/Help
+	  else
+	    HELPDIR=$SWPREFIX/share/zsh/$ZSH_VERSION/Help:$HELPDIR
+	  fi
+
+	elif [[ -d $SWPREFIX/share/zsh/$ZSH_VERSION/help ]];then
+
+	  if [[ -z $HELPDIR ]];then
+	    HELPDIR=$SWPREFIX/share/zsh/$ZSH_VERSION/help
+	  else
+	    HELPDIR=$SWPREFIX/share/zsh/$ZSH_VERSION/help:$HELPDIR
+	  fi
+
+	fi
+
+	export -TU HELPDIR helpdir
+	typeset -U helpdir  # probably redundant with previous line
+
+# Now it should work like $PATH and $path
+
+
+
+##########################################################################
+#
+#           Most of what follows is distributed with ZSH:
+#             Housekeeping, Completions, environment Options,
+#             Keybindings and and zstyles
+#
+##########################################################################
+
+
+
+if [[ -o interactive ]]; then
+
+	function _exit()        # function to run upon exit of shell
+	{
+		echo -e "[1;31mHasta la vista, baby![0m"
+	}
+	trap _exit 0
+
+	HISTSIZE=500
+	#HISTFILE=~/.zsh/zsh_history
+    if (( ! EUID )); then
+        HISTFILE=~/.zsh/zsh_history_root
+    else
+        HISTFILE=~/.zsh/zsh_history
+    fi    
+	SAVEHIST=500
+	export HISTFILE HISTSIZE SAVEHIST
+        
+	#-------------------
+	# custom completions
+	#-------------------
+	
+    # Load our additional cusom completions here
+	compctl -D -f + -U -Q -K multicomp
+	
+	# I have removed compctl from the distribution and moved everything into
+	# zsh completion functions, so this is for any legacy script.
+	
+	if [[ -f $ZDOT/compctl ]];then 
+	  source $ZDOT/compctl
+    fi
+
+	ZSH_VERSION_TYPE=new
+
+	 
+	# {{{ Profiling
+
+	[[ -n "$ZSH_PROFILE_RC" ]] && which zmodload >&/dev/null && zmodload zsh/zprof
+
+	# }}}
+	# {{{ Loading status
+
+	zshrc_load_status () {
+	  # \e[0K is clear to right
+	  # echo -n "\r$ZDOT/environment load: $* ... \e[0K"   #uncomment to debug
+	}
+
+	# }}}
+	
+	# {{{ Options
+	
+	#---------------------------------
+	# setting zsh environment options
+	#---------------------------------
+
+	zshrc_load_status 'setting options'
+
+	setopt                       \
+	        append_history       \
+	        auto_list            \
+	        auto_menu            \
+	        auto_param_keys      \
+	     NO_auto_pushd           \
+	        bad_pattern          \
+	        bang_hist            \
+	        brace_ccl            \
+	        correct_all          \
+	        cdable_vars          \
+	     NO_chase_links          \
+	     NO_clobber              \
+	        complete_in_word     \
+	     NO_csh_junkie_loops     \
+	     NO_csh_junkie_quotes    \
+	     NO_csh_null_glob        \
+	        extended_glob        \
+	        function_argzero     \
+	        glob                 \
+	     NO_glob_assign          \
+	        glob_complete        \
+	     NO_glob_dots            \
+	        glob_subst           \
+	        hash_cmds            \
+	        hash_dirs            \
+	        hash_list_all        \
+	        hist_allow_clobber   \
+	        hist_beep            \
+	     NO_hup                  \
+	     NO_ignore_braces        \
+	        ignore_eof           \
+	        interactive_comments \
+	     NO_list_ambiguous       \
+	        list_types           \
+	        long_list_jobs       \
+	        magic_equal_subst    \
+	     NO_mark_dirs            \
+	        multios              \
+	        nomatch              \
+	        notify               \
+	     NO_null_glob            \
+	        path_dirs            \
+	        posix_builtins       \
+	     NO_print_exit_value     \
+	        pushd_ignore_dups    \
+	     NO_pushd_minus          \
+	        pushd_to_home        \
+	        rc_expand_param      \
+	     NO_rc_quotes            \
+	     NO_rm_star_silent       \
+	     NO_sh_file_expansion    \
+	        short_loops          \
+	     NO_single_line_zle      \
+	     NO_sun_keyboard_hack    \
+	        unset                \
+	     NO_verbose                 
+	#        zle       \
+	#     NO_all_export           \
+	#        always_last_prompt   \
+	#     NO_always_to_end        \
+	#     NO_auto_cd              \
+	#     NO_auto_name_dirs       \
+	#        auto_param_slash     \
+	#        auto_remove_slash    \
+	#     NO_auto_resume          \
+	#     NO_beep                 \
+	#     NO_bsd_echo             \
+	#        complete_aliases     \
+	#     NO_correct              \
+	#        csh_junkie_history   \
+	#        equals               \
+	#        extended_history     \
+	#        hist_ignore_dups     \
+	#        hist_ignore_space    \
+	#     NO_hist_no_store        \
+	#        hist_verify          \
+    #        share_history        \
+	#     NO_ignore_eof           \
+	#     NO_list_beep            \
+	#     NO_mail_warning         \
+	#     NO_menu_complete        \
+	#        numeric_glob_sort    \
+	#     NO_overstrike           \
+	#     NO_prompt_cr            \
+	#        prompt_subst         \
+	#        pushd_silent         \
+	#        sh_option_letters    \
+    #        NO_sh_word_split     \
+
+	if [[ $ZSH_VERSION == 3.0.<6->* || $ZSH_VERSION_TYPE == 'new' ]]; then
+	  setopt \
+	        hist_reduce_blanks
+	fi
+
+	# }}}
+	# {{{ Watching for other users
+
+	LOGCHECK=60
+	WATCHFMT="[%B%t%b] %B%n%b has %a %B%l%b from %B%M%b"
+
+	# }}}
+	# {{{ Completions
+	
+    #--------------------------
+	# standard zsh completions
+	#--------------------------
+
+	zshrc_load_status 'completion system'
+
+	# {{{ New advanced completion system
+
+	 
+     autoload -U compinit
+     compinit -C # don't perform security check
+	 
+
+	#-------------------------------------------
+	# Enable the way cool bells and whistles.
+	#-------------------------------------------
+
+	# enable menu selection
+	zstyle ':completion:*' menu select=10
+
+	# General completion technique
+	#zstyle ':completion:*' completer _complete _correct _approximate _prefix
+	zstyle ':completion:*' completer _complete _prefix
+	zstyle ':completion::prefix-1:*' completer _complete
+	zstyle ':completion:incremental:*' completer _complete _correct
+	zstyle ':completion:predict:*' completer _complete
+
+	# Completion caching
+	zstyle ':completion::complete:*' use-cache 1
+	zstyle ':completion::complete:*' cache-path ~/.zsh/cache/$HOST
+
+	# Expand partial paths
+	zstyle ':completion:*' expand 'yes'
+	zstyle ':completion:*' squeeze-slashes 'yes'
+
+	# Include non-hidden directories in globbed file completions
+	# for certain commands
+	#zstyle ':completion::complete:*' \
+	#  tag-order 'globbed-files directories' all-files 
+	#zstyle ':completion::complete:*:tar:directories' file-patterns '*~.*(-/)'
+
+	# Don't complete backup files as executables
+	zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~'
+
+	# Separate matches into groups
+	zstyle ':completion:*:matches' group 'yes'
+
+	# Describe each match group.
+	zstyle ':completion:*:descriptions' format "%B---- %d%b"
+
+	# Messages/warnings format
+	zstyle ':completion:*:messages' format '%B%U---- %d%u%b' 
+	zstyle ':completion:*:warnings' format '%B%U---- no match for: %d%u%b'
+	 
+	# Describe options in full
+	zstyle ':completion:*:options' description 'yes'
+	zstyle ':completion:*:options' auto-description '%d'
+
+	# }}}
+	# {{{ Simulate my old dabbrev-expand 3.0.5 patch 
+
+	zstyle ':completion:*:history-words' stop yes
+	zstyle ':completion:*:history-words' remove-all-dups yes
+	zstyle ':completion:*:history-words' list false
+	zstyle ':completion:*:history-words' menu yes
+
+	# }}}
+	
+	
+	# 	
+	# {{{ (host, port, user) triples for telnet
+
+	telnet_users_hosts_ports=(
+	)
+	zstyle ':completion:*:*:telnet:*' users-hosts-ports $telnet_users_hosts_ports
+
+	# }}}
+	# {{{ which
+
+	# reverse unwanted aliasing of `which' by distribution startup
+	# files (e.g. /etc/profile.d/which*.sh); zsh's which is perfectly
+	# good as is.
+
+	alias which >&/dev/null && unalias which
+
+	# }}}
+	# {{{ run-help
+
+	alias run-help >&/dev/null && unalias run-help
+	autoload run-help
+
+	# }}}
+
+	# {{{ Restarting zsh or bash; reloading .zshrc or functions
+
+	bash () {
+	  NO_SWITCH="yes" command bash "$@"
+	}
+
+	restart () {
+	  exec $SHELL $SHELL_ARGS "$@"
+	}
+
+	profile () {
+	  ZSH_PROFILE_RC=1 $SHELL "$@"
+	}
+
+	reload () {
+	  if [[ "$#*" -eq 0 ]]; then
+	    . $zdotdir/.zshrc
+	  else
+	    local fn
+	    for fn in "$@"; do
+	      unfunction $fn
+	      autoload -U $fn
+	    done
+	  fi
+	}
+	compdef _functions reload
+
+	# }}}
+
+	# }}}
+	# {{{ Key bindings 
+
+	zshrc_load_status 'key bindings'
+
+	if [[ -f ~/.zsh/zshvi ]];then
+       bindkey -v
+       print "Using vi key bindings!"
+    else
+       bindkey -e
+    fi
+	bindkey '\e\e[C' forward-word
+	bindkey '\e\e[D' backward-word
+	bindkey '\e[A'  up-line-or-history
+	bindkey '\e[B'  down-line-or-history
+
+	bindkey -s '^X^Z' '%-^M'
+	bindkey '^[e' expand-cmd-path
+	#bindkey -s '^X?' '\eb=\ef\C-x*'
+	bindkey '^[^I' reverse-menu-complete
+	bindkey '^X^N' accept-and-infer-next-history
+	#bindkey '^[p' history-beginning-search-backward
+	#bindkey '^[n' history-beginning-search-forward
+	bindkey '^[P' history-beginning-search-backward
+	bindkey '^[N' history-beginning-search-forward
+	bindkey '^[b' emacs-backward-word
+	bindkey '^[f' emacs-forward-word
+	bindkey '^[v' expand-or-complete-prefix
+
+	# Fix weird sequence that rxvt produces
+	bindkey -s '^[[Z' '\t'
+
+	# alias no=ls  # for Dvorak
+
+	# }}}
+	# {{{ Miscellaneous
+
+	zshrc_load_status 'miscellaneous'
+
+	# {{{ ls colours
+
+	if which dircolors >&/dev/null && [[ -e "${zdotdir}/.dircolors" ]]; then
+	  # show directories in yellow
+	  #eval `dircolors -b $zdotdir/.dircolors`
+      noglob eval $(command dircolors -b $zdotdir/.dircolors)
+	fi
+
+	if [[ $ZSH_VERSION > 3.1.5 ]]; then
+	  zmodload -i zsh/complist
+
+	  zstyle ':completion:*' list-colors ''
+
+	  zstyle ':completion:*:*:kill:*:processes' list-colors \
+	    '=(#b) #([0-9]#)*=0=01;31'
+
+	  # completion colours
+	  zstyle ':completion:*' list-colors "$LS_COLORS"
+	fi  
+
+	# }}}
+
+	# }}}
+fi
