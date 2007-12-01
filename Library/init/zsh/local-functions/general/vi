@@ -20,3 +20,5 @@
 	fi
 
     unset i
+    unset otherfile
+
