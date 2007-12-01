@@ -93,6 +93,8 @@ if [[  $(uname) == Darwin  ]]; then
     # alias photoshop="open -a Adobe\ Photoshop\ 7.0"
     alias netscape="open -a netscape"
 	alias calc="open -a calculator"
+	# Add a transparent movable (and removable) space to the dock and restart it
+	alias add_dock_space="defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}' ; killall Dock"
 	
 	# Fink specific
 	if [[ -d /sw || -x $(which fink) ]]; then	
