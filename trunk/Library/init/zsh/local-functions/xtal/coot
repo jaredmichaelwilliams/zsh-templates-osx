@@ -1,5 +1,6 @@
 #!/bin/zsh -f
 
+
 # This is a zsh shell script or function that augments the coot command line 
 # experience. Just type "coot" followed by the names of your pdb files, map files, 
 # mtz files and so on. If you have the unix program screen, it starts coot in a 
@@ -121,8 +122,15 @@ done
 
 ###  Issue the actual coot commands:
 
-cootcommandarray=( $screenarray =coot $argarray $startupscript $scriptfilearray $pdbfilearray \
+if [[ -x $SWPREFIX/bin/coot ]]; then
+
+    cootcommandarray=( $screenarray $SWPREFIX/bin/coot $argarray $startupscript $scriptfilearray $pdbfilearray \
 		$datafilearray $mapfilearray )
+		
+else
+ 	cootcommandarray=( $screenarray =coot $argarray $startupscript $scriptfilearray $pdbfilearray \
+		$datafilearray $mapfilearray )
+fi
 
 if [[ "$TERM_PROGRAM" == "iTerm.app" ]];then
 	
