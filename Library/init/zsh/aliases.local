@@ -65,10 +65,13 @@ fi
 
 # Some common aliases:
 	alias back='cd "$OLDPWD";pwd'
-	alias dt="cd $HOME/Desktop"  	# Shortcut to the desktop
 	# alias rehash='hash -r'  		# Now a shell built-in
 	alias purge="rm -i *~"    		# Remove emacs guano
 	alias rm="rm -i"		  		# Some people hate this, but it saved my arse many times.
+	
+	if [[ $(which dt) == "dt not found" ]];then
+		alias dt="cd $HOME/Desktop; pwd"  	# Shortcut to the desktop
+	fi
 
 	if [[ -n $(which xwit | head -n 1) ]];then
 	    alias popx='xwit -pop -id'
