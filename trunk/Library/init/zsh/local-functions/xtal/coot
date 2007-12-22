@@ -56,7 +56,8 @@ fi
 testforscreen=$(whereis screen | head -n 1 )
 
 if [[ -x $testforscreen ]]; then
-	screenarray=( screen -S coot )
+	print "setenv PATH $SWPREFIX/bin:$PATH" >| /tmp/screenrc$$
+	screenarray=( screen -c /tmp/screenrc$$  -S coot )
 else
 	screenarray=( command )
 fi
@@ -122,15 +123,9 @@ done
 
 ###  Issue the actual coot commands:
 
-if [[ -x $SWPREFIX/bin/coot ]]; then
-
-    cootcommandarray=( $screenarray $SWPREFIX/bin/coot $argarray $startupscript $scriptfilearray $pdbfilearray \
+cootcommandarray=( $screenarray =coot $argarray $startupscript $scriptfilearray $pdbfilearray \
 		$datafilearray $mapfilearray )
 		
-else
- 	cootcommandarray=( $screenarray =coot $argarray $startupscript $scriptfilearray $pdbfilearray \
-		$datafilearray $mapfilearray )
-fi
 
 if [[ "$TERM_PROGRAM" == "iTerm.app" ]];then
 	
