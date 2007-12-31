@@ -13,12 +13,9 @@ if [[ $(sw_vers -productVersion) < 10.5 ]]; then
 	autoload -U customize_x11_gui_10.4
 	customize_x11_gui_10.4
 else
-	print "Under construction"
-	print "Invoking the non-gui alternative for now"
-	#autoload customize_x11_gui_10.5
-	#customize_x11_gui_10.5
-	autoload customize_x11_10.5
-	customize_x11_10.5
+	autoload customize_x11_gui_10.5
+	customize_x11_gui_10.5
+ 
 fi
 
  
