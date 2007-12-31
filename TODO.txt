@@ -9,3 +9,8 @@ Functions:
 	cd_ is broken for directories that have spaces.
 
 	Function to access paste buffer stack?
+	
+
+General:
+
+    system op functions for 10.5 need updating (eg: add_user )

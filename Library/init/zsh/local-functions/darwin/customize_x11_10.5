@@ -51,6 +51,8 @@ fi
 
 if [[ -d /usr/X11/X11.app ]];then
     PATH_TO_X11='/usr/X11/X11.app'
+elif [[ -d /usr/X11 && -d /Applications/Utilities/X11.app ]];then
+    PATH_TO_X11='/Applications/Utilities/X11.app'
 else
     print "Can't locate Apple's X11.app"
 	print "This should be a default install on 10.5"
@@ -125,13 +127,18 @@ print " "
 print "Apple's X11.app starts an \e[1m xterm \e[0m every time X11.app starts up."
 print "If you find this behavior annoying, you can issue the command"
 print "\e[1m  defaults write org.x.X11_launcher app_to_run /usr/X11/bin/xlsclients \e[0m "
+print " or "
+print "\e[1m  defaults write org.x.X11  app_to_run /usr/X11/bin/xlsclients \e[0m "
 
 print -n "Shall I do this for you now? [y/N]: "
 
 function Change_xinitrc {
 	defaults write org.x.X11_launcher app_to_run /usr/X11/bin/xlsclients
+	defaults write org.x.X11          app_to_run /usr/X11/bin/xlsclients
 	print "To get the xterm back, issue"
 	print "\e[1m defaults write org.x.X11_launcher app_to_run /usr/X11/bin/xterm \e[0m "
+    print " or "
+	print "\e[1m defaults write org.x.X11  app_to_run /usr/X11/bin/xterm \e[0m "
 }
 
 function nope2 { print ""; print "Leaving the current behavior alone."  }
@@ -162,7 +169,11 @@ print " "
 
 print -n "Shall I do this for you now? [y/N]: "
 
-function changequitalert { defaults write com.apple.x11 no_quit_alert true }
+function changequitalert { 
+             defaults write com.apple.x11 no_quit_alert true
+             defaults write org.x.X11 no_quit_alert true
+             defaults write org.x.X11_launcher no_quit_alert true
+         }
 function nope2 { print ""; print "Leaving file com.apple.x11 alone."  }
 
     user_task_yes='changequitalert'
@@ -195,7 +206,12 @@ print -n "Shall I do this for you now? [y/N]: "
 
 function change_ffm {
     defaults write com.apple.x11 wm_ffm true 
+    defaults write org.x.X11_launcher  wm_ffm true 
+    defaults write org.x.X11  wm_ffm true 
+
     defaults write com.apple.x11 wm_click_through -bool true
+    defaults write org.x.X11_launcher  wm_click_through -bool true
+    defaults write org.x.X11  wm_click_through -bool true
 }
 
 function nope2 { print ""; print "Leaving file com.apple.x11 alone."  }

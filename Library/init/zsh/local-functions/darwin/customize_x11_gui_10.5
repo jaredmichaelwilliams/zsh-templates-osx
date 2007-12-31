@@ -174,6 +174,8 @@ pashua_run "$conf"
     
     if [[ -d /usr/X11/X11.app ]];then
         PATH_TO_X11='/usr/X11/X11.app'
+    elif [[ -d /usr/X11 && -d /Applications/Utilities/X11.app ]];then
+        PATH_TO_X11='/Applications/Utilities/X11.app'
     else
         print "Can't locate Apple's X11.app"
         return 100
@@ -187,13 +189,18 @@ pashua_run "$conf"
     if [[ $rb2 == 'Prevent xterm from starting automatically.' ]];then
 
 		defaults write org.x.X11_launcher app_to_run /usr/X11/bin/xlsclients
+		defaults write org.x.X11          app_to_run /usr/X11/bin/xlsclients
+
 		print "To get the xterm back, issue"
 		print "\e[1m defaults write org.x.X11_launcher app_to_run /usr/X11/bin/xterm \e[0m "
+        print " and "
+		print "\e[1m defaults write org.x.X11  app_to_run /usr/X11/bin/xterm \e[0m "
 
      
     elif [[ $rb2 == 'Restore xterm to starting automatically.' ]];then
 
 		defaults write org.x.X11_launcher app_to_run /usr/X11/bin/xterm
+		defaults write org.x.X11          app_to_run /usr/X11/bin/xterm
 		
     fi
 
@@ -205,9 +212,13 @@ pashua_run "$conf"
         
     if [[ $rb3 == 'Get rid of it.' ]];then
         defaults write com.apple.x11 no_quit_alert true  
+        defaults write org.x.X11 no_quit_alert true
+        defaults write org.x.X11_launcher no_quit_alert true
         print ""; print "writing 'no_quit_alert true' to com.apple.x11.plist"   
     elif [[ $rb3 == 'Restore it.' ]];then 
         defaults write com.apple.x11 no_quit_alert false  
+        defaults write org.x.X11 no_quit_alert false
+        defaults write org.x.X11_launcher no_quit_alert false
         print ""; print "writing 'no_quit_alert false' to com.apple.x11.plist"   
     else
         print ""; print "leaving com.apple.x11.plist alone"
@@ -219,8 +230,12 @@ pashua_run "$conf"
     ########################################################
   
     function change_ffm {
-        defaults write com.apple.x11 wm_ffm $BOOL 
-        defaults write com.apple.x11 wm_click_through -bool $BOOL 
+        defaults write com.apple.x11       wm_ffm $BOOL 
+        defaults write org.x.X11_launcher  wm_ffm $BOOL 
+        defaults write org.x.X11           wm_ffm $BOOL 
+        defaults write com.apple.x11       wm_click_through -bool $BOOL 
+        defaults write org.x.X11_launcher  wm_click_through -bool $BOOL 
+        defaults write org.x.X11           wm_click_through -bool $BOOL 
         }
         
     if [[ $rb4 == 'Turn on Focus Follows Mouse.' ]];then
