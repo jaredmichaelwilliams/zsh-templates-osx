@@ -1,5 +1,14 @@
 #!/bin/zsh -f
 
+version="2.0.0"
+
+# The script must be run as an admin user 
+#
+if [[ -z $(id -p $USER | grep admin) ]];then
+	print "You must be an administrative user with sudo privileges in order to run $0"
+fi
+
+# For 10.5:  Eliminated niutil commands in favor of Directory Service
 
 # Obtained and modified from a bash shell script available at
 # http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
@@ -24,15 +33,6 @@ function usage {
   return 1
 }
 
-
-# The script must be run as root 
-#
-if [[ "$USER" != "root" ]]; then
-  echo "Must be run as root"
-  return 1
-fi
-
-
 # Check parameters
 #
 if [[ "$1" = "-q" ]]; then
@@ -47,26 +47,31 @@ fi
 
 group="$1"
 
-# search NetInfo for the given group - it should exist
-str="$(nifind /groups/$group .)"
+# search Directory Service for the given group - it should exist
+# str="$(nifind /groups/$group .)"
+str="$( dscl . -list /Groups | grep -w $group )"
 if [[ -z "$str" ]]; then
   usage "Group $group does not exist"
-  return 1
+  return 11
 fi
 
 
 # Check if this is a primary group for some user and warn if so
 #   but not in quiet mode
 if [[ $quiet = "no" ]]; then
-  
+
   # get the group number from the name
-  gid="$(nireport . /groups name gid | grep -w "^$group" | cut -f 2)"
+  gid="$(dscl . -list /Groups PrimaryGroupID | grep -w "^$group" |  awk '{print $2}' )"
 
   # print a warning if it is any user's primary group
-  str="$(nireport . /users gid | grep -w $gid)"
+  # str="$(nireport . /users gid | grep -w $gid)"
+  str="$(dscl . -list /users PrimaryGroupID | grep -w "$gid" )"
+
+
   if [[ ! -z "$str" ]]; then
     echo "WARNING: this is a primary group:"
-    nireport . /users gid name | grep -w "^$gid"
+    # nireport . /users gid name | grep -w "^$gid"
+    dscl . -list /users PrimaryGroupID | grep -w "^$gid"
  
     print -n "Do you really want to do this? "
     read -t 10 -A ans
@@ -85,7 +90,7 @@ fi
 # sanity check
 if [[ "$group" = "" ]]; then return 42; fi
 
-dscl . delete /groups/$group
+sudo dscl . delete /groups/$group
 
 echo "Group $group deleted"
 return 0

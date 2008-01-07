@@ -1,5 +1,15 @@
 #!/bin/zsh -f
 
+version="2.0.0"
+
+# The script must be run as an admin user 
+#
+if [[ -z $(id -p $USER | grep admin) ]];then
+	print "You must be an administrative user with sudo privileges in order to run $0"
+fi
+
+# For 10.5:  Eliminated niutil commands in favor of Directory Service
+
 # Obtained and modified from a bash shell script available at
 # http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
  
@@ -23,15 +33,6 @@ function usage {
   return 1
 }
 
-
-# Ensure user is root
-#
-if [[ "$USER" != "root" ]]; then
-  echo "Must be run as root (type the command \"sudo zsh\")"
-  return 1
-fi
-
-
 # Check parameters
 #
 if [[ $# -lt 2 ]]; then
@@ -51,14 +52,16 @@ fi
 for group in $groups; do
 
   # get the group number from the name
-  gid="$(nireport . /groups name gid | grep -w "^$group" | cut -f 2)"
+  gid="$(dscl . -list /Groups PrimaryGroupID | grep -w "^$group" |  awk '{print $2}' )"
   
   # check if the group exists
-  strgroup="$(nifind /groups/$group .)"
+  # strgroup="$(nifind /groups/$group .)"
+  strgroup="$( dscl . -list /Groups | grep -w $group )"
   # check if the user is listed for the group (not listed in own primary)
-  stringroup="$(nireport . /groups name users | grep -w "^$group" | grep -w "$user")"
+  # stringroup="$(nireport . /groups name users | grep -w "^$group" | grep -w "$user")"
+  stringroup="$( dscl . -list /Groups users | grep -w "^$group" | grep -w "$user")"
   # check if this is the user's primary group
-  strprimary="$(nireport . /users name gid | grep -w "^$user" | grep -w "$gid" )"
+  strprimary="$(dscl . -list /Groups PrimaryGroupID | grep -w "^$user" | grep -w "$gid" )"
     
   # ensure that the group exists...
   if [[ -z "$strgroup" ]]; then
@@ -72,7 +75,7 @@ for group in $groups; do
   else
     # remove user from the group
 
-    dscl . delete /groups/$group users $user
+    sudo dscl . delete /groups/$group users $user
     echo "User $user removed from group $group"
   fi
 done
