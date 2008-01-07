@@ -1,5 +1,15 @@
 #!/bin/zsh -f
 
+version="2.0.0"
+
+# The script must be run as an admin user 
+#
+if [[ -z $(id -p $USER | grep admin) ]];then
+	print "You must be an administrative user with sudo privileges in order to run $0"
+fi
+
+# For 10.5:  Eliminated niutil commands in favor of Directory Service
+
 # Obtained and modified from a bash shell script available at
 # http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
 
@@ -19,36 +29,31 @@ declare str   # working
 function usage {
   print "Delete a user account, group, and group membership"
   print "Usage: $commandname username"
-  if [[ "$*" != "" ]]; then print ""; print "Error: $*"; fi
+  if [[ "$*" != "" ]]; then 
+     print ""
+     print "Error: $*"
+  fi
   return 1
 }
-
-
-# The script must be run as root 
-#
-if [[ "$USER" != "root" ]]; then
-  print "Must be run as root (type \"sudo zsh\" ) "
-  return 1
-fi
-
 
 # Check parameters
 #
 if [[ $# -ne 1 ]]; then
   usage
-  return 1
+  return 21
 fi
 
 user="$1"
+RecordName=${user}
 
-# search NetInfo for the given user - it should exist
-str="$(nifind /users/$user .)"
+# search Directory Service for the given user - it should exist
+str="$(dscl . -list /Users  |  grep -w $RecordName )"
 if [[  -z "$str" ]]; then
   usage "User $user does not exist"
   return 1
 fi
 
-# Delete the user from NetInfo
+# Delete the user from Directory Services
 #
 # delete the user from all groups
 
@@ -60,26 +65,26 @@ autoload -U delete_group
 delete_group -q $user
 
 # delete the user from NetInfo
-dscl . delete /users/$user
+sudo dscl . delete /users/$user
 
 print "User $user deleted"
 
 # Archive the user's home directory
 #
 # check that the user has a home directory
-if [[ -e /Users/$user ]]; then
+if [[ -d /Users/$user ]]; then
   # archive it
   cd /Users
-  tar -czf ${user}-archive.tgz $user
+  sudo /usr/bin/tar -czf ${user}-archive.tgz $user
   cd  
   
   # delete it CHECKING THAT AN ARCHIVE WAS CRESATED
   if [[ -e /Users/${user}-archive.tgz ]]; then
-    rm -rf /Users/${user}
+    sudo rm -rf /Users/${user}
   fi
 fi
 
-print "Users home directory archived and deleted"
+print "Users home directory archived as /Users/${user}-archive.tgz and deleted"
 
 return 0
 

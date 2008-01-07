@@ -1,6 +1,14 @@
 #!/bin/zsh -f
 
+version="2.0.0"
 
+# The script must be run as an admin user 
+#
+if [[ -z $(id -p $USER | grep admin) ]];then
+	print "You must be an administrative user with sudo privileges in order to run $0"
+fi
+
+# For 10.5:  Eliminated niutil commands in favor of Directory Service
 # Obtained and modified from a bash shell script available at
 # http://www.osxfaq.com/tips/unix-tricks/week91/friday.ws
 
@@ -20,15 +28,6 @@ function usage {
   return 1
 }
 
-
-# Ensure user is root
-#
-if [[ "$USER" != "root" ]]; then
-  echo "Must be run as root (type the command \"sudo zsh\" )"
-  return 1
-fi
-
-
 # Check parameters
 #
 if [[ $# -lt 2 ]]; then
@@ -38,40 +37,43 @@ fi
 
 group="$1"
 
-# search NetInfo for the given group - it should exist
-str="$(nifind /groups/$group .)"
+# search Directory Service for the given group - it should exist
+
+str="$( dscl . -list /Groups | grep -w $group )"
 if [[ -z "$str" ]]; then
   usage "Group $group does not exist"
-  return 1
+  return 11
 fi
 
 # get the group number from the name
-gid="$(nireport . /groups name gid | grep -w "^$group" | cut -f 2)"
+gid="$(dscl . -list /Groups PrimaryGroupID | grep -w "^$group" |  awk '{print $2}' )"
 
-# Drop the group and loop thro' additional parameters (users) to add to group
+
+# Drop the group and loop through additional parameters (users) to add to group
 #
 shift
 
 for user in $*; do
   # check if the user exists
-  struser="$(nifind /users/$user .)"
+  # struser="$(nifind /users/$user .)"
+  struser="$(dscl . -list /Users  |  grep -w $user )"  
   # check if the user already belongs to the group
-  stringroup="$(nireport . /groups name users | grep -w "^$group" | grep -w "$user")"
+  stringroup="$( dscl . -list /Groups users | grep -w "^$group" | grep -w "$user")"
   # check if this is the user's primary group
-  strprimary="$(nireport . /users name gid | grep -w "^$user" | grep -w "$gid" )"
+  strprimary="$(dscl . -list /Groups PrimaryGroupID | grep -w "^$user" | grep -w "$gid" )"
 
   # ensure that the user exists...
-  if [ -z "$struser" ]; then
+  if [[ -z "$struser" ]]; then
     echo "User $user does not exist"
   # ...and does not already belong to the group...
-  elif [ ! -z "$stringroup" ]; then
+  elif [[ ! -z "$stringroup" ]]; then
     echo "User $user already belongs to group $group - not added again"
   # ...and this is not the user's primary group
-  elif [ ! -z "$strprimary" ]; then
+  elif [[ ! -z "$strprimary" ]]; then
     echo "This is the user's primary group - not added"
   else
     # add user to the group
-    dscl . merge /groups/$group users "$user" 
+    sudo dscl . merge /groups/$group users "$user" 
     echo "User $user added to group $group"
   fi
 done

@@ -290,18 +290,23 @@ if [[ -o interactive ]]; then
 			# For VirtueDesktops and CodeTek Virtual Desktops
             # A function to switch desktops
             autoload -U sd
+
+	        # These need to be invoked by an admin user.
+			if [[ -n $(id -p $USER | grep -w admin ) ]]; then
+
+	            # functions to add (or delete) groups and users to groups
+	            autoload -U add_user       addgroup        adduser2group 
+	            autoload -U delete_user    delete_group    remove_user_from_group
 			
-		if [[ $(sw_vers -productVersion) < 10.5 ]]; then	
-           # functions to add (or delete) groups and users to groups
-           # These need to be invoked as root.
-            autoload -U addgroup delete_group adduser2group remove_user_from_group add_user delete_user
+				if [[ $(sw_vers -productVersion) < 10.5 ]]; then	
             
-            # Two functions to help with nfs mounts and exports:
-            autoload -U exportfs nfs_niloader
-                # if Apple someday includes an exportfs command, this should be
-                # renamed or turned off
-        fi
-    
+		            # Two functions to help with nfs mounts and exports:
+		            autoload -U exportfs nfs_niloader
+		                # if Apple someday includes an exportfs command, this should be
+		                # renamed or turned off
+		        fi
+    		fi # test for admin
+
             # autoload open-x11 # Doesn't work correctly.  Use this workaround:
             function open-x11 {
                 if [[ -f $ZDOT/local-functions/darwin/open-x11 ]]; then
