@@ -34,9 +34,9 @@ _setopt(7)               - corrected version of supplied _setopt completion func
 _switch_users(7)         - completion function for the function switch_users (command-line fast user switching)
 _unsetopt(7)             - corrected version of supplied _unsetopt completion function
 _users(7)                - completion function for the function switch_users (command-line fast user switching) _users completion function for only the real users in /Users directory switch_users function to do fast user switching from the command line (eg: switch_users nixon )
-add_user(7)              - Add a user to the netinfo database and create the user's account
-addgroup(7)              - Add a user group to the netinfo database
-adduser2group(7)         - Add an existing user (or many users) to an existing group to the netinfo database
+add_user(7)              - Add a user to the Directory Service database and create the user's account
+addgroup(7)              - Add a user group to the Directory Service database
+adduser2group(7)         - Add an existing user (or many users) to an existing group to the Directory Service database
 aeon(7)                  - toggle AppleEvent logging on or off
 bbown(7)                 - function to change file ownership to bbedit
 canonicalize_pdb(7)      - function to put nucleic acid pdb files in canonical format (crystallography)
@@ -57,8 +57,8 @@ cpbcp(7)                 - copy the full path of a command to the pastboard
 cpos(7)                  - copies the path matching that of the frontmost finder window
 customize_x11(7)         - Assist the user in changing (improving) the behavior of Apple's X11.app
 customize_x11_gui(7)     - Assist the user in changing (improving) the behavior of Apple's X11.app -- GUI version
-delete_group(7)          - Delete a group from the netinfo database
-delete_user(7)           - Delete a user from the netinfo database and archive's the user's account
+delete_group(7)          - Delete a group from the Directory Service database
+delete_user(7)           - Delete a user from the Directory Service database and archive's the user's account
 dirstack(1), gdirs(1)    - display directory stack as gui menu
 dotgrep(7)               - function to grep stuff from dot files
 dusize(7)                - function to get filesizes with du and sum them in awk
@@ -135,7 +135,7 @@ prompt_simple_setup(7)   - function defining a very simple prompt (zsh-% in bold
 pymol(7)                 - function to run pymol and display process in an iTerm tab (crystallography)
 quit(7)                  - quits the named application
 rcommand(7)              - executes a single command on a remote host and returns stdout
-remove_user_from_group(7) - Remove an existing user from an existing group (or all groups) in the netinfo database
+remove_user_from_group(7) - Remove an existing user from an existing group (or all groups) in the Directory Service database
 renew_dhcp(7)            - Function to renew a dynamically allocated IP address via BOOTP or DHCP
 renice_grep(7)           - function to renice by string
 rmm(7)                   - emulates unix rm but uses the OS X Trash
