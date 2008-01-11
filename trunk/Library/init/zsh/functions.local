@@ -297,14 +297,13 @@ if [[ -o interactive ]]; then
 	            # functions to add (or delete) groups and users to groups
 	            autoload -U add_user       addgroup        adduser2group 
 	            autoload -U delete_user    delete_group    remove_user_from_group
-			
-				if [[ $(sw_vers -productVersion) < 10.5 ]]; then	
-            
-		            # Two functions to help with nfs mounts and exports:
-		            autoload -U exportfs nfs_niloader
-		                # if Apple someday includes an exportfs command, this should be
-		                # renamed or turned off
-		        fi
+           
+	            # Two functions to help with nfs mounts and exports:
+	            autoload -U exportfs nfs_niloader
+				alias nfs_automounter="nfs_niloader"
+                # if Apple someday includes an exportfs command, this should be
+                # renamed or turned off
+		         
     		fi # test for admin
 
             # autoload open-x11 # Doesn't work correctly.  Use this workaround:
