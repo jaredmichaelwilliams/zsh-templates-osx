@@ -1,28 +1,44 @@
 #!/bin/zsh -f
 
+if [[ $(sw_vers -productVersion) < 10.5 ]]; then
+ 
+	sudo niload -m -v fstab . < /etc/fstab 
+	
+else
 
-# This shell script needs to be run with sudo or as root
+	print "niload does not exist on 10.5"
+	print "There is no longer a need for this function (command)"
+	print "Simply use the \e[1m automount \e[0m command instead"
+	print "Issue \e[1m man automount \e[0m for more details"
+	print ""
+	print ""
+	print "Issuing \e[1m sudo automount -vc \e[0m "
+	sudo automount -vc
+fi
 
-#if [[ $(id -u) != 0 ]];then
-#        print "Invoke this with the command sudo $0"
-#        print "or run as root user"
-#        return 1
-#fi    
-
-sudo niload -m -v fstab . < /etc/fstab 
 
 
 print "Here are the currently mounted filesystems: "
 print ""
-df -h
+            df -h
 print ""
-print ""
-print "Here are the nfs mountable filesystems listed in /etc/fstab :"
-print ""
-grep " nfs " /etc/fstab | awk '{print $2}' 
 print ""
 
-print "To mount additional filesystems, type the command"
-print "sudo mount /filesystem  or sudo mount -a"
-print ""
+if [[ -f /etc/fstab ]];then
+		print "Here are the nfs mountable filesystems listed in /etc/fstab :"
+		print ""
+		            grep " nfs " /etc/fstab | awk '{print $2}' 
+		print ""
+		print "To mount additional filesystems manually, type the command"
+		print "sudo mount /filesystem  or sudo mount -a"
+		print ""
+fi
 
+if [[ -f /etc/auto_master ]];then
+	print "Here are the nfs mountable filesystems listed in /etc/auto_\* :"
+	print ""
+	            less /etc/auto_* | grep -va "\#"
+	print ""	
+	sleep 2
+fi
+ 
