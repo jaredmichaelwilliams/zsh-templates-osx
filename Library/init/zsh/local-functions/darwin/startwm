@@ -1,11 +1,13 @@
 #!/bin/zsh -f
 
+# set -x
+
 # Start a full-screen xwindowmanager session but in a nested window.
 
 ###############################################################################
 # Do some reality checks:
 
-if [[ ! -x $(which xnest) ]];then
+if [[ ! -x $(which Xnest) ]];then
     print "xnest does not appear to be on this system"
     print "running the vanilla $0 command"
     command $0
@@ -85,11 +87,20 @@ adj_vert=$((res_array[2]-100))
 # Do this as a subprocess to avoid noise about the process finishing.
 
 #set -x
-( xinit ~/.x$1 -- Xnest :$$[3]$$[4]  -name "$1 nested session (initiated in $PWD on $HOST)" \
+
+if [[  -x  /usr/X11/bin/Xnest   ]]; then
+( xinit ~/.x$1 -- /usr/X11/bin/Xnest :$$[3]$$[4]  -name "$1 nested session (initiated in $PWD on $HOST)" \
                       -geometry ${adj_horiz}x${adj_vert}+100+0 2>| /dev/null & )
-   
- 
   
+elif [[ -x  /usr/X11R6/bin/Xnest  ]]; then
+
+( xinit ~/.x$1 -- /usr/X11/bin/Xnest :$$[3]$$[4]  -name "$1 nested session (initiated in $PWD on $HOST)" \
+                      -geometry ${adj_horiz}x${adj_vert}+100+0 2>| /dev/null & )
+
+else
+	print "Could not find Xnest"
+	return 1000
+fi
 
 
  
