@@ -5,6 +5,13 @@
 ###############################################################################
 # Do some reality checks:
 
+if [[ ! -x $(which xnest) ]];then
+    print "xnest does not appear to be on this system"
+    print "running the vanilla $0 command"
+    command $0
+    return 42
+fi
+
 if [[ $# != 1 ]];then
 	print "Usage: $0 windowmanager-executable-name"
 	print "where the argument is eg: enlightenment, twm, startkde, or a similar command."
