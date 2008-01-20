@@ -10,7 +10,7 @@
 ###############################################################################
 # Do some reality checks:
 
-if [[ ! -x $(which xnest) ]];then
+if [[ ! -x $(which Xnest) ]];then
     print "xnest does not appear to be on this system"
     print "running the vanilla $0 command"
     command $0
@@ -66,8 +66,18 @@ res_array=($(system_profiler -detailLevel mini | grep Resolution | awk '{print $
 adj_horiz=$((res_array[1]-200))
 adj_vert=$((res_array[2]-100))
 
+if [[ -x  /usr/X11/bin/Xnest ]];then
+    XNESTPATH=/usr/X11/bin/Xnest
+elif [[ -x  /usr/X11R6/bin/Xnest ]];then
+    XNESTPATH=/usr/X11R6/bin/Xnest	
+elif [[ -x  $( which Xnest) ]];then
+    XNESTPATH="$( which Xnest)"
+else 
+	print "Xnest not found"
+fi
+
  
-xinit /tmp/.xenmapman_$$_junk --  Xnest :9$$[4] -name XDLMAPMAN \
+xinit /tmp/.xenmapman_$$_junk --  $XNESTPATH :9$$[4] -name XDLMAPMAN \
                       -geometry ${adj_horiz}x${adj_vert}+100+0  2>| /dev/null &
    
 sleep 5
