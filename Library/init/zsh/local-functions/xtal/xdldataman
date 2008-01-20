@@ -65,9 +65,20 @@ res_array=($(system_profiler -detailLevel mini | grep Resolution | awk '{print $
 # Shave off 100 pixels in each dimension
 adj_horiz=$((res_array[1]-200))
 adj_vert=$((res_array[2]-100))
+
+
+if [[ -x  /usr/X11/bin/Xnest ]];then
+    XNESTPATH=/usr/X11/bin/Xnest
+elif [[ -x  /usr/X11R6/bin/Xnest ]];then
+    XNESTPATH=/usr/X11R6/bin/Xnest	
+elif [[ -x  $( which Xnest) ]];then
+    XNESTPATH="$( which Xnest)"
+else 
+	print "Xnest not found"
+fi
  
 # Now run the nested x-window session
-xinit /tmp/.xendataman_$$_junk --  Xnest :9$$[4] -name XDLDATAMAN \
+xinit /tmp/.xendataman_$$_junk --  $XNESTPATH :9$$[4] -name XDLDATAMAN \
                         -geometry ${adj_horiz}x${adj_vert}+100+0  2>| /dev/null &
 
 # Wait five seconds and then clean up the mess  
