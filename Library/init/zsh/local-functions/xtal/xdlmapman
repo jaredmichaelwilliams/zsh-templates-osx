@@ -10,6 +10,13 @@
 ###############################################################################
 # Do some reality checks:
 
+if [[ ! -x $(which xnest) ]];then
+    print "xnest does not appear to be on this system"
+    print "running the vanilla $0 command"
+    command $0
+    return 42
+fi
+
 # No point in using this unless we are on OS X:
 if [[ $(uname) != Darwin ]];then
 	print "This is a bugfix for OS X X-windows. This does not appear to be OS X."
