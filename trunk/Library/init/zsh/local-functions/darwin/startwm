@@ -93,11 +93,11 @@ if [[  -x  /usr/X11/bin/Xephyr   ]]; then
 
 
 elif [[  -x  /usr/X11/bin/Xnest   ]]; then
-    ( xinit ~/.x$1 -- /usr/X11/bin/Xnest :$$[3]$$[4]  -name "$1 nested session (initiated in $PWD on $HOST)" \
+    ( xinit ~/.x$1 -- /usr/X11/bin/Xnest :$$[3]$$[4]  -br  -name "$1 nested session (initiated in $PWD on $HOST)" \
                       -geometry ${adj_horiz}x${adj_vert}+100+0 2>| /dev/null & )
   
 elif [[ -x  /usr/X11R6/bin/Xnest  ]]; then
-    ( xinit ~/.x$1 -- /usr/X11/bin/Xnest :$$[3]$$[4]  -name "$1 nested session (initiated in $PWD on $HOST)" \
+    ( xinit ~/.x$1 -- /usr/X11/bin/Xnest :$$[3]$$[4]  -br  -name "$1 nested session (initiated in $PWD on $HOST)" \
                       -geometry ${adj_horiz}x${adj_vert}+100+0 2>| /dev/null & )
 
 else
