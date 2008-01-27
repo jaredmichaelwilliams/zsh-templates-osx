@@ -1,0 +1,5 @@
+#summary ZSH on OS X wiki referral.
+
+= The ZSH on OS X wiki =
+
+[http://xanana.ucsc.edu/~wgscott/xtal/wiki/index.php/ZSH_on_OS_X Please visit our wiki]
