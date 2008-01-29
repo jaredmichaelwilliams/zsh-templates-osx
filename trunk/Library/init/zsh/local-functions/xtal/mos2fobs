@@ -7,6 +7,10 @@ version="0.5"
 
 ##  mos2fobs.zsh
 
+date_time_stamp="$( command date +'%Y-%m-%d-%H%M' )"
+
+
+
 print "#####################################################################################################"
 print ""
 print "  This script will process the mtz file output from mosflm using CCP4 programs"
@@ -373,7 +377,7 @@ fi
 
 scala hklin  /tmp/junk_${mtz_prefix}_sort.mtz  \
       hklout /tmp/junk_${mtz_prefix}_scala.mtz \
-      << end-scala  >| scala_run1_logfile.html
+      << end-scala  >| scala_${mtz_prefix}_${date_time_stamp}_logfile.html
 run 1 all
 intensities partials # we have few fulls 
 cycles 40
@@ -394,7 +398,7 @@ end-scala
 buttonDialog="Shall I display the Scala log file in the Camino web browser?"
 
 if [[ $(buttonfuncKey) != Dismiss ]];then
-   open -a Camino scala_run1_logfile.html
+   open -a Camino scala_${mtz_prefix}_${date_time_stamp}_logfile.html
    sleep 5
    buttonDialog=""
 fi
@@ -414,7 +418,7 @@ fi
 
 truncate hklin /tmp/junk_${mtz_prefix}_scala.mtz \
          hklout /tmp/junk_${mtz_prefix}_trunc.mtz \
-         <<EOF-trunc >| truncate_run1_log.html                    
+         <<EOF-trunc >| truncate_${mtz_prefix}_${date_time_stamp}_log.html                    
 title $mtz_prefix dataset
 truncate yes
 nresidue $sumasu
@@ -426,7 +430,7 @@ EOF-trunc
 buttonDialog="Shall I display the Truncate log file in the Camino web browser?"
 
 if [[ $(buttonfuncKey) != Dismiss ]];then
-   open -a Camino truncate_run1_log.html
+   open -a Camino truncate_${mtz_prefix}_${date_time_stamp}_log.html
    sleep 5
    buttonDialog=""
 fi
