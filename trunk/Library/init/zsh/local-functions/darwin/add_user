@@ -1,6 +1,6 @@
 #!/bin/zsh -f
 
-version="2.0.0"
+version="2.0.1"
 
 # The script must be run as an admin user 
 #
@@ -116,8 +116,8 @@ sudo dscl . create /users/$RecordName gid $uid
 sudo dscl . create /users/$RecordName home /Users/$RecordName
 sudo dscl . create /users/$RecordName shell /bin/zsh
 sudo dscl . create /users/$RecordName realname "$RealName"
-#dscl . create /users/$RecordName picture "/Library/User Pictures/Fun/Smack.tif"
-sudo  dscl . create /users/$RecordName sharedDir Public
+sudo dscl . create /users/$RecordName picture "/Library/User Pictures/Fun/Gingerbread Man.tif" 
+sudo dscl . create /users/$RecordName sharedDir Public
  
 # add some other properties that are usually in Directory Service
 sudo  dscl . create /users/$RecordName _shadow_passwd ""
