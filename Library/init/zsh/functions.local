@@ -292,7 +292,7 @@ if [[ -o interactive ]]; then
             autoload -U sd
 
 	        # These need to be invoked by an admin user.
-			if [[ -n $(id -p $USER | grep -w admin ) ]]; then
+			if [[ -n $(/usr/bin/id -p $USER | grep -w admin ) ]]; then
 
 	            # functions to add (or delete) groups and users to groups
 	            autoload -U add_user       addgroup        adduser2group 
