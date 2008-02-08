@@ -10,7 +10,7 @@ fi
 if [[ -z $1 ]]; then
   /System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
 else
-  USERID=`id -u $1`;
+  USERID=`/usr/bin/id -u $1`;
   if [[ -z $USERID ]]; then
     return -1;
   fi

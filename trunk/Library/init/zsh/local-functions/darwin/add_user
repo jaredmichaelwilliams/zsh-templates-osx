@@ -4,7 +4,7 @@ version="2.0.1"
 
 # The script must be run as an admin user 
 #
-if [[ -z $(id -p $USER | grep admin) ]];then
+if [[ -z $(/usr/bin/id -p $USER | grep admin) ]];then
 	print "You must be an administrative user with sudo privileges in order to run $0"
 fi
   
