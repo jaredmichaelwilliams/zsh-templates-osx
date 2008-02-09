@@ -13,7 +13,7 @@ _open_absolute_application_path() {
   local expl curcontext
   zstyle -T ":completion:${curcontext}:files" prefix-needed && \
     [[ "$PREFIX" != /* && compstate[nmatches] -ne 0 ]] && return 1
-  _wanted files expl %B'--- application file ---'%b _path_files -P "$PREFIX[1]" -W /
+   _wanted files expl %B'--- application file ---'%b _path_files -P "$PREFIX[1]" -W /
 }
 
 _open() {
@@ -158,8 +158,11 @@ _open() {
       elif [[ $app == DefaultApp ]]; then  
         compadd -X %B'--- files available to open ---'%b *(.)   
       
-      elif [[ -n "$app" ]]; then
-        _wanted files expl "file for $app" _mac_files_for_application "$app"
+	  # This is a temporary bandaid fix
+      # elif [[ -n "$app" ]]; then
+      #   
+      #  _wanted files expl "file for $app" _mac_files_for_application "$app"
+
       else
         _files
       fi
