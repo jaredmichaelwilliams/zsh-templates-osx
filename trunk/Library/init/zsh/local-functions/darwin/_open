@@ -158,10 +158,9 @@ _open() {
       elif [[ $app == DefaultApp ]]; then  
         compadd -X %B'--- files available to open ---'%b *(.)   
       
-	  # This is a temporary bandaid fix
-      # elif [[ -n "$app" ]]; then
-      #   
-      #  _wanted files expl "file for $app" _mac_files_for_application "$app"
+      elif [[ -n "$app" ]]; then
+        
+       _wanted files expl "file for $app" _mac_files_for_application "$app"
 
       else
         _files
