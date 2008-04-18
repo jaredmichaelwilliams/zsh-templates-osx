@@ -126,8 +126,8 @@ if [[ -o interactive ]]; then
 	# that in turn will ensure completions are up to date.  We run the command once 
 	# now to establish a short-term SpotLight cache.
 
-		if [[ -f /Librayr/LaunchAgents/zsh.refresh.completion.plist  || \
-			  -f /Librayr/LaunchAgents/zsh.refresh.completion.plist  ]];then
+		if [[ -f /Library/LaunchAgents/zsh.refresh.completion.plist  || \
+			  -f /Library/LaunchAgents/zsh.refresh.completion.plist  ]];then
 						touch ~/.zsh/zrefresh 2>/dev/null
 						chmod 777 ~/.zsh/zrefresh  2>/dev/null
 		fi
