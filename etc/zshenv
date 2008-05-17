@@ -269,6 +269,10 @@ fi
 
     PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
 
+# Remove any instances of multiple colons:
+
+    PATH=${PATH/::/:}
+
 #
 # Export PATH as separate command to avoid dollar signs in export line
 #
@@ -315,7 +319,9 @@ fi
 #  FPATH=$ZDOT_USER/my-functions:$FPATH
 # fi
 
+# Remove any instances of multiple colons:
 
+    FPATH=${FPATH/::/:}
 
 export FPATH
 
