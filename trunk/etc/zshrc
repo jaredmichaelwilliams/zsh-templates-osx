@@ -209,7 +209,9 @@ if [[ -d $ZDOT_USER/my-functions ]]; then
    FPATH=$ZDOT_USER/my-functions:$FPATH
 fi
 
+# Remove any instances of multiple colons:
 
+    FPATH=${FPATH/::/:}
 
 export FPATH
 
