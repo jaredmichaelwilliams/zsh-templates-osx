@@ -183,6 +183,11 @@ if [[ -o interactive ]]; then
             # Terminal-Finder interactions
 			autoload -U cdf posd posgrep posfind fdc cdd cpos  full_path_in_finder
 			
+			# Terminal-ForkLift interactions
+			if [[ -f  $HOME/Library/Preferences/com.binarynights.ForkLift.plist  ]]; then
+			    autoload -U forklift cdright cdleft
+			fi
+			
 			# Terminal-Safari interactions
 			autoload -U cds spath eds
 			
