@@ -2,6 +2,7 @@
 
 # Author:  Motoi Washida
 # modified by W G Scott
+# revised Sept 12, 2008 to get rid of absolute path for fink
 # revised August 13, 2005
 # June 8, 2005 from the
 # November 12 2004 CVS version
@@ -15,11 +16,11 @@ function _MakeListCache {
             # list of uninstalled programs:
             #source /sw/bin/init.sh
  
-		command /sw/bin/fink list -n | command /usr/bin/awk '{print $1}' >| ~/.zsh/cache/uninst_finkpkgs
+		command fink list -n | command /usr/bin/awk '{print $1}' >| ~/.zsh/cache/uninst_finkpkgs
 	       # list of installed programs:
-		command /sw/bin/fink list -i | command /usr/bin/awk '{print $2}'  >| ~/.zsh/cache/inst_finkpkgs
+		command fink list -i | command /usr/bin/awk '{print $2}'  >| ~/.zsh/cache/inst_finkpkgs
 	       # list installed but out of date programs:
-		command /sw/bin/fink list -o | command /usr/bin/awk '{print $2}'  >| ~/.zsh/cache/outdated_finkpkgs
+		command fink list -o | command /usr/bin/awk '{print $2}'  >| ~/.zsh/cache/outdated_finkpkgs
 	}
 
 
