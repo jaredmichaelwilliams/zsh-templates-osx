@@ -8,6 +8,7 @@
 # current.
 
 # Author:  W G Scott
+# Revised Sept 12, 2008, to remove absolute /sw/bin/fink path as this causes trouble
 # Revised October 14, 2006
 # June 8, 2005  
 
@@ -19,11 +20,11 @@ function MakeListCache {
 	# Store package list caches here:
         command mkdir -p ~/.zsh/cache
 	# list installed but out of date programs:
-		command /sw/bin/fink list -o | command awk '{print $2}'  >| ~/.zsh/cache/outdated_finkpkgs
+		command fink list -o | command awk '{print $2}'  >| ~/.zsh/cache/outdated_finkpkgs
     # list of uninstalled programs:
-		command /sw/bin/fink list -n | command awk '{print $1}' >| ~/.zsh/cache/uninst_finkpkgs
+		command fink list -n | command awk '{print $1}' >| ~/.zsh/cache/uninst_finkpkgs
 	# list of installed programs:
-		command /sw/bin/fink list -i | command awk '{print $2}'  >| ~/.zsh/cache/inst_finkpkgs
+		command fink list -i | command awk '{print $2}'  >| ~/.zsh/cache/inst_finkpkgs
 	}
 
 # Now run the function to (re)make the cache lists
