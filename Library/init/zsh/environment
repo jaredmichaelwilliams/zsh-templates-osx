@@ -130,6 +130,15 @@ fi # [[  $(uname) == Darwin  && -z $SSH_CONNECTION ]]
 
 # Add /usr/local manpages
 
+    if [[ -x $(which manpath ) ]];then 
+		if [[ -z $MANPATH ]]; then
+			MANPATH=$( manpath )
+		else
+			MANPATH=$( manpath ):${MANPATH}	
+			typeset -U manpath
+		fi
+	fi
+
 	if [[ -d /usr/local/share/man ]];then
 	    MANPATH=$MANPATH:/usr/local/share/man
 	fi
