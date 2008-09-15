@@ -11,7 +11,7 @@
 
 
 
-if [[ -x $SWPREFIX/bin/ls ||   $(uname) != Darwin ]]; then  
+if [[ -x $SWPREFIX/bin/ls ||   $(uname) != Darwin  && $(uname) != FreeBSD  ]]; then  
   alias ls='ls --color=auto'
 fi
 
