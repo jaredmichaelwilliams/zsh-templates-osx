@@ -30,7 +30,10 @@ if [[ ! -d $ZDOT ]];then
 		print "\e[1m WARNING!! /etc/zshenv file DOES NOT EXIST \e[0m"
 	elif [[ ! -f /etc/zsh/zshenv && $(uname) == Linux ]]; then
 		print "\e[1m WARNING!! /etc/zsh/zshenv file DOES NOT EXIST \e[0m"
+    elif [[ ! -f /etc/zsh/zshenv && $(uname) == FreeBSD ]]; then
+	    print "\e[1m WARNING!! /etc/zsh/zshenv file DOES NOT EXIST \e[0m"
 	fi
+	 
 	if [[ ! -f $HOME/.zshenv ]]; then
 		print "\e[1m WARNING!! $HOME/.zshenv file DOES NOT EXIST \e[0m"		
 	fi
