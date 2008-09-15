@@ -347,7 +347,10 @@ if [[ -o interactive ]]; then
 							# This gets known hosts from ~/.ssh/known_hosts
 							#----------------------------------------------
 
-							$( < ~/.ssh/known_hosts | command cut -f 1 -d " " | command cut -f 1 -d , )
+						#	$( < ~/.ssh/known_hosts | command cut -f 1 -d " " | command cut -f 1 -d , )
+							
+							
+							$( < ~/.ssh/known_hosts | command cut -f 1 -d " " | command cut -f 1 -d , | command cut -f 1  -d ":" | sed -e 's/\[//g' -e 's/]//g' )
 
 							)
 
