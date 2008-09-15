@@ -51,8 +51,8 @@
         function FindCocoaApps {
         /usr/bin/locate "/Applications**/*.app" | grep -v Contents
         
-        if [[ -d ~/Applications ]]; then
-            /usr/bin/locate "~/Applications**/*.app" | grep -v Contents
+        if [[ -d $HOME/Applications ]]; then
+            /usr/bin/locate "$HOME/Applications**/*.app" | grep -v Contents
         fi
         
         if [[ -d /Developer/Applications ]]; then
