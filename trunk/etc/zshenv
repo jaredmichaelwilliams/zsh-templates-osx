@@ -183,9 +183,23 @@ fi
 #                                 #
 ###################################
 
-# You should, as a bare minimum, have these in your OS X $PATH:
+# You should, as a bare minimum, have $MINPATH in your OS X $PATH:
 
-MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
+
+if [[ -x /usr/libexec/path_helper ]]; then
+    eval $(/usr/libexec/path_helper -s )
+    MIN_PATH=$PATH:/usr/libexec
+    MANPATH=${MANPATH}
+else
+    MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
+    if [[ -d /usr/X11/share/man ]]; then
+        MANPATH=/usr/share/man:/usr/X11/share/man
+	elif [[ -d /usr/X11R6/share/man ]]; then
+	    MANPATH=/usr/share/man:/usr/X11R6/share/man
+	else 
+	    MANPATH=/usr/share/man
+	fi
+fi
 
 # Then PREPEND or APPEND these to $PATH only if they exist:
 
@@ -270,8 +284,8 @@ fi
 
 # Now assemble and generate the ordered PATH:
 
-
-    PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
+    PATH=$PREPEND_PATH:$MIN_PATH:$APPEND_PATH
+    #PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
 
     # Remove any instances of multiple colons:
 
