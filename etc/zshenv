@@ -9,8 +9,6 @@
                     #################################################
 
 
-
-
 # File  /etc/zshenv  (Use with the accompanying /etc/zshrc)
 # For systemwide install, copy zshenv and zshrc to /etc/zshenv and /etc/zshrc 
 # For individual users, you must install BOTH files as ~/.zshenv and ~/.zshrc
@@ -21,9 +19,6 @@
 # This is always run, even if zsh -f is used
 # So we don't put interactive shell stuff in here, but rather zshrc
 #
-# If fink is not installed in /sw, the alternative directory must be set here.
-# Fink installation does this automatically.
-
 
 # First, disable the zsh-newuser-install mechanism, as it can confuse the new
 # user of these files. Do this by creating an empty ~/.zshrc file if none
@@ -33,6 +28,29 @@ if [[ ! -f  ~/.zshrc ]];then
    touch ~/.zshrc
 fi
 
+# Establish initial conditions for $PATH and $MANPATH consistent with expected behavior:
+
+# You should, as a bare minimum, have $MINPATH in your OS X $PATH:
+
+
+if [[ -x /usr/libexec/path_helper ]]; then
+    eval $(/usr/libexec/path_helper -s )
+    MIN_PATH=$PATH:/usr/libexec
+    MANPATH=${MANPATH}
+else
+    MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
+    if [[ -d /usr/X11/share/man ]]; then
+        MANPATH=/usr/share/man:/usr/X11/share/man
+	elif [[ -d /usr/X11R6/share/man ]]; then
+	    MANPATH=/usr/share/man:/usr/X11R6/share/man
+	else 
+	    MANPATH=/usr/share/man
+	fi
+fi
+
+
+# If fink is not installed in /sw, the alternative directory must be set here.
+# Fink installation does this automatically.
 
 if [[  $(uname) == Darwin ]]; then
 
@@ -179,27 +197,11 @@ fi
 
 ###################################
 #                                 #
-#     Here we set the PATH:       #
+#     Here we add to the PATH:    #
 #                                 #
 ###################################
 
-# You should, as a bare minimum, have $MINPATH in your OS X $PATH:
 
-
-if [[ -x /usr/libexec/path_helper ]]; then
-    eval $(/usr/libexec/path_helper -s )
-    MIN_PATH=$PATH:/usr/libexec
-    MANPATH=${MANPATH}
-else
-    MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
-    if [[ -d /usr/X11/share/man ]]; then
-        MANPATH=/usr/share/man:/usr/X11/share/man
-	elif [[ -d /usr/X11R6/share/man ]]; then
-	    MANPATH=/usr/share/man:/usr/X11R6/share/man
-	else 
-	    MANPATH=/usr/share/man
-	fi
-fi
 
 # Then PREPEND or APPEND these to $PATH only if they exist:
 
