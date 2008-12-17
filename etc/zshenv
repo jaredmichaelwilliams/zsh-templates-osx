@@ -190,7 +190,7 @@ MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
 # Then PREPEND or APPEND these to $PATH only if they exist:
 
 # Note that $SWPREFIX/bin and $SWPREFIX/sbin were *prepended* at the top of the file
-# if you installed fink in $SWPREFIX, so you don't need to add these again.  However,
+# if you installed fink in $SWPREFIX, you don't need to add these again.  However,
 # to ensure the desired priority ordering, I do the following, which together with the
 # typeset -U command, allows fine-tuning of the order without either duplicating or
 # accidently deleting anything from $PATH :
@@ -201,14 +201,16 @@ if [[ -d $SWPREFIX/bin ]]; then
 fi
 
 #### For MacPorts, if present
-if [[ -d /opt/local/bin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin
+if [[ -f ~/.zsh/zsh_macportsfirstinpath ]]; then
+	if [[ -d /opt/local/bin ]]; then
+	    PREPEND_PATH=/opt/local/bin:/opt/local/sbin:$PREPEND_PATH
+	fi
+else
+	if [[ -d /opt/local/bin ]]; then
+	    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin:/opt/local/sbin
+	fi
 fi
 
-#### For MacPorts, if present
-if [[ -d /opt/local/sbin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/opt/local/sbin
-fi
 
 #### For X11, if present
 if [[ -d /usr/X11/bin ]]; then
