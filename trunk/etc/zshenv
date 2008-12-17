@@ -187,6 +187,8 @@ fi
 
 MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
 
+# Then PREPEND or APPEND these to $PATH only if they exist:
+
 # Note that $SWPREFIX/bin and $SWPREFIX/sbin were *prepended* at the top of the file
 # if you installed fink in $SWPREFIX, so you don't need to add these again.  However,
 # to ensure the desired priority ordering, I do the following, which together with the
@@ -198,12 +200,14 @@ if [[ -d $SWPREFIX/bin ]]; then
     PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin
 fi
 
+#### For MacPorts, if present
+if [[ -d /opt/local/bin ]]; then
+    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin
+fi
 
-# Then PREPEND or APPEND these to $PATH only if they exist:
-
-#### For user-installed python framework, if present
-if [[ -d /Library/Frameworks/Python.framework/Versions/Current/bin ]];then
-	PREPEND_PATH=$PREPEND_PATH:/Library/Frameworks/Python.framework/Versions/Current/bin
+#### For MacPorts, if present
+if [[ -d /opt/local/sbin ]]; then
+    PREPEND_PATH=$PREPEND_PATH:/opt/local/sbin
 fi
 
 #### For X11, if present
@@ -218,34 +222,29 @@ if [[ -d /Developer/Tools ]]; then
     PREPEND_PATH=$PREPEND_PATH:/Developer/Tools
 fi
 
-#### For AquaTclTk, if present
-if [[ -d /Library/Tcl/bin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/Library/Tcl/bin
-fi
-
-#### For MacPorts, if present
-if [[ -d /opt/local/bin ]]; then
-    APPEND_PATH=$APPEND_PATH:/opt/local/bin
-fi
-
-#### For MacPorts, if present
-if [[ -d /opt/local/sbin ]]; then
-    APPEND_PATH=$APPEND_PATH:/opt/local/sbin
+#### For /usr/local, if present
+if [[ -d /usr/local/sbin ]]; then
+    APPEND_PATH=usr/local/sbin:$APPEND_PATH
 fi
 
 #### For /usr/local, if present
 if [[ -d /usr/local/bin ]]; then
-    APPEND_PATH=$APPEND_PATH:/usr/local/bin
-fi
-
-#### For /usr/local, if present
-if [[ -d /usr/local/sbin ]]; then
-    APPEND_PATH=$APPEND_PATH:/usr/local/sbin
+    APPEND_PATH=/usr/local/bin:$APPEND_PATH
 fi
 
 #### For /usr/local/xtal, if present
 if [[ -d /usr/local/xtal/bin ]]; then
     APPEND_PATH=$APPEND_PATH:/usr/local/xtal/bin
+fi
+
+#### For user-installed python framework, if present
+if [[ -d /Library/Frameworks/Python.framework/Versions/Current/bin ]];then
+	APPEND_PATH=$APPEND_PATH:/Library/Frameworks/Python.framework/Versions/Current/bin
+fi
+
+#### For AquaTclTk, if present
+if [[ -d /Library/Tcl/bin ]]; then
+    APPEND_PATH=$APPEND_PATH:/Library/Tcl/bin
 fi
 
 #### For user's own bin directory, if present
@@ -264,7 +263,7 @@ fi
 # worries you.
 
 
-    APPEND_PATH=$APPEND_PATH:.
+#    APPEND_PATH=$APPEND_PATH:.
 
 
 # Now assemble and generate the ordered PATH:
@@ -272,9 +271,16 @@ fi
 
     PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
 
-# Remove any instances of multiple colons:
+	# Remove any instances of multiple colons:
 
-    PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
+	PATH=${PATH/::/:}
 
 #
 # Export PATH as separate command to avoid dollar signs in export line
@@ -324,7 +330,13 @@ fi
 
 # Remove any instances of multiple colons:
 
-    FPATH=${FPATH/::/:}
+		FPATH=${FPATH/::/:}		
+		FPATH=${FPATH/::/:}		
+		FPATH=${FPATH/::/:}
+		FPATH=${FPATH/::/:}
+		FPATH=${FPATH/::/:}
+		FPATH=${FPATH/::/:}
+		FPATH=${FPATH/::/:}
 
 export FPATH
 
