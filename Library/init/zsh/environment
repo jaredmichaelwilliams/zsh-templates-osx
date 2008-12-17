@@ -305,7 +305,7 @@ if [[ -o interactive ]]; then
 	     NO_glob_assign          \
 	        glob_complete        \
 	     NO_glob_dots            \
-	        glob_subst           \
+	     NO_glob_subst           \
 	        hash_cmds            \
 	        hash_dirs            \
 	        hash_list_all        \
