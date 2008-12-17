@@ -226,7 +226,7 @@ fi
 
 #### For /usr/local, if present
 if [[ -d /usr/local/sbin ]]; then
-    APPEND_PATH=usr/local/sbin:$APPEND_PATH
+    APPEND_PATH=/usr/local/sbin:$APPEND_PATH
 fi
 
 #### For /usr/local, if present
