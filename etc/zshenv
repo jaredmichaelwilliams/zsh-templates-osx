@@ -1,12 +1,12 @@
 
 
-					#################################################
-					#################################################
-					#                                               #
-					#        /etc/zshenv    OR    ~/.zshenv         #
-					#                                               #
-					#################################################
-					#################################################
+                    #################################################
+                    #################################################
+                    #                                               #
+                    #        /etc/zshenv    OR    ~/.zshenv         #
+                    #                                               #
+                    #################################################
+                    #################################################
 
 
 
@@ -59,12 +59,12 @@ mkdir -p ~/.zsh
 
 
 if [[ $(uname) == Darwin ]];then
-	ZDOT='/Library/init/zsh'
-	ZDOT_USER="$HOME/Library/init/zsh"
+    ZDOT='/Library/init/zsh'
+    ZDOT_USER="$HOME/Library/init/zsh"
     ZDOT_TEMPLATE="$SWPREFIX/share/zsh/templates/Library/init/zsh"
 elif [[ $(uname) == Linux ]];then
-	ZDOT='/etc/zsh/init/zsh'	
-	ZDOT_USER='~/.zsh'
+    ZDOT='/etc/zsh/init/zsh'    
+    ZDOT_USER='~/.zsh'
 elif [[ $(uname) == FreeBSD ]];then
     ZDOT='/etc/zsh/init/zsh'
     ZDOT_USER='~/.zsh'
@@ -74,19 +74,19 @@ fi
 # Only export those directories that really exist:
 
 if [[ -d $ZDOT ]];then
-	export ZDOT
+    export ZDOT
 else
-	export ZDOT=""
+    export ZDOT=""
 fi
 if [[ -d $ZDOT_USER ]];then
-	export ZDOT_USER
+    export ZDOT_USER
 else
-	export ZDOT_USER=""
+    export ZDOT_USER=""
 fi
 if [[ -d $ZDOT_TEMPLATE ]];then
-	export ZDOT_TEMPLATE
+    export ZDOT_TEMPLATE
 else
-	export ZDOT_TEMPLATE=""
+    export ZDOT_TEMPLATE=""
 fi
 
 
@@ -99,19 +99,19 @@ fi
 
 
 if [[ ! -d $ZDOT && -d $ZDOT_TEMPLATE ]];then
-	ZDOT="$ZDOT_TEMPLATE"
-	export ZDOT
-	# Notify user of what is happening:
-	if [[ -z $SSH_CONNECTION && -o interactive ]];then 
-	    print "Using template files installed in $ZDOT"
-	fi
+    ZDOT="$ZDOT_TEMPLATE"
+    export ZDOT
+    # Notify user of what is happening:
+    if [[ -z $SSH_CONNECTION && -o interactive ]];then 
+        print "Using template files installed in $ZDOT"
+    fi
 elif [[ ! -d $ZDOT && -d $ZDOT_USER ]];then
-	ZDOT="$ZDOT_USER"
-	export ZDOT
-	# Notify user of what is happening:
-	if [[ -z $SSH_CONNECTION && -o interactive ]];then 
-		print "Using template files installed in $ZDOT"
-	fi
+    ZDOT="$ZDOT_USER"
+    export ZDOT
+    # Notify user of what is happening:
+    if [[ -z $SSH_CONNECTION && -o interactive ]];then 
+        print "Using template files installed in $ZDOT"
+    fi
 fi
 
 
@@ -239,7 +239,7 @@ fi
 
 #### For user-installed python framework, if present
 if [[ -d /Library/Frameworks/Python.framework/Versions/Current/bin ]];then
-	APPEND_PATH=$APPEND_PATH:/Library/Frameworks/Python.framework/Versions/Current/bin
+    APPEND_PATH=$APPEND_PATH:/Library/Frameworks/Python.framework/Versions/Current/bin
 fi
 
 #### For AquaTclTk, if present
@@ -259,8 +259,8 @@ fi
 
 # Append current directory at the very end of the path, not the beginning.  
 # Some people consider this to be a minor security hazard.  Putting it at the
-# end of the path minimizes the potential hazard.  Comment it out if this
-# worries you.
+# end of the path minimizes the potential hazard.  Uncomment it if this
+# what you want.
 
 
 #    APPEND_PATH=$APPEND_PATH:.
@@ -271,16 +271,18 @@ fi
 
     PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
 
-	# Remove any instances of multiple colons:
+    # Remove any instances of multiple colons:
 
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
-	PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    PATH=${PATH/::/:}
+    # Remove leading : if present
+    PATH=${PATH#:}  
 
 #
 # Export PATH as separate command to avoid dollar signs in export line
@@ -330,13 +332,15 @@ fi
 
 # Remove any instances of multiple colons:
 
-		FPATH=${FPATH/::/:}		
-		FPATH=${FPATH/::/:}		
-		FPATH=${FPATH/::/:}
-		FPATH=${FPATH/::/:}
-		FPATH=${FPATH/::/:}
-		FPATH=${FPATH/::/:}
-		FPATH=${FPATH/::/:}
+        FPATH=${FPATH/::/:}     
+        FPATH=${FPATH/::/:}     
+        FPATH=${FPATH/::/:}
+        FPATH=${FPATH/::/:}
+        FPATH=${FPATH/::/:}
+        FPATH=${FPATH/::/:}
+        FPATH=${FPATH/::/:}
+        # Remove leading : if present
+        FPATH=${FPATH#:}  
 
 export FPATH
 
