@@ -32,13 +32,16 @@ fi
 
 # You should, as a bare minimum, have $MINPATH in your OS X $PATH:
 
-
 if [[ -x /usr/libexec/path_helper ]]; then
     eval $(/usr/libexec/path_helper -s )
+    # Minimal $PATH set automatically
     MIN_PATH=$PATH:/usr/libexec
+    # Minimal $MANPATH set automatically
     MANPATH=${MANPATH}
 else
+    # Alternative Minimal $PATH set manually
     MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
+    # Alternative Minimal $MANPATH set manually
     if [[ -d /usr/X11/share/man ]]; then
         MANPATH=/usr/share/man:/usr/X11/share/man
 	elif [[ -d /usr/X11R6/share/man ]]; then
@@ -286,8 +289,8 @@ fi
 
 # Now assemble and generate the ordered PATH:
 
-    PATH=$PREPEND_PATH:$MIN_PATH:$APPEND_PATH
-    #PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
+    #PATH=$PREPEND_PATH:$MIN_PATH:$APPEND_PATH
+    PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
 
     # Remove any instances of multiple colons:
 
