@@ -10,7 +10,7 @@
 	<true/>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Library/init/zsh/local-functions/etc/faster_open.zsh</string>
+		<string>/Library/init/zsh/zshrc.d/local-functions/etc/faster_open.zsh</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

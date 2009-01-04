@@ -10,7 +10,7 @@
 	<true/>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/Library/init/zsh/local-functions/darwin/_FinkMakeListCache</string>
+		<string>/Library/init/zsh/zshrc.d/local-functions/darwin/_FinkMakeListCache</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
