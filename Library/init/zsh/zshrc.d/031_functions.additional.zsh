@@ -1,12 +1,12 @@
-					
+                    
 
-					#################################################
-					#################################################
-					#                                               #
-					#              $ZDOT/functions.local            #
-					#                                               #
-					#################################################
-					#################################################
+        #################################################
+        #################################################
+        #                                               #
+        #        $ZDOT/functions.additional.zsh         #
+        #                                               #
+        #################################################
+        #################################################
 
 
 
@@ -52,16 +52,16 @@ if [[ -o interactive ]]; then
 
 
 
-		########################################################
-		#                                                      #
+        ########################################################
+        #                                                      #
         #       For system-wide control, edit these:           #
-		#                                                      #
-		        LOAD_ESSENTIAL_FUNCTIONS='YES'                 #
+        #                                                      #
+                LOAD_ESSENTIAL_FUNCTIONS='YES'                 #
         #                                                      #    
-		        LOAD_POSSIBLY_ANNOYING_FUNCTIONS='NO'          #
+                LOAD_POSSIBLY_ANNOYING_FUNCTIONS='NO'          #
         #                                                      #   
-		        LOAD_CRYSTAL_FUNCTIONS='NO'                    #
-		#                                                      #
+                LOAD_CRYSTAL_FUNCTIONS='NO'                    #
+        #                                                      #
         ########################################################      
 
 
@@ -83,76 +83,76 @@ if [[ -o interactive ]]; then
     
       # functions that are not Darwin-specific:
         
-		# Abbrreviate standard unix command sequences
+        # Abbrreviate standard unix command sequences
         autoload -U fds 
-		autoload -U fdsa 
-		autoload -U pgrep 
-		autoload -U hgrep 
-		autoload -U pidof 
-		autoload -U errnum 
-		autoload -U ldirs 
-		autoload -U go 
-		autoload -U stoppedjobs 
+        autoload -U fdsa 
+        autoload -U pgrep 
+        autoload -U hgrep 
+        autoload -U pidof 
+        autoload -U errnum 
+        autoload -U ldirs 
+        autoload -U go 
+        autoload -U stoppedjobs 
         autoload -U gunall 
-		autoload -U showalias 
-		autoload -U ppath 
-		autoload -U dotgrep 
-		autoload -U sgrep 
-		autoload -U envgrep
+        autoload -U showalias 
+        autoload -U ppath 
+        autoload -U dotgrep 
+        autoload -U sgrep 
+        autoload -U envgrep
         autoload -U renice_grep 
-		autoload -U txtgrep 
-		autoload -U lgrep 
-		autoload -U whichre 
-		autoload -U dusize 
-		
-		 
+        autoload -U txtgrep 
+        autoload -U lgrep 
+        autoload -U whichre 
+        autoload -U dusize 
+        
+         
         # sudo-enabled vim
-		autoload -U vi vim gvim  
-		
-		# Use imagemagic to make black background transparent
-		autoload -U make_trasparent
-		
-		# catenate pdf files with ghostscript
-		autoload -U joinpdf 
-		  
-		# locate "*/${@}"
-		autoload -U locwd
-			
-		# find dependencies from fink or linux debian packages
-		autoload -U depfinder
+        autoload -U vi vim gvim  
+        
+        # Use imagemagic to make black background transparent
+        autoload -U make_trasparent
+        
+        # catenate pdf files with ghostscript
+        autoload -U joinpdf 
+          
+        # locate "*/${@}"
+        autoload -U locwd
+            
+        # find dependencies from fink or linux debian packages
+        autoload -U depfinder
         
         # run a remote command
-		# hostname followed by command string
-		autoload -U rcommand
-		
-        # Find duplicate files
-		autoload -U find_dups
+        # hostname followed by command string
+        autoload -U rcommand
         
-		# cd to $_ or if a file, to dirname $_
-		autoload -U cd_
+        # Find duplicate files
+        autoload -U find_dups
+        
+        # cd to $_ or if a file, to dirname $_
+        autoload -U cd_
 
-		# Use tidy to convert to XHTML
-		autoload -U tidyxml
-		
-		# Show the named function's arguments
-		autoload -U function_content
+        # Use tidy to convert to XHTML
+        autoload -U tidyxml
+        
+        # Show the named function's arguments
+        autoload -U function_content
     
         # stuff for keeper suite
         autoload -U keep; alias keep='noglob keep'  
 
         # For cd? (shared directory stack)
-		autoload -U dirstack dirdump cpath
-			# keep the ~/.zsh/zdirdump file from growing too long (250 entries seems ok)
-	        tmp_timestamp=$(date | awk '{print $4}')           
-	        command touch ~/.zsh/zdirdump
-	        command cp ~/.zsh/zdirdump /tmp/$tmp_timestamp.zdirdump
-	        command tail -n 250 /tmp/$tmp_timestamp.zdirdump >| ~/.zsh/zdirdump
-	        command rm -f /tmp/$tmp_timestamp.zdirdump
-		
-			# Do this instead of defining a chpwd function with "dirdump" in it:
-			typeset -ga chpwd_functions
-			chpwd_functions+=dirdump
-		# ---------------------------------------------------------------------
+        autoload -U dirstack dirdump cpath
+            # keep the ~/.zsh/zdirdump file from growing too long (250 entries seems ok)
+            tmp_timestamp=$(date | awk '{print $4}')           
+            command touch ~/.zsh/zdirdump
+            command cp ~/.zsh/zdirdump /tmp/$tmp_timestamp.zdirdump
+            command tail -n 250 /tmp/$tmp_timestamp.zdirdump >| ~/.zsh/zdirdump
+            command rm -f /tmp/$tmp_timestamp.zdirdump
+        
+            # Do this instead of defining a chpwd function with "dirdump" in it:
+            typeset -ga chpwd_functions
+            chpwd_functions+=dirdump
+        # ---------------------------------------------------------------------
 
 
       # functions that are Darwin-specific:
@@ -168,156 +168,156 @@ if [[ -o interactive ]]; then
         fi
     
 
-			# This is used to prompt a new user to configure the templates
-			# in a user-specific manner.
-			autoload -U configure_zsh_templates
-			
-			# This is required for many of the GUI scripts
-			# Don't turn it off
-			autoload -U pashua_run
-			
+            # This is used to prompt a new user to configure the templates
+            # in a user-specific manner.
+            autoload -U configure_zsh_templates
+            
+            # This is required for many of the GUI scripts
+            # Don't turn it off
+            autoload -U pashua_run
+            
             # wrapper needed for new _fink fast completions
-			autoload -U fink  
+            autoload -U fink  
             autoload -U fink_web sync_fink ; alias finkweb='fink_web'
     
             # Terminal-Finder interactions
-			autoload -U cdf posd posgrep posfind fdc cdd cpos  full_path_in_finder
-			
-			# Terminal-ForkLift interactions
-			if [[ -f  $HOME/Library/Preferences/com.binarynights.ForkLift.plist  ]]; then
-			    autoload -U forklift cdright cdleft
-			fi
-			
-			# Terminal-Safari interactions
-			autoload -U cds spath eds
-			
-			# iTerm osascript/shell script functions
+            autoload -U cdf posd posgrep posfind fdc cdd cpos  full_path_in_finder
+            
+            # Terminal-ForkLift interactions
+            if [[ -f  $HOME/Library/Preferences/com.binarynights.ForkLift.plist  ]]; then
+                autoload -U forklift cdright cdleft
+            fi
+            
+            # Terminal-Safari interactions
+            autoload -U cds spath eds
+            
+            # iTerm osascript/shell script functions
             autoload -U ntab ntrm tcmd
 
-			# a "locate" command that uses mdfind
-			autoload -U mlocate
-			
- 			# Pasteboard interactions
-			autoload -U  pbcp  
-			autoload -U  cpbcp
-			
-			
-			# Hardware interactions
-			autoload -U  scrollspeed 
-			autoload -U  function_key_toggle
-			autoload -U  airport battery numcpu
+            # a "locate" command that uses mdfind
+            autoload -U mlocate
+            
+            # Pasteboard interactions
+            autoload -U  pbcp  
+            autoload -U  cpbcp
+            
+            
+            # Hardware interactions
+            autoload -U  scrollspeed 
+            autoload -U  function_key_toggle
+            autoload -U  airport battery numcpu
 
-			
-			# Fast user switching
-			autoload -U  switch_users
-			
-			# "open" and related functions for starting and stopping Apps.
+            
+            # Fast user switching
+            autoload -U  switch_users
+            
+            # "open" and related functions for starting and stopping Apps.
             autoload -U  quit open sudo_open enable_faster_open zsh_cache_cleaner
             
             # Help/information functions
-			autoload -U help_template_functions help_zsh_templates whichfunctions whatsnew
+            autoload -U help_template_functions help_zsh_templates whichfunctions whatsnew
 
-			# Start Screen Saver
-			autoload -U  sss
+            # Start Screen Saver
+            autoload -U  sss
 
-			# Functions to fill and take out the trash
-			autoload -U MacRm empty_trash
-			
-			# lsbom the listed package with the given arguments
-			autoload -U mybom
-			
-			# Internet
-			autoload -U myip  renew_dhcp 
+            # Functions to fill and take out the trash
+            autoload -U MacRm empty_trash
+            
+            # lsbom the listed package with the given arguments
+            autoload -U mybom
+            
+            # Internet
+            autoload -U myip  renew_dhcp 
  
-			# X11.app customization
+            # X11.app customization
             autoload -U  customize_x11 customize_x11_gui 
 
-			# Nested (xnest) window manager sessions
-			autoload -U startenlightenment 
-			autoload -U startwm
-			
-			# Aptly named GUI to focus various X-windows
-			autoload -U xtwit
-			
-			# Non-nested subsidiary X-displays
-			  # start the specified 8-bit X11 process
-			autoload -U 8bitx
-			  # start arbitrary process 
-			autoload -U newx 
-			  # start a remote X-windows session
-			autoload -U remotex
-			
-			# Make an image file the desktop background
-			autoload -U wallpaper
-			
-			# Add a photo icon to an image file -- uses sips
-			autoload -U addIcon
-			
-			# Send mail using Apple's Mail.app
+            # Nested (xnest) window manager sessions
+            autoload -U startenlightenment 
+            autoload -U startwm
+            
+            # Aptly named GUI to focus various X-windows
+            autoload -U xtwit
+            
+            # Non-nested subsidiary X-displays
+              # start the specified 8-bit X11 process
+            autoload -U 8bitx
+              # start arbitrary process 
+            autoload -U newx 
+              # start a remote X-windows session
+            autoload -U remotex
+            
+            # Make an image file the desktop background
+            autoload -U wallpaper
+            
+            # Add a photo icon to an image file -- uses sips
+            autoload -U addIcon
+            
+            # Send mail using Apple's Mail.app
             autoload -U macmail 
-				# uncommend for a drop-in mail command replacement
-				# alias mail="macmail"
+                # uncommend for a drop-in mail command replacement
+                # alias mail="macmail"
 
-			# toggle AppleEvent logging on or off
- 			autoload -U aeon 
+            # toggle AppleEvent logging on or off
+            autoload -U aeon 
 
-			# Make zip archive with ditto while keeping parent
-			autoload -U zipit  
-			
-			# list all (OS X) locked files
-			autoload -U llock
-			
-			# Turn off (and if you must, on) those stupid widgets
+            # Make zip archive with ditto while keeping parent
+            autoload -U zipit  
+            
+            # list all (OS X) locked files
+            autoload -U llock
+            
+            # Turn off (and if you must, on) those stupid widgets
             autoload -U disable_Dashboard enable_Dashboard
-			
-			# GUI interface to the user and host completion systems
+            
+            # GUI interface to the user and host completion systems
             autoload -U  user_setup host_setup
 
-			# View most things in Preview (needs a2ps installed)
+            # View most things in Preview (needs a2ps installed)
             autoload -U a2preview da2preview
-			
-			# Meta-functions for osascript/shellscript GUI programming
+            
+            # Meta-functions for osascript/shellscript GUI programming
             autoload -U osa_direc_browser osa_file_browser osa_choose_list osa_display_dialog
-						
-			# TextMate.app project-opener command-line utility
-			autoload -U tmpj # function to open saved projects with programmed completion
-			autoload -U mate # wrapper opens html in Safari and TextMate simultaneously
+                        
+            # TextMate.app project-opener command-line utility
+            autoload -U tmpj # function to open saved projects with programmed completion
+            autoload -U mate # wrapper opens html in Safari and TextMate simultaneously
             autoload -U cdt  # cd to directory in frontmost TextMate window
-			
-			# Growl-related functions (precommands)
-			if [[ -x $(which growlnotify) ]]; then
-				autoload -U gnotify snotify
-			fi
-			
-			# General editor functions: 
-			autoload -U composer edit
-			
-			# For VirtueDesktops and CodeTek Virtual Desktops
+            
+            # Growl-related functions (precommands)
+            if [[ -x $(which growlnotify) ]]; then
+                autoload -U gnotify snotify
+            fi
+            
+            # General editor functions: 
+            autoload -U composer edit
+            
+            # For VirtueDesktops and CodeTek Virtual Desktops
             # A function to switch desktops
             autoload -U sd
 
-			# Toggle SPACES on and off
-			
-			if [[ $(sw_vers -productVersion) < 10.5 ]]; then
-				/usr/bin/true
-			else
-				autoload -U toggle_spaces switcher
-			fi
+            # Toggle SPACES on and off
+            
+            if [[ $(sw_vers -productVersion) < 10.5 ]]; then
+                /usr/bin/true
+            else
+                autoload -U toggle_spaces switcher
+            fi
 
-	        # These need to be invoked by an admin user.
-			if [[ -n $(/usr/bin/id -p $USER | grep -w admin ) ]]; then
+            # These need to be invoked by an admin user.
+            if [[ -n $(/usr/bin/id -p $USER | grep -w admin ) ]]; then
 
-	            # functions to add (or delete) groups and users to groups
-	            autoload -U add_user       addgroup        adduser2group 
-	            autoload -U delete_user    delete_group    remove_user_from_group
+                # functions to add (or delete) groups and users to groups
+                autoload -U add_user       addgroup        adduser2group 
+                autoload -U delete_user    delete_group    remove_user_from_group
            
-	            # Two functions to help with nfs mounts and exports:
-	            autoload -U exportfs nfs_niloader
-				alias nfs_automounter="nfs_niloader"
+                # Two functions to help with nfs mounts and exports:
+                autoload -U exportfs nfs_niloader
+                alias nfs_automounter="nfs_niloader"
                 # if Apple someday includes an exportfs command, this should be
                 # renamed or turned off
-		         
-    		fi # test for admin
+                 
+            fi # test for admin
 
             # autoload open-x11 # Doesn't work correctly.  Use this workaround:
             function open-x11 {
@@ -347,26 +347,26 @@ if [[ -o interactive ]]; then
                 # GUIDIRS_PASHUA='no'        
             if [[ $GUIDIRS_PASHUA == 'yes' ]];then
                 autoload guidirs_pashua
-				function gdirs { 
-					typeset -U dirs_shared
-					dirstack $1 > /dev/null
-					guidirs_pashua  2> /dev/null
-				}
+                function gdirs { 
+                    typeset -U dirs_shared
+                    dirstack $1 > /dev/null
+                    guidirs_pashua  2> /dev/null
+                }
                 # alias gdirs="typeset -U dirs_shared; dirstack > /dev/null ; guidirs_pashua"
              else
                 autoload _guidirs
-				function gdirs { 
-					typeset -U dirs_shared
-					dirstack $1 > /dev/null
-					_guidirs 2> /dev/null 
-				}
+                function gdirs { 
+                    typeset -U dirs_shared
+                    dirstack $1 > /dev/null
+                    _guidirs 2> /dev/null 
+                }
                 # alias gdirs="typeset -U dirs_shared; dirstack > /dev/null ; _guidirs"
              fi
-			
-			 typeset -U dirs_shared
-			
-			# The command-line version is "dirstack" or cd\?.  Defined in $ZDOT/zshrc.d/aliases.local
-			# alias cd\?="dirdump; typeset -U dirs_shared; dirstack"
+            
+             typeset -U dirs_shared
+            
+            # The command-line version is "dirstack" or cd\?.  Defined in $ZDOT/zshrc.d/aliases.local
+            # alias cd\?="dirdump; typeset -U dirs_shared; dirstack"
               
                 
       fi   ## end ##  [[ $(uname) == Darwin ]]
@@ -386,18 +386,18 @@ if [[ -o interactive ]]; then
             FPATH=$ZDOT/zshrc.d/local-functions/opt:$FPATH
         fi
         
-		# An augmented man function to read zsh shell builtins and helpfiles.
+        # An augmented man function to read zsh shell builtins and helpfiles.
          autoload -U man
-		 autoload -U screen
-		
-		# Wrapper for sudo so when "sudo zsh" is invoked, 
-		# zsh will start root as a loging zsh shell to
-		# avoid problems with environment clashes.
-		 autoload -U sudo
-		
-		#idiosyncratic ls variations
+         autoload -U screen
+        
+        # Wrapper for sudo so when "sudo zsh" is invoked, 
+        # zsh will start root as a loging zsh shell to
+        # avoid problems with environment clashes.
+         autoload -U sudo
+        
+        #idiosyncratic ls variations
          function lh { command ls -hltF "$@" | head }   
-		 autoload -U ldot
+         autoload -U ldot
          alias ll='ls -l'  
          
          if [[ $(uname) == Darwin ]];then 
@@ -435,28 +435,28 @@ if [[ -o interactive ]]; then
         autoload -U ccp4_patches # Check for new ccp4 patches
 
         # Augmented coot function wrapper
-		autoload -U coot 
-		
-		# Does what it claims
-		autoload -U sca2mtz 
-		
-		# Use default scala settins to process mosflm data
-		# ending with truncated mtz file and cns hkl files.
-		# Mercilessly interactive osa/shell script
-		autoload -U mos2fobs 
-		
-		# Launcher for MacPyMOL unix binary
-		autoload -U pymol 
-		
-		# Overlay two (eg) pdf Patterson maps
-		autoload -U overlay 
+        autoload -U coot 
+        
+        # Does what it claims
+        autoload -U sca2mtz 
+        
+        # Use default scala settins to process mosflm data
+        # ending with truncated mtz file and cns hkl files.
+        # Mercilessly interactive osa/shell script
+        autoload -U mos2fobs 
+        
+        # Launcher for MacPyMOL unix binary
+        autoload -U pymol 
+        
+        # Overlay two (eg) pdf Patterson maps
+        autoload -U overlay 
 
- 		# If you have foo.mtz and foo.pdb from refmac, these make
-		# 2Fo-Fc and Fo-Fc maps
+        # If you have foo.mtz and foo.pdb from refmac, these make
+        # 2Fo-Fc and Fo-Fc maps
         autoload -U mapcover mapcoverdiff
         
-		# Xnested wrappers:  X11 bug workaround
-		autoload -U xdlmapman xdldataman
+        # Xnested wrappers:  X11 bug workaround
+        autoload -U xdlmapman xdldataman
         
         # Function to download PDB files from the PDB server
         autoload -U getpdb
@@ -469,36 +469,36 @@ if [[ -o interactive ]]; then
         # A better cns_edit and cns_web
         autoload -U cns_edit cns_web
 
-		# Activate the environment.xtal script
-		touch ~/.zsh/use_xtal_env
+        # Activate the environment.xtal script
+        touch ~/.zsh/use_xtal_env
 
     fi  ## end ## [[ $LOAD_CRYSTAL_FUNCTIONS == 'YES' ]]
     
-	#########################################################################    
-	
+    #########################################################################    
+    
     #----------------------------------------------------------- 
     # Choose default shell prompt AND Update terminal Titlebar and Tab
     #-----------------------------------------------------------
 
-	# Load the default zsh prompt switching command-line interface
+    # Load the default zsh prompt switching command-line interface
     autoload -U promptinit; promptinit
 
-	# This activates the settitle, settab functions that will persist
-	# even if you change to a customizable prompt. 
-	# If you don't want to use settab and settitle, then issue the command
-	# "touch ~/.zsh/notitletabs" .  Note that the "simple" prompt will over-ride
-	# this setting.
-	
-	if [[ ! -f ~/.zsh/notitletabs ]]; then
-		autoload -U set_title_tab
-		set_title_tab
-	fi
-	
-	
-	# If we have OS X, load the GUI switching interface as well
-	
+    # This activates the settitle, settab functions that will persist
+    # even if you change to a customizable prompt. 
+    # If you don't want to use settab and settitle, then issue the command
+    # "touch ~/.zsh/notitletabs" .  Note that the "simple" prompt will over-ride
+    # this setting.
+    
+    if [[ ! -f ~/.zsh/notitletabs ]]; then
+        autoload -U set_title_tab
+        set_title_tab
+    fi
+    
+    
+    # If we have OS X, load the GUI switching interface as well
+    
     if [[ $(uname) == "Darwin" ]]; then
-    	autoload -U  switch_prompt
+        autoload -U  switch_prompt
     fi
     
     # To customize the prompt, copy $ZDOT_TEMPLATE/zshrc.d/prompt to
@@ -513,7 +513,7 @@ if [[ -o interactive ]]; then
        source $ZDOT_TEMPLATE/zshrc.d/prompt
     fi
 
-	#########################################################################    
+    #########################################################################    
     
     # This alters the default behavior of the  completion
     # functions.   If  set  to  on, words which have more
@@ -523,7 +523,7 @@ if [[ -o interactive ]]; then
     set show-all-if-ambiguous on
     # needed here so it works the first time (why?)
 
-	
+    
 fi ## end ## [[ -o interactive ]]
 
 ###############################################################################    
