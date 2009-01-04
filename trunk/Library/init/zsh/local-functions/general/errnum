@@ -1,2 +1,0 @@
-#!/bin/zsh -f 
-command grep -i "[ -]${1}[ ,]" /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/CarbonCore.framework/Versions/Current/Headers/MacErrors.h 

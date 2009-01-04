@@ -1,6 +1,0 @@
-#compdef coot
-autoload -U _files_only
-#local expl
- _description files  expl %B'--- files loadable into coot ---'%b
-_files_only "$expl[@]" -g '*.(pdb|brk|ent|map|mtz|cif|ccp4|scm|phs)'
-

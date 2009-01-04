@@ -1,2 +1,0 @@
-#!/bin/zsh -f 
-command  ps -auxww | command grep -i "${1}" | command grep -v "[p ]grep" 

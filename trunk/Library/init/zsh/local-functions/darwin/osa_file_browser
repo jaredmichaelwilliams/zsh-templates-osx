@@ -1,9 +1,0 @@
-#!/bin/zsh -f
-osascript <<-eof
-tell app "Finder"
-     activate
-     set f to POSIX path of ((choose file with prompt \
-     "Select a file:\
-       $Example") as string) 
-     end
-eof
