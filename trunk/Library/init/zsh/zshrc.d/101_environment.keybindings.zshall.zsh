@@ -1,12 +1,11 @@
 
-
-                    ##################################################################
-                    ##################################################################
-                    #                                                                #
-                    #       $ZDOT/zshrc.d/environment.keybindings.zshall.zsh         #
-                    #                                                                #
-                    ##################################################################
-                    ##################################################################
+          ##################################################################
+          ##################################################################
+          #                                                                #
+          #       $ZDOT/zshrc.d/environment.keybindings.zshall.zsh         #
+          #                                                                #
+          ##################################################################
+          ##################################################################
 
 
 
@@ -59,8 +58,8 @@ if [[ -o interactive ]]; then
     bindkey '\e\e[D' backward-word
     #bindkey '\e[A'  up-line-or-history
     #bindkey '\e[B'  down-line-or-history
-	bindkey '\e[A'  history-search-backward 
-	bindkey '\e[B'  history-search-forward
+    bindkey '\e[A'  history-search-backward 
+    bindkey '\e[B'  history-search-forward
     #bindkey '^[p' history-beginning-search-backward
     #bindkey '^[n' history-beginning-search-forward
 
@@ -81,7 +80,7 @@ if [[ -o interactive ]]; then
 
     # alias no=ls  # for Dvorak
 
-	bindkey '^L' push-input
+    bindkey '^L' push-input
 
     # }}}
 fi
