@@ -1,384 +1,121 @@
-
-
-                    #################################################
-                    #################################################
-                    #                                               #
-                    #        /etc/zshenv    OR    ~/.zshenv         #
-                    #                                               #
-                    #################################################
-                    #################################################
-
-
-# File  /etc/zshenv  (Use with the accompanying /etc/zshrc)
-# For systemwide install, copy zshenv and zshrc to /etc/zshenv and /etc/zshrc 
-# For individual users, you must install BOTH files as ~/.zshenv and ~/.zshrc
-# i.e, cp zshenv ~/.zshenv    and   cp zshrc  ~/.zshrc 
-
-# print "Running /etc/zshenv"  # Un-comment for debugging or verbose startup.
-
-# This is always run, even if zsh -f is used
-# So we don't put interactive shell stuff in here, but rather zshrc
-#
-
-# First, disable the zsh-newuser-install mechanism, as it can confuse the new
-# user of these files. Do this by creating an empty ~/.zshrc file if none
-# currently exists.
-
-if [[ ! -f  ~/.zshrc ]];then
-   touch ~/.zshrc
-fi
-
-# Establish initial conditions for $PATH and $MANPATH consistent with expected behavior:
-
-# You should, as a bare minimum, have $MINPATH in your OS X $PATH:
-
-if [[ -x /usr/libexec/path_helper ]]; then
-    eval $(/usr/libexec/path_helper -s )
-    # Minimal $PATH set automatically
-    MIN_PATH=$PATH:/usr/libexec
-    # Minimal $MANPATH set automatically
-    MANPATH=${MANPATH}
-else
-    # Alternative Minimal $PATH set manually
-    MIN_PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/libexec
-    # Alternative Minimal $MANPATH set manually
-    if [[ -d /usr/X11/share/man ]]; then
-        MANPATH=/usr/share/man:/usr/X11/share/man
-	elif [[ -d /usr/X11R6/share/man ]]; then
-	    MANPATH=/usr/share/man:/usr/X11R6/share/man
-	else 
-	    MANPATH=/usr/share/man
-	fi
-fi
-
-
-# If fink is not installed in /sw, the alternative directory must be set here.
-# Fink installation does this automatically.
-
-if [[  $(uname) == Darwin ]]; then
-
-    if [[ -d /sw/fink ]]; then
-        export SWPREFIX='/sw'
-    else
-        export SWPREFIX='ALT_SWPREFIX'
-    fi
-
-fi
-
-# *******************************************************************************
-
-# Files in /etc and in the user directory are read by default on OS X.  
-# Files in $SWPREFIX/etc and in the user directory are read by default for the fink 
-# version of zsh. This file is designed to be compatable with both. Define path to
-# additional alias, environment and function files.  Canonically, the system-wide
-# files on OS X are in /Library/init/zsh.  
-
-# Files in /etc/zsh and in the user directory are read by default on Ubuntu linux.
-# We will assume the best place for files to go is /etc/zsh/init/zsh
-
-mkdir -p ~/.zsh
-
-
-if [[ $(uname) == Darwin ]];then
-    ZDOT='/Library/init/zsh'
-    ZDOT_USER="$HOME/Library/init/zsh"
-    ZDOT_TEMPLATE="$SWPREFIX/share/zsh/templates/Library/init/zsh"
-elif [[ $(uname) == Linux ]];then
-    ZDOT='/etc/zsh/init/zsh'    
-    ZDOT_USER='~/.zsh'
-elif [[ $(uname) == FreeBSD ]];then
-    ZDOT='/etc/zsh/init/zsh'
-    ZDOT_USER='~/.zsh'
-fi
-
-
-# Only export those directories that really exist:
-
-if [[ -d $ZDOT ]];then
-    export ZDOT
-else
-    export ZDOT=""
-fi
-if [[ -d $ZDOT_USER ]];then
-    export ZDOT_USER
-else
-    export ZDOT_USER=""
-fi
-if [[ -d $ZDOT_TEMPLATE ]];then
-    export ZDOT_TEMPLATE
-else
-    export ZDOT_TEMPLATE=""
-fi
-
-
-
-
-# If the user installed everything in $ZDOT_USER and $ZDOTDIR is nonexistent, attempt
-# to globally adjust everything to accomidate this change. Likewise for the 
-# fink-installed version.
-
-
-
-if [[ ! -d $ZDOT && -d $ZDOT_TEMPLATE ]];then
-    ZDOT="$ZDOT_TEMPLATE"
-    export ZDOT
-    # Notify user of what is happening:
-    if [[ -z $SSH_CONNECTION && -o interactive ]];then 
-        print "Using template files installed in $ZDOT"
-    fi
-elif [[ ! -d $ZDOT && -d $ZDOT_USER ]];then
-    ZDOT="$ZDOT_USER"
-    export ZDOT
-    # Notify user of what is happening:
-    if [[ -z $SSH_CONNECTION && -o interactive ]];then 
-        print "Using template files installed in $ZDOT"
-    fi
-fi
-
-
-
-# *******************************************************************************
-
-###################################
-#                                 #
-#  Initialize Fink if it exists:  #
-#                                 #
-###################################
-
-# Test prevents aborting this file if fink is absent
-# Note that programs in fink automatically export environment variables using this
-# file. These live in $SWPREFIX/etc/profile.d/foo.sh
-
-
-if [[ -f $SWPREFIX/bin/init.sh  &&  $(uname) == Darwin ]]; then
-      source $SWPREFIX/bin/init.sh
-      
-elif [[ ! -f ~/.zsh/finknowarn  &&  $(uname) == Darwin ]];then
-  print ""
-  print "\e[1m WARNING!!  Fink does not appear to be present and has not been initialized \e[0m"
-  print ""
-  print "\e[1m If you have not installed fink or you want to get rid of this warning message,\e[0m"
-  print "\e[1m please type \e[0m touch ~/.zsh/finknowarn \e[1m now.\e[0m"
-  print "" 
-fi
-
-
-
-# *******************************************************************************
-
-
-
-####################################
-#                                  #
-#  Export environment variables:   #
-#                                  #
-####################################
-
-
-#     First include Gary Kerbaugh's distribution (which I modified).
-
-# Look for customized file.  If that doesn't exist, use the one provided.
-
-if [[ -f $ZDOT/environment ]]; then
-      source $ZDOT/environment
-           
-elif [[ -f $ZDOT_TEMPLATE/environment  &&  $(uname) == Darwin ]]; then
-      source $ZDOT_TEMPLATE/environment   
-elif [[  $(uname) == Darwin ]]; then
-    print " WARNING!!  Fink zsh templates are absent."
-fi
-
-
-
-# Now our local environment and path variables (including host name completion):
-
-# moved to /etc/zshrc
-
-# *******************************************************************************
-
-
-
-###################################
-#                                 #
-#     Here we add to the PATH:    #
-#                                 #
-###################################
-
-
-
-# Then PREPEND or APPEND these to $PATH only if they exist:
-
-# Note that $SWPREFIX/bin and $SWPREFIX/sbin were *prepended* at the top of the file
-# if you installed fink in $SWPREFIX, you don't need to add these again.  However,
-# to ensure the desired priority ordering, I do the following, which together with the
-# typeset -U command, allows fine-tuning of the order without either duplicating or
-# accidently deleting anything from $PATH :
-
-#### For Fink, if present
-if [[ -d $SWPREFIX/bin ]]; then
-    PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin
-fi
-
-#### For MacPorts, if present
-if [[ -f ~/.zsh/zsh_macportsfirstinpath ]]; then
-	if [[ -d /opt/local/bin ]]; then
-	    PREPEND_PATH=/opt/local/bin:/opt/local/sbin:$PREPEND_PATH
-	fi
-else
-	if [[ -d /opt/local/bin ]]; then
-	    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin:/opt/local/sbin
-	fi
-fi
-
-
-#### For X11, if present
-if [[ -d /usr/X11/bin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/usr/X11/bin
-elif [[ -d /usr/X11R6/bin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/usr/X11R6/bin
-fi
-
-#### For Developer Tools, if present
-if [[ -d /Developer/Tools ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/Developer/Tools
-fi
-
-#### For /usr/local, if present
-if [[ -d /usr/local/sbin ]]; then
-    APPEND_PATH=/usr/local/sbin:$APPEND_PATH
-fi
-
-#### For /usr/local, if present
-if [[ -d /usr/local/bin ]]; then
-    APPEND_PATH=/usr/local/bin:$APPEND_PATH
-fi
-
-#### For /usr/local/xtal, if present
-if [[ -d /usr/local/xtal/bin ]]; then
-    APPEND_PATH=$APPEND_PATH:/usr/local/xtal/bin
-fi
-
-#### For user-installed python framework, if present
-if [[ -d /Library/Frameworks/Python.framework/Versions/Current/bin ]];then
-    APPEND_PATH=$APPEND_PATH:/Library/Frameworks/Python.framework/Versions/Current/bin
-fi
-
-#### For AquaTclTk, if present
-if [[ -d /Library/Tcl/bin ]]; then
-    APPEND_PATH=$APPEND_PATH:/Library/Tcl/bin
-fi
-
-#### For user's own bin directory, if present
-if [[ -d ~/bin ]]; then
-    APPEND_PATH=$APPEND_PATH:~/bin
-fi
-
-#### For user's own hidden bin directory, if present
-if [[ -d ~/.bin ]]; then
-    APPEND_PATH=$APPEND_PATH:~/.bin
-fi
-
-# Append current directory at the very end of the path, not the beginning.  
-# Some people consider this to be a minor security hazard.  Putting it at the
-# end of the path minimizes the potential hazard.  Uncomment it if this
-# what you want.
-
-
-#    APPEND_PATH=$APPEND_PATH:.
-
-
-# Now assemble and generate the ordered PATH:
-
-    #PATH=$PREPEND_PATH:$MIN_PATH:$APPEND_PATH
-    PATH=$PREPEND_PATH:$MIN_PATH:$PATH:$APPEND_PATH
-
-    # Remove any instances of multiple colons:
-
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    PATH=${PATH/::/:}
-    # Remove leading : if present
-    PATH=${PATH#:}  
-
-#
-# Export PATH as separate command to avoid dollar signs in export line
-#
-
-        export PATH
-
-#
-#
-# Avoid repeats in the path
-#
-
-        typeset -U path
-
-
-
-# *******************************************************************************
-
-
-###################################
-#                                 #
-#     Here we set the FPATH:      #
-#                                 #
-###################################
-
-#
-# Set the function path to include local functions and/or my functions 
-# (The order of prepending is important.)
-# Some people add these to their $PATH as well.
-
-if [[ -d $ZDOT_TEMPLATE/local-functions ]]; then
-    FPATH=$ZDOT_TEMPLATE/local-functions:$FPATH
-fi
-
-
-if [[ -d $ZDOT/local-functions ]]; then
-    FPATH=$ZDOT/local-functions:$FPATH
-fi
-
-
-# Moved to /etc/zshrc to ensure that this will be prepended
-# to the $FPATH
+                #################################################
+                #################################################
+                #                                               #
+                #                  /etc/zshenv                  #
+                #                                               #
+                #################################################
+                #################################################
+
+
+# File:  /etc/zshenv
+# Version: 2.0.0
+
+###############################################################################
  
-# if [[ -d $ZDOT_USER/my-functions ]]; then
-#  FPATH=$ZDOT_USER/my-functions:$FPATH
-# fi
-
-# Remove any instances of multiple colons:
-
-        FPATH=${FPATH/::/:}     
-        FPATH=${FPATH/::/:}     
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        # Remove leading : if present
-        FPATH=${FPATH#:}  
-
-export FPATH
-
-typeset -U fpath
-
-# *******************************************************************************
+#  Created by William G. Scott on January 2, 2009.
+#  Copyright (c) . All rights reserved.
 
 
-#################################################################################
-
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
 #
-# Don't kill background jobs upon logging out
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
 #
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
+#    USA
+#    
+#    cf. URL:   http://www.fsf.org/licensing/licenses/gpl.html                 
+#                                                                              
+############################################################################## 
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+############################################################################## 
+######################     Define the minimal $PATH        ################### 
+############################################################################## 
+                                                                               
+#   This file is always read, even with zsh -f .                                 
+#   Therefore this file should contain only directives that cannot be over-
+#   ridden with zsh -f                                                                  
+#                                                                            
+#   Uncomment for debug                                                          
+#   print "reading /etc/zshenv with $0"                                          
+#                                                                            
+#   Create the minimal $PATH and $MANPATH assignments:                           
+                                                                               
+    if [[ -x /usr/libexec/path_helper ]]; then                                 
+        eval $(/usr/libexec/path_helper -s)                                    
+    fi   
+                                                                          
+############################################################################## 
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+##############################################################################
+########################       Define $ZDOT           ########################
+##############################################################################
 
-setopt nohup
+#   Uncomment to assign $ZDOT as appropriate                                    
+#   ZDOT="/Library/init/zsh" ; export ZDOT                                      
+#   otherwise, use the following assignment:                                    
+                                                                                
+    if [[ -z $ZDOT && -d "/Library/init/zsh" ]]; then                         
+        ZDOT="/Library/init/zsh" ; export ZDOT                                
+    elif [[ -d "/etc/zsh/init/zsh" ]]; then                                   
+        ZDOT="/etc/zsh/init/zsh" ; export ZDOT                                
+    fi    
+                                                                        
+##############################################################################
 
 
-# *******************************************************************************
 
 
+
+
+
+
+
+##############################################################################
+#########################        zshenv.d           ##########################
+##############################################################################
+
+#   Put any additional directives for the systemwide zshenv in files within 
+#   ${ZDOT}/zshenv.d
+#   See ${ZDOT}/zshenv.d/README for additional information. In general, you 
+#   shouldn't need to add in anything.
+
+    if [[ -d "${ZDOT}/zshenv.d" ]]; then
+        foreach file in $(command ls ${ZDOT}/zshenv.d/* | grep -v disabled | grep -v README )
+            source $file
+        end
+    fi
+
+##############################################################################
+
+
+
+
+
+# The user's own directives can be put into ~/.zshenv
+
+
+
+
+
+
+ 
