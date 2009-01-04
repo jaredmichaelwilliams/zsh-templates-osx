@@ -1,3 +1,0 @@
-#!/bin/zsh -f
-# pbcp: copy the output of a command to the clipboard and to stdout
- eval "$* | tee /dev/tty | pbcopy"

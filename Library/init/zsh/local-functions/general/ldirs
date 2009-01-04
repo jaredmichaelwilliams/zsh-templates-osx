@@ -1,2 +1,0 @@
-#!/bin/zsh -f 
-command ls -AFlh ${1} | grep "^d"

@@ -1,6 +1,0 @@
-#compdef open-x11 $ZDOT/local-functions/darwin/open-x11 $ZDOT_TEMPLATE/local-functions/darwin/open-x11 /usr/bin/open-x11
-
-  local expl
-
-  _wanted commands expl 'external command' compadd "$@" -k commands
-
