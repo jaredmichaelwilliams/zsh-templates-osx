@@ -1,259 +1,129 @@
+				#################################################
+				#################################################
+				#                                               #
+				#                  /etc/zshrc                   #
+				#                                               #
+				#################################################
+				#################################################
 
 
-					#################################################
-					#################################################
-					#                                               #
-					#        /etc/zshrc     OR     ~/.zshrc         #
-					#                                               #
-					#################################################
-					#################################################
+# File:  /etc/zshrc
+# Version: 2.0.0
 
-
-
-
-#  File /etc/zshrc
-
-# File  /etc/zshrc  (Use with the accompanying /etc/zshenv)
-# For systemwide install, copy zshenv and zshrc to /etc/zshenv and /etc/zshrc 
-# For individual users, you must install BOTH files as ~/.zshenv and ~/.zshrc
-# i.e, cp zshenv ~/.zshenv    and   cp zshrc  ~/.zshrc
-
-# print "Running /etc/zshrc"  # Un-comment for debugging or verbose startup.
-
-# put stuff in here that doesn't belong in /etc/zshenv  (according to purists)
-# i.e, stuff you DON'T want run when you issue /bin/zsh -f
-
-if [[ ! -d $ZDOT ]];then
-	print "\e[1m WARNING!! zshenv file is absent or malfunctioning \e[0m"
-	print "\$ZDOT is undefined: can't find user-installed templates "
-	if [[ ! -f /etc/zshenv && $(uname) == Darwin ]]; then
-		print "\e[1m WARNING!! /etc/zshenv file DOES NOT EXIST \e[0m"
-	elif [[ ! -f /etc/zsh/zshenv && $(uname) == Linux ]]; then
-		print "\e[1m WARNING!! /etc/zsh/zshenv file DOES NOT EXIST \e[0m"
-    elif [[ ! -f /etc/zsh/zshenv && $(uname) == FreeBSD ]]; then
-	    print "\e[1m WARNING!! /etc/zsh/zshenv file DOES NOT EXIST \e[0m"
-	fi
-	 
-	if [[ ! -f $HOME/.zshenv ]]; then
-		print "\e[1m WARNING!! $HOME/.zshenv file DOES NOT EXIST \e[0m"		
-	fi
-	print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-	print "\e[1m You NEED to install BOTH the zshenv and the zshrc files!!! \e[0m"
-	print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-fi
-
-if [[ -f $ZDOT/environment.local ]]; then
-      source $ZDOT/environment.local
-      
-elif [[ -f $ZDOT_TEMPLATE/environment.local ]]; then
-      source $ZDOT_TEMPLATE/environment.local     
-elif [[  $(uname) == Darwin ]]; then
-    print " WARNING!!  Fink zsh templates are absent."
-fi
-   
-if [[ ! -d $ZDOT && -d $ZDOT_TEMPLATE ]];then
-	ZDOT="$ZDOT_TEMPLATE"
-	export ZDOT
-	# Notify user of what is happening:
-	if [[ -z $SSH_CONNECTION && -o interactive ]];then 
-	    print "Using template files installed in $ZDOT"
-	fi
-elif [[ ! -d $ZDOT && -d $ZDOT_USER ]];then
-	ZDOT="$ZDOT_USER"
-	export ZDOT
-	# Notify user of what is happening:
-	if [[ -z $SSH_CONNECTION && -o interactive ]];then 
-		print "Using template files installed in $ZDOT"
-	fi
-fi
-
-
-#     Then add those of the individual users, if they exist.  
-
-if [[ -f $ZDOT_USER/environment.mine &&  $ZDOT != $ZDOT_USER ]]; then
-      source $ZDOT_USER/environment.mine
-fi
-
-
-# *******************************************************************************
-
-# Files in /etc and in the user directory are read by default.  Define path to
-# additional alias, environment and function files.  Canonically, the system-wide
-# files on OS X are in $ZDOT, which is set in /etc/zshenv, which gets run before 
-# this file.  If it is not set, set it now.
-
-
-if [[ -z $ZDOT && -z $ZDOT_TEMPLATE ]]; then
-    #print "WARNING: \$ZDOT not set in /etc/zshenv.  Please check it."
-    export ZDOT='/Library/init/zsh'
-    export ZDOT_USER='~/Library/init/zsh'
-    export ZDOT_TEMPLATE='$SWPREFIX/share/zsh/templates/Library/init/zsh'
-    sleep 5
-fi
-
-
-
-
-if [[ -o interactive ]]; then
+###############################################################################
  
+#  Created by William G. Scott on January 2, 2009.
+#  Copyright (c) . All rights reserved.
 
-###################################################################################
 
-#   First run Gary Kerbaugh's customized zsh alias and function files
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
 #
-
-# *******************************************************************************
-
-
-
-####################################
-#                                  #
-#  Define aliases of general use:  #
-#                                  #
-####################################
-
-
-
-#   Source system alias definitions
-if [ -f $ZDOT/aliases ]; then
-    source $ZDOT/aliases
-elif [[ -f $ZDOT_TEMPLATE/aliases ]]; then
-      source $ZDOT_TEMPLATE/aliases   
-elif [[  $(uname) == Darwin ]]; then
-    print " WARNING!!  Fink zsh templates are absent."
-fi
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 
+#    USA                                                                       
+#                                                                              
+#    cf. URL:   http://www.fsf.org/licensing/licenses/gpl.html                 
+#                                                                              
+############################################################################## 
 
 
 
+#    This file, and those sourced from within it, will not be read with zsh -f
+                                                                              
+                                                                              
+      
+                                                                        
+                                                                              
+                                                                              
+                                                                              
+##############################################################################
+#########################        zshrc.d           ###########################
+##############################################################################
 
-#######################################
-#                                     #
-#  Define functions of general use:   #
-#                                     #
-#######################################
+#   Put any modified directives for the systemwide zshrc in files within 
+#   ${ZDOT}/zshrc.d
+#   See ${ZDOT}/zshrc.d/README for additional information.
 
-
-#    Source system function definitions
-if [ -f $ZDOT/functions ]; then
-    source $ZDOT/functions
-elif [[ -f $ZDOT_TEMPLATE/functions ]]; then
-      source $ZDOT_TEMPLATE/functions   
-elif [[  $(uname) == Darwin ]]; then
-    print " WARNING!!  Fink zsh templates are absent."
-fi
-
-
-
-
-####################################
-#                                  #
-#  Define local aliases:           #
-#                                  #
-####################################
-
-
-#  Now run our local alias and function files
-
-# Source our own alias definitions
-if [ -f $ZDOT/aliases.local ]; then
-    source $ZDOT/aliases.local
-elif [[ -f $ZDOT_TEMPLATE/aliases.local ]]; then
-      source $ZDOT_TEMPLATE/aliases.local   
-elif [[  $(uname) == Darwin ]]; then
-    print " WARNING!!  Fink zsh templates are absent."
-fi
-
-
-
-
-####################################
-#                                  #
-#  Define local functions:         #
-#                                  #
-####################################
-
-
-# Source our local function definitions
-if [ -f $ZDOT/functions.local ]; then
-    source $ZDOT/functions.local
-elif [[ -f $ZDOT_TEMPLATE/functions.local ]]; then
-      source $ZDOT_TEMPLATE/functions.local   
-elif [[  $(uname) == Darwin ]]; then
-    print " WARNING!!  Fink zsh templates are absent."
-fi
-
-
-#  Now run each person's own alias and function files if they exist
-
-####################################
-#                                  #
-#  User-defined aliases:           #
-#                                  #
-####################################
-
-# Source alias definitions
-if [ -f $ZDOT_USER/aliases.mine ]; then
-    source  $ZDOT_USER/aliases.mine
-fi
-
-
-####################################
-#                                  #
-#  User-defined functions:         #
-#                                  #
-####################################
-
-# Source function definitions
-if [ -f $ZDOT_USER/functions.mine ]; then
-    source  $ZDOT_USER/functions.mine
-fi
- 
-if [[ -d $ZDOT_USER/my-functions ]]; then
-   FPATH=$ZDOT_USER/my-functions:$FPATH
-fi
-
-# Remove any instances of multiple colons:
-
-    FPATH=${FPATH/::/:}
-
-export FPATH
-
-typeset -U fpath
-
-####################################
-#                                  #
-#  Autocompletion  functions:      #
-#                                  #
-####################################
-
-    autoload -U compinit
-    compinit  
-
-####################################
-#                                  #
-#  Prompt new user to configure:   #
-#                                  #
-####################################
-
-  
-	if [[ ! -f ~/.zsh/configure_zsh_templates &&  $(uname) == Darwin  && -z $SSH_CONNECTION && -o interactive ]]; then
-
-		dialogue_text=( Please take a moment to customize your ZSH environment on OS X \? )
-
-		answer1=$(osa_display_dialog "Never" "Not now" "Yes please")
-
-		if [[ "$answer1" == "Never"  ]]; then	
-			mkdir -p ~/.zsh
-			touch ~/.zsh/configure_zsh_templates
-			print "Issue the command"
-			print "\e[1m configure_zsh_templates \e[0m "
-			print "if you decide to give this a try."
-		elif [[ "$answer1" == "Not now"  ]]; then
-			print "Leaving this setting unchanged."
-	    else
-			autoload -U configure_zsh_templates
-			configure_zsh_templates
-		fi
+	if [[  -d "${ZDOT}/zshrc.d" ]]; then
+		foreach file in $(command ls -d ${ZDOT}/zshrc.d/* | grep -v disabled | \
+			              grep -v README | grep -v environment.xtal | \
+			              grep -v local-functions | grep -v prompt )
+		    source $file
+		end
 	fi
-fi
- 
+	
+############################################################################## 
+                                                                               
+                                                                               
+                                                                               
+                     
+
+                                                          
+                                                                               
+                                                                               
+############################################################################## 
+####################        zshrc_local.d           ########################## 
+############################################################################## 
+
+#   Put any additional directives for the systemwide zshrc in files within 
+#   ${ZDOT}/zshrc_local.d .   This directory is empty when distributed. Its 
+#   contents are run after everything in zshenv.d and zshrc.d .
+#   See ${ZDOT}/zshrc_local.d/README for additional information.
+
+	if [[  -d "${ZDOT}/zshrc_local.d" ]]; then
+		foreach file in $(command ls -d ${ZDOT}/zshrc_local.d/* | grep -v disabled | \
+			              grep -v README |  grep -v site-functions )
+		    source $file
+		end
+	fi
+	
+##############################################################################
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+           
+
+                                                                   
+                                                                              
+##############################################################################
+##########        zshrc_local.d/site-functions          ######################
+##############################################################################
+
+#   Put any additional functions for the systemwide zshrc in files within 
+#   ${ZDOT}/zshrc_local.d/site-functions .  This directory is empty when 
+#   distributed. Its contents are run after everything in zshenv.d and zshrc.d
+#   See ${ZDOT}/zshrc_local.d/README for additional information.
+
+	if [[  -d "${ZDOT}/zshrc_local.d/site-functions" ]]; then
+
+	    if ((  $( command ls -1  ${ZDOT}/zshrc_local.d/site-functions/* |wc -l ) > 1 )); then
+	        # Add the function directory to the head of $FPATH
+		    FPATH=${ZDOT}/zshrc_local.d/site-functions:${FPATH}
+		    export FPATH
+		    typeset -U path manpath fpath
+		    # Autload every function in the site-functions directory
+			foreach fxnfile in $(command ls -d ${ZDOT}/zshrc_local.d/site-functions/* | grep -v README )
+			    autoload -U $(basename $fxnfile)
+			end
+		fi	
+	
+	fi
+	
+##############################################################################
+
+
+
+# The user's own directives can be put into ~/.zshrc
+
+
+
