@@ -1,0 +1,5 @@
+#!/bin/zsh -f
+
+sysctl hw.logicalcpu | awk '{print $NF}' 
+
+return $?
