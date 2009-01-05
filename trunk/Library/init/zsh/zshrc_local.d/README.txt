@@ -15,4 +15,10 @@ bindings; do that in zshrc.d please!).
 Files with the string "disabled" anywhere in the filename will
 be omitted.
 
-To enable a file named foo.disabled, rename it to foo .
+To enable a file named foo.disabled, rename it to foo, or just make a symbolic link.
+
+For example, I do this:
+
+   ln -s ../zshrc.d/environment.xtal.d/phenix_env.zsh-disabled     phenix_env.zsh
+
+rather than alter the distributed $ZDOT/zshrc.d  directory.
