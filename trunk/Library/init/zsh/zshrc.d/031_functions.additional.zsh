@@ -471,6 +471,7 @@ if [[ -o interactive ]]; then
         autoload -U cns_edit cns_web
 
         # Activate the environment.xtal script
+        [[ ! -d ~/.zsh ]] && mkdir -p ~/.zsh  
         touch ~/.zsh/use_xtal_env
 
     fi  ## end ## [[ $LOAD_CRYSTAL_FUNCTIONS == 'YES' ]]

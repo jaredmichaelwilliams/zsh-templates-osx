@@ -47,6 +47,12 @@ if [[ ! -f  ~/.zshrc ]];then
    touch ~/.zshrc
 fi
 
+# Make the ~/.zsh directory if it does not yet exist.
+
+if [[ ! -d ~/.zsh ]]; then 
+   mkdir -p ~/.zsh  
+fi
+
 ###############################################################################
 
 
