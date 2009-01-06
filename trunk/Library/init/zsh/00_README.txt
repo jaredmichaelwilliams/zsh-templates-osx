@@ -43,10 +43,12 @@
 # ZSH-templates-OSX Version: 2.0.0
 
 
-#    Created by William G. Scott, Wataru Kagawa and several other contributors, 
-#    2003 - 2009. Copyright (c) . All rights reserved. The original (unmodified)
-#    completion # functions _open, _fink, _hdiutils, _defaults and their dependencies 
-#    were written by Motoi Washida and are now included with zsh. 
+#    Created by William G. Scott, Wataru Kagawa, Gary Kerbaugh and several other  
+#    contributors, 2003 - 2009. Copyright (c) . All rights reserved. The original 
+#    completion functions _open, _fink, _hdiutils, _defaults and their dependencies 
+#    were written by Motoi Washida and are now included with the official zsh. 
+#    The ones here have been augmented (or changed for the worse, depending upon
+#    your point of view).
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
