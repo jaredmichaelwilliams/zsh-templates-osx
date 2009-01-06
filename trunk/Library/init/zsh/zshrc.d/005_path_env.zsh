@@ -238,58 +238,6 @@ fi
 
         typeset -U path
 
-
-
-# *******************************************************************************
-
-
-###################################
-#                                 #
-#     Here we set the FPATH:      #
-#                                 #
-###################################
-
-#
-# Set the function path to include local functions and/or my functions 
-# (The order of prepending is important.)
-# Some people add these to their $PATH as well.
-
-if [[ -d $ZDOT_TEMPLATE/zshrc.d/local-functions ]]; then
-    FPATH=$ZDOT_TEMPLATE/zshrc.d/local-functions:$FPATH
-fi
-
-
-if [[ -d $ZDOT/zshrc.d/local-functions ]]; then
-    FPATH=$ZDOT/zshrc.d/local-functions:$FPATH
-fi
-
-
-# Moved to /etc/zshrc to ensure that this will be prepended
-# to the $FPATH
- 
-# if [[ -d $ZDOT_USER/my-functions ]]; then
-#  FPATH=$ZDOT_USER/my-functions:$FPATH
-# fi
-
-# Remove any instances of multiple colons:
-
-        FPATH=${FPATH/::/:}     
-        FPATH=${FPATH/::/:}     
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        FPATH=${FPATH/::/:}
-        # Remove leading : if present
-        FPATH=${FPATH#:}  
-
-export FPATH
-
-typeset -U fpath
-
-# *******************************************************************************
-
-
 #################################################################################
 
 #
