@@ -11,6 +11,11 @@
     compinit  
 
 
+# avoid repeats in the paths
+
+	typeset -U path manpath fpath
+
+
 ####################################
 #                                  #
 #  Prompt new user to configure:   #
