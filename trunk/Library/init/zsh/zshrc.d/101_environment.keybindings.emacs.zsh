@@ -57,7 +57,8 @@ if [[ -o interactive ]]; then
 
     if [[ -f ~/.zsh/zshvi ]];then
        # Over-ride to use vi key bindings
-       # Keep this conditional test for legacy compatibility.
+       # Keep this conditional test for legacy compatibility
+       # and for the convenience of individual user customizability.
        bindkey -v
        print "Using vi key bindings!"
     else
