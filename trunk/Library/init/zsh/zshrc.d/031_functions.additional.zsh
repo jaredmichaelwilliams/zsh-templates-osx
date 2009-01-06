@@ -144,6 +144,7 @@ if [[ -o interactive ]]; then
         autoload -U dirstack dirdump cpath
             # keep the ~/.zsh/zdirdump file from growing too long (250 entries seems ok)
             tmp_timestamp=$(date | awk '{print $4}')           
+            [[ ! -d ~/.zsh ]] && mkdir -p ~/.zsh  
             command touch ~/.zsh/zdirdump
             command cp ~/.zsh/zdirdump /tmp/$tmp_timestamp.zdirdump
             command tail -n 250 /tmp/$tmp_timestamp.zdirdump >| ~/.zsh/zdirdump
