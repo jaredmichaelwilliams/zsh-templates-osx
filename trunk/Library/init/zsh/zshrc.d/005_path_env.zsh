@@ -135,32 +135,32 @@ fi
 # accidently deleting anything from $PATH :
 
 #### For Fink, if present
-#if [[ -d $SWPREFIX/bin ]]; then
-#    PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin
-#fi
-
-#### For MacPorts, if present
-#if [[ -f ~/.zsh/zsh_macportsfirstinpath ]]; then
-#	if [[ -d /opt/local/bin ]]; then
-#	    PREPEND_PATH=/opt/local/bin:/opt/local/sbin:$PREPEND_PATH
-#	fi
-#else
-#	if [[ -d /opt/local/bin ]]; then
-#	    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin:/opt/local/sbin
-#	fi
-#fi
+#   if [[ -d $SWPREFIX/bin ]]; then                                           #
+#       PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin                             #
+#   fi                                                                        #
+                                                                              #
+#   ### For MacPorts, if present                                              #
+#   if [[ -f ~/.zsh/zsh_macportsfirstinpath ]]; then                          #  Moved to
+#   	if [[ -d /opt/local/bin ]]; then                                      #  001 and
+#   	    PREPEND_PATH=/opt/local/bin:/opt/local/sbin:$PREPEND_PATH         #  002
+#   	fi                                                                    #
+#   else                                                                      #
+#   	if [[ -d /opt/local/bin ]]; then                                      #
+#   	    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin:/opt/local/sbin         #
+#   	fi                                                                    #
+#   fi
 
 
 #### For X11, if present
 if [[ -d /usr/X11/bin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/usr/X11/bin
+    APPEND_PATH=/usr/X11/bin:$APPEND_PATH
 elif [[ -d /usr/X11R6/bin ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/usr/X11R6/bin
+    APPEND_PATH=/usr/X11R6/bin:$APPEND_PATH
 fi
 
 #### For Developer Tools, if present
 if [[ -d /Developer/Tools ]]; then
-    PREPEND_PATH=$PREPEND_PATH:/Developer/Tools
+    APPEND_PATH=/Developer/Tools:$APPEND_PATH
 fi
 
 #### For /usr/local, if present
