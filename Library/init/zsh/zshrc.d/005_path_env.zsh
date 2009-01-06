@@ -135,20 +135,20 @@ fi
 # accidently deleting anything from $PATH :
 
 #### For Fink, if present
-if [[ -d $SWPREFIX/bin ]]; then
-    PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin
-fi
+#if [[ -d $SWPREFIX/bin ]]; then
+#    PREPEND_PATH=$SWPREFIX/bin:$SWPREFIX/sbin
+#fi
 
 #### For MacPorts, if present
-if [[ -f ~/.zsh/zsh_macportsfirstinpath ]]; then
-	if [[ -d /opt/local/bin ]]; then
-	    PREPEND_PATH=/opt/local/bin:/opt/local/sbin:$PREPEND_PATH
-	fi
-else
-	if [[ -d /opt/local/bin ]]; then
-	    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin:/opt/local/sbin
-	fi
-fi
+#if [[ -f ~/.zsh/zsh_macportsfirstinpath ]]; then
+#	if [[ -d /opt/local/bin ]]; then
+#	    PREPEND_PATH=/opt/local/bin:/opt/local/sbin:$PREPEND_PATH
+#	fi
+#else
+#	if [[ -d /opt/local/bin ]]; then
+#	    PREPEND_PATH=$PREPEND_PATH:/opt/local/bin:/opt/local/sbin
+#	fi
+#fi
 
 
 #### For X11, if present
