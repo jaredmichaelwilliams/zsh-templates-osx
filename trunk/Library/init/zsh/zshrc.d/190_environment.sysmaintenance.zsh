@@ -55,22 +55,7 @@ if [[ -o interactive ]]; then
 			        fi
 		fi
 	fi
-fi # [[ -o interactive ]]
- 
-    
-					###################################################################
-					####         More housecleaning                              ######
-					###################################################################     
-	       
-# avoid repeats in the paths
- 
-	typeset -U path manpath fpath
-
- 
-# Don't kill background jobs upon logging out
- 
-	setopt nohup
-        
+fi # [[ -o interactive ]]     
    
     
  
