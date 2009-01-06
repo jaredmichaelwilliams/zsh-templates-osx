@@ -46,7 +46,11 @@
 #
 #             Use this for vi (non-default keybidings)
 #             by renaming from environment.keybindings.vi.zsh-disabled to
-#             environment.keybindings.vi.zsh
+#             environment.keybindings.vi.zsh.  NOTE PLEASE that this changes
+#             the default shell bindings to vi for everyone on the system, 
+#             which is probably a very bad idea. Instead, it is much better
+#             to use the emacs key bindings by default, and to let individual
+#             users over-ride this by issuing the command "touch ~/.zsh/zshvi"
 #
 ##########################################################################
 
