@@ -149,6 +149,7 @@ if [[ -o interactive ]]; then
          NO_mark_dirs            \
             multios              \
             nomatch              \
+            nohup                \
             notify               \
          NO_null_glob            \
             path_dirs            \
