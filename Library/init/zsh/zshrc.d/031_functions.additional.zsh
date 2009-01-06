@@ -524,7 +524,32 @@ if [[ -o interactive ]]; then
     #
     set show-all-if-ambiguous on
     # needed here so it works the first time (why?)
+    
 
+
+    # Now clean up and remove any instances of multiple colons:
+    FPATH=${FPATH/::/:}
+    FPATH=${FPATH/::/:}
+    FPATH=${FPATH/::/:}
+    FPATH=${FPATH/::/:}
+    FPATH=${FPATH/::/:}
+    FPATH=${FPATH/::/:}
+    FPATH=${FPATH/::/:}
+    # Remove leading : if present
+    FPATH=${FPATH#:}  
+
+#
+# Export PATH as separate command to avoid dollar signs in export line
+#
+
+        export FPATH
+
+#
+#
+# Avoid repeats in the fpath array
+#
+
+        typeset -U fpath
     
 fi ## end ## [[ -o interactive ]]
 
