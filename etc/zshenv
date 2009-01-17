@@ -75,7 +75,9 @@
 #   otherwise, use the following assignment:                                    
                                                                                 
     if [[ -z $ZDOT && -d "/Library/init/zsh" ]]; then                         
-        ZDOT="/Library/init/zsh" ; export ZDOT                                
+        ZDOT="/Library/init/zsh" ; export ZDOT  
+    elif [[ -z $ZDOT && -d "$HOME/Library/init/zsh" ]]; then                         
+	        ZDOT="$HOME/Library/init/zsh" ; export ZDOT                              
     elif [[ -d "/etc/zsh/init/zsh" ]]; then                                   
         ZDOT="/etc/zsh/init/zsh" ; export ZDOT                                
     fi    
