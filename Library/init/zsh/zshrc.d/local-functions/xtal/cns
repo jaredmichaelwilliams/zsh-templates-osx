@@ -10,8 +10,24 @@ alias cns=""; unalias cns
 		# CNS 1.2 obtained from David Gohara  #
 		# <http://gohara.wustl.edu/software.html>
 		#######################################
+
+if [[ -d $CNS_SOLVE/mac-intel-darwin/bin && ($(uname) == Darwin && $(uname -p) == i386) ]]; then
+
+    cns_solve_ex="$CNS_SOLVE/mac-intel-darwin/bin/cns"
+    print ""; print "\e[1m Using cns OS X intel from the CNS-1.21 binary distribution \e[0m " ; print ""
+
+elif [[ -d $CNS_SOLVE/intel-i686-linux/bin && (  $(uname) == Linux && $(uname -m) == i686 ) ]]; then
+
+    cns_solve_ex="$CNS_SOLVE/intel-i686-linux/bin/cns"
+    print ""; print "\e[1m Using cns i686 for Linux from the CNS-1.21 binary distribution \e[0m " ; print ""
+
+elif [[ -d $CNS_SOLVE/intel-x86_64bit-linux/bin && ( $(uname) == Linux && ( $(uname -m) == x86_64 || $(uname) == ia64 ) ) ]]; then
+
+    cns_solve_ex="$CNS_SOLVE/intel-x86_64bit-linux/bin/cns"
+    print ""; print "\e[1m Using cns 64bit-linux from the CNS-1.21 binary distribution \e[0m " ; print ""
+	
 		
-if [[ -d $SWPREFIX/share/xtal/cns1.2_univ ]]; then
+elif [[ -d $SWPREFIX/share/xtal/cns1.2_univ ]]; then
  
 	cns_solve_ex="$SWPREFIX/share/xtal/cns1.2_univ/binaries/cns_solve"
 	print ""; print "\e[1m Using universal CNS-1.2 binary from David Gohara installed with fink  \e[0m " ; print ""
