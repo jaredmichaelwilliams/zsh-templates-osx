@@ -171,12 +171,19 @@ if [[ $use_xbrowser == true ]]; then
               METHOD="POST" 
         ' >| $tmpfile
         
-        
+    if [[ $(basename $CNS_SOLVE) ==  cns_solve_1.21 ]];then         
         if [[ $help == 1 ]]; then
-          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi?cns_help=on"' >>| $tmpfile
+          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.21/cns_form.cgi?cns_help=on"' >>| $tmpfile
         else
-          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi"' >>| $tmpfile
+          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.21/cns_form.cgi"' >>| $tmpfile
         fi
+    else
+		if [[ $help == 1 ]]; then
+		  echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi?cns_help=on"' >>| $tmpfile
+		else
+		  echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi"' >>| $tmpfile
+		fi
+    fi
         
         
         echo '>  
@@ -249,13 +256,19 @@ else    # Altered to accomidate OS X native browser eg:  Camino
         ' > $tmpfile
         
         
-         
+    if [[ $(basename $CNS_SOLVE) ==  cns_solve_1.21 ]];then           
         if [[ $help == 1 ]]; then
-          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi?cns_help=on"' >>| $tmpfile
+          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.21/cns_form.cgi?cns_help=on"' >>| $tmpfile
         else
-          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi"' >>| $tmpfile
+          echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.21/cns_form.cgi"' >>| $tmpfile
         fi
-        
+    else
+	    if [[ $help == 1 ]]; then
+	      echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi?cns_help=on"' >>| $tmpfile
+	    else
+	      echo 'ACTION="http://cns.csb.yale.edu/cgi-bin/cns_solve_1.2/cns_form.cgi"' >>| $tmpfile
+	    fi
+    fi        
         
         echo '> 
         </P> 
