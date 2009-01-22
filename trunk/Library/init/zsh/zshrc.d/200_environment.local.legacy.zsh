@@ -17,8 +17,14 @@
     # If $ZDOT and $ZDOT_USER are the same directory, we want to avoid doing 
     # this twice.
 
+    if [[ -d $ZDOT_USER/my-functions ]];then
+		FPATH=$ZDOT_USER/my-functions:${FPATH}
+		export FPATH
+    fi
+
     if [[ -d $ZDOT_USER && $ZDOT_USER != $ZDOT ]];then
         foreach myconfigfile in $ZDOT_USER/*
             source $myconfigfile
         end
     fi
+
