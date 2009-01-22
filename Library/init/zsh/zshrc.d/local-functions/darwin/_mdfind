@@ -221,17 +221,21 @@ _mdfind () {
     #              mdfind -onlyin /Applications -onlyin /Developer "kMDItemContentType == 'com.apple.application-*'"
     
     ########################################################################################################
+
         
        _arguments -C \
-        '-0[used in conjunction with xargs -0]'\
+        '-0[used in conjunction with xargs -0]: :->supply_pattern'\
         '-s[show contents of smart folder <name>]: :->savedSearch'\
-        '-count[output total number of matches]' \
-        '-interpret[user-friendly Spotlight string query]:pattern: '\
+        '-count[output total number of matches]: :->supply_pattern' \
+        '-interpret[user-friendly Spotlight string query]: :->supply_pattern'\
         '-literal[force over-rides interpret]: :->mdsearchstring'\
-        '-live[live updates in search]'\
+        '-live[live updates in search]: :->supply_pattern'\
         '-onlyin[specify the Directory]: :->mdsearchpath'\
-        '*:pattern: '
- 
+        '*: :->supply_pattern_or_option'
+
+
+#       '*:pattern: '
+
 
     ####################################################################################     
     # This function is for "savedSearch"
@@ -335,11 +339,19 @@ _mdfind () {
                 _SavedSearches  
                 _message 'possible Saved Searches in $HOME/Library/Saved\ Searches'
           ;;
-      
+ 
+          (supply_pattern)
+               _message "Enter any string you would supply to SpotLight."
+          ;;
+
+
+  	  	 (supply_pattern_or_option)
+		      _message "Enter \"-<tab>\" to choose an option, or simply type any string you would supply to SpotLight."
+		  ;;
+     
       esac
     
-    
-    
+
 }
 
 fi # Test OS X 10.5 or above
