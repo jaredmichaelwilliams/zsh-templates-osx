@@ -3,6 +3,7 @@
  
 
 # Author: W. G. Scott
+# Revised for 10.5 on Jan 22 2009
 # July 5 2005
 # for Mac OS X v. 10.4 and above
  
@@ -19,30 +20,77 @@ _mdfind () {
     zstyle ':completion:*' group-name '' 
     
     #########################################################################################################
-    # SYNOPSIS  mdfind [-0] [-live] [-onlyin directory] query  
-    #
-    #    -0          Prints an ASCII NUL character after each result path.  This
-    #                is useful when used in conjunction with xargs -0.
-    #
-    #     -live       Causes the mdfind command to provide live-updates to the num-
-    #                 ber of files matching the query.  When an update causes the
-    #                 query results to change the number of matches is updated.
-    #                 The find can be cancelled by typing ctrl-C.            
-    #
-    #     -onlyin dir
-    #                 Limit the scope of the search to the directory specified.
-    #
-    # example:
+    #  
+    #  	SYNOPSIS
+    #  	     mdfind [-live] [-count] [-onlyin directory] query
+    #  
+    #  	DESCRIPTION
+    #  	     The mdfind command consults the central metadata store and returns a list of files that match the given
+    #  	     metadata query. The query can be a string or a query expression.
+    #  
+    #  	     The following options are available:
+    #  
+    #  	     -0          Prints an ASCII NUL character after each result path.  This is useful when used in conjunc-
+    #  	                 tion with xargs -0.
+    #  
+    #  	     -live       Causes the mdfind command to provide live-updates to the number of files matching the
+    #  	                 query.  When an update causes the query results to change the number of matches is updated.
+    #  	                 The find can be cancelled by typing ctrl-C.
+    #  
+    #  	     -count      Causes the mdfind command to output the total number of matches, instead of the path to the
+    #  	                 matching items.
+    #  
+    #  	     -onlyin dir
+    #  	                 Limit the scope of the search to the directory specified.
+    #  
+    #  	     -literal    Force the provided query string to be taken as a literal query string, without interpreta-
+    #  	                 tion.
+    #  
+    #  	     -interpret  Force the provided query string to be interpreted as if the user had typed the string into
+    #  	                 the Spotlight menu.  For example, the string "search" would produce the following query
+    #  	                 string:
+    #  	                       (* = search* cdw || kMDItemTextContent = search* cdw)
+    #  
+    #  	EXAMPLES
+    #  	     The following examples are shown as given to the shell.
+    #  
+    #  	     This returns all files with any metadata attribute value matching the string "image":
+    #  
+    #  	           mdfind image
+    #  
+    #  	     This returns all files that contain "MyFavoriteAuthor" in the kMDItemAuthor metadata attribute:
+    #  
+    #  	           mdfind "kMDItemAuthor == '*MyFavoriteAuthor*'"
+    #  
+    #  	     This returns all files with any metadata attribute value matching the string "skateboard".  The find
+    #  	     continues to run after gathering the initial results, providing a count of the number of files that
+    #  	     match the query.
+    #  
+    #  	           mdfind -live skateboard
+    #  relevant example:
     # mdfind -onlyin /Applications -onlyin /Developer "kMDItemContentType == 'com.apple.application-*'"
     
     ########################################################################################################
         
        _arguments -C \
-        '-gui[use GUI menu of completions]: :->usethegui'\
         '-0[used in conjunction with xargs -0]'\
+        '-s[show contents of smart folder <name>]: :->savedSearch'\
+        '-count[output total number of matches]' \
+        '-interpret[user-friendly Spotlight string query]'\
+        '-literal[force over-rides interpret]: :->mdsearchstring'\
         '-live[live updates in search]'\
         '-onlyin[specify the Directory]: :->mdsearchpath'\
-        '*: :->mdsearchstring'
+        '*:pattern: '
+    #    '*: :->mdsearchstring'
+
+    #  This now causes trouble and is no longer needed in 10.5
+    #  as it now uses smart folders as a GUI interface
+    #          '-gui[use GUI menu of completions]: :->usethegui'\
+
+    ####################################################################################     
+    # This function is for "savedSearch"
+
+                function _SavedSearches { true }
        
     ####################################################################################     
     # These functions are for "mdsearchstring"
@@ -137,6 +185,11 @@ _mdfind () {
           (mdsearchpath)
                 _directories  
                 _message 'possible search paths: prepend / for root-level directories'
+          ;;
+
+          (savedSearch)
+                _SavedSearches  
+                _message 'possible Saved Searches in $HOME/Library/Saved\ Searches'
           ;;
       
       esac
