@@ -197,6 +197,9 @@ if [[ -o interactive ]]; then
 
             # a "locate" command that uses mdfind
             autoload -U mlocate
+
+            # Change metadata (spotlight) attributes
+            autoload -U mdattr
             
             # Pasteboard interactions
             autoload -U  pbcp  
