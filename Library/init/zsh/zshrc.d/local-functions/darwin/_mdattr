@@ -1,0 +1,49 @@
+#compdef mdattr
+
+#   mdls [-d] attributeName [string] file ... 
+
+zmodload zsh/complist  2>/dev/null
+zstyle ':completion:*' menu select=10  
+zstyle ':completion:*' list-prompt '%S -- more -- %s' 
+ 
+#set -x
+
+_mdattr (){
+ 
+    function _attributeNameObtinator {    
+        compadd -X %B' --- Select one of the possible metadata attributes --- %b' \
+            $(/usr/bin/mdimport -A | awk '{print $1}' | perl -p -e "s;('|kMDItem);;g"    )   
+    }  
+    
+    autoload -U _files_only
+
+     _arguments -C \
+        '-d[delete specified metadata attribute from specified file]: :->mdAttributeName:'\
+        '*: :->mdAttributeName'
+
+
+    case "$state" in
+
+        (supply_pattern)
+             _message "Enter any string, using double quotes if you have spaces between words."
+        ;;
+
+	  	 (mdAttributeName)
+		      _attributeNameObtinator
+		;;
+		
+		 (GetFile)
+		     _files_only
+		;;
+   
+    esac
+  
+} # _mdattr
+
+
+_mdattr "$@" 
+
+
+
+
+      
