@@ -5,7 +5,7 @@
 # Create or revise an existing Apple-type metadata AttributeName of the form kMDItemAttributeName
 
 
-version="0.0.1"
+version="0.0.2"
 
 
 ###############################################################################
@@ -36,7 +36,7 @@ version="0.0.1"
 
 
 
-function mdattr_usage {
+function _mdattr_usage {
     print ""
     print "\e[1m mdattr\e[0m is a function that can create, delete or revise Apple-style metadata attributes" 
     print " of the form \e[1mkMDItem\e[0m\e[36mAttributeName\e[0m and assign each to a value of \e[35mAttributeValue\e[0m "
@@ -55,7 +55,7 @@ SecondArg="$2"
 CountArgs="$#" 
 
 if [[ "$CountArgs" -lt 3 ]]; then
-   mdattr_usage
+   _mdattr_usage
    return 42
 fi
 
