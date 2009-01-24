@@ -5,44 +5,61 @@
 zmodload zsh/complist  2>/dev/null
 zstyle ':completion:*' menu select=10  
 zstyle ':completion:*' list-prompt '%S -- more -- %s' 
- 
-#set -x
-
-_mdattr (){
- 
-    function _attributeNameObtinator {    
-        compadd -X %B' --- Select one of the possible metadata attributes --- %b' \
-            $(/usr/bin/mdimport -A | awk '{print $1}' | perl -p -e "s;('|kMDItem);;g"    )   
-    }  
-    
-    autoload -U _files_only
-
-     _arguments -C \
-        '-d[delete specified metadata attribute from specified file]: :->mdAttributeName:'\
-        '*: :->mdAttributeName'
 
 
-    case "$state" in
 
-        (supply_pattern)
-             _message "Enter any string, using double quotes if you have spaces between words."
-        ;;
+# Define a completion function for Apple Metadata Names, and remove kMDItem prefix
+function _attributeNameObtinator {    
+    compadd -X %B' --- Select one of the possible metadata attributes --- %b' \
+        $(/usr/bin/mdimport -A | awk '{print $1}' | perl -p -e "s;('|kMDItem);;g"    )   
+}
 
-	  	 (mdAttributeName)
-		      _attributeNameObtinator
-		;;
-		
-		 (GetFile)
-		     _files_only
-		;;
-   
-    esac
-  
-} # _mdattr
+# Ask the user to supply a double-quoted string for the corresponding user-supplied value
+function _attributeValueObtinator {
+ 	_message "Enter any string, using double quotes if you have spaces between words."
+}
 
 
-_mdattr "$@" 
+# Conditional tests for the context-dependent completions
+function _conditional_tester {
+	if [[ $words[2] == "-h" ]]; then
 
+		return 0
+	
+	elif [[ $words[2] == "-d" ]]; then
+
+		if  (( CURRENT == 2 )); then
+			true
+		elif (( CURRENT == 3 )); then
+			_attributeNameObtinator
+		else  
+			_files
+		fi
+	
+	else
+
+		if  (( CURRENT == 2 )); then
+			_attributeNameObtinator
+		elif (( CURRENT == 3 )); then
+			_attributeValueObtinator
+		else  
+			_files
+		fi
+	fi
+}
+
+
+
+
+if  (( CURRENT == 2 )); then
+_arguments -C \
+    '-d[delete specified metadata attribute from specified file]'\
+	'-h[help]' 
+fi
+
+
+
+_conditional_tester
 
 
 
