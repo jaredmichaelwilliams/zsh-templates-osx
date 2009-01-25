@@ -75,6 +75,9 @@ if [[ -o interactive ]]; then
     bindkey '^[f' emacs-forward-word
     bindkey '^[v' expand-or-complete-prefix
 
+    bindkey '^[[H'  beginning-of-line       # Home
+    bindkey '^[[F'  end-of-line             # End
+
     # Fix weird sequence that rxvt produces
     bindkey -s '^[[Z' '\t'
 
