@@ -54,14 +54,8 @@ if [[ -o interactive ]]; then
 
     # zshrc_load_status 'key bindings'
 
-    bindkey '\e\e[C' forward-word
-    bindkey '\e\e[D' backward-word
-    #bindkey '\e[A'  up-line-or-history
-    #bindkey '\e[B'  down-line-or-history
-    bindkey '\e[A'  history-search-backward 
-    bindkey '\e[B'  history-search-forward
-    #bindkey '^[p' history-beginning-search-backward
-    #bindkey '^[n' history-beginning-search-forward
+    # command zle -la  produces a list of possible commands
+    # command bindkey -L produces a list of keys and their current bindings
 
     bindkey -s '^X^Z' '%-^M'
     bindkey '^[e' expand-cmd-path
@@ -75,8 +69,29 @@ if [[ -o interactive ]]; then
     bindkey '^[f' emacs-forward-word
     bindkey '^[v' expand-or-complete-prefix
 
-    bindkey '^[[H'  beginning-of-line       # Home
-    bindkey '^[[F'  end-of-line             # End
+    # Key Up(arrow) and Key Down(arrow)
+    bindkey '\e[A'  history-search-backward  # Up
+	bindkey '\e[B'  history-search-forward   # Down
+    #bindkey '\e[A'  up-line-or-history      # Up
+    #bindkey '\e[B'  down-line-or-history    # Down
+	
+	# Key Right(arrow) and Key Left(arrow)
+    bindkey '\e\e[C' forward-word            # Right
+    bindkey '\e\e[D' backward-word           # Left
+	
+    # Key Home and Key End
+    # May have to be configured within the terminal emulator
+    bindkey '^[[H'  beginning-of-line        # Home
+    bindkey '^[[F'  end-of-line              # End
+   
+    # Key PageUp and Key PageDown
+    # Note that PageUp and PageDown and/or
+    # ^PageUp and ^PageDown are intercepted by the 
+    # terminal emulator and should may the scroll bar up and down
+    # Configure these within the terminal emulator
+    # Typical xterm/linux values
+    # bindkey '^[[5~' foo  # PageUp
+    # bindkey '^[[6~' bar  # PageDown
 
     # Fix weird sequence that rxvt produces
     bindkey -s '^[[Z' '\t'
