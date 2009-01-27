@@ -86,9 +86,9 @@ if [[ -o interactive ]]; then
    
     # Key PageUp and Key PageDown
     # Note that PageUp and PageDown and/or
-    # ^PageUp and ^PageDown are intercepted by the 
-    # terminal emulator and should may the scroll bar up and down
-    # Configure these within the terminal emulator
+    # ^PageUp and ^PageDown are usually intercepted by the 
+    # terminal emulator.  Therefore, you will likely have to
+    # configure these within the terminal emulator itself.
     # Typical xterm/linux values
     # bindkey '^[[5~' foo  # PageUp
     # bindkey '^[[6~' bar  # PageDown
