@@ -81,8 +81,35 @@ if [[ -o interactive ]]; then
 	
     # Key Home and Key End
     # May have to be configured within the terminal emulator
-    bindkey '^[[H'  beginning-of-line        # Home
-    bindkey '^[[F'  end-of-line              # End
+    
+    if [[ $(uname) == "Darwin" && -z $SSH_CONNECTION ]];then
+		if [[ ( $TERM == "xterm" && $COLORTERM == *rxvt* ) || ( $TERM == "xterm" && $TERM_PROGRAM == iTerm.app ) ]];then
+	        bindkey '^[[7~'  beginning-of-line        # Home
+	        bindkey '^[[8~'  end-of-line              # End
+	
+		elif [[ ( $TERM == "vt100" && $TERM_PROGRAM == iTerm.app ) ]];then
+			bindkey '^[Oq'  beginning-of-line        # Home
+			bindkey '^[Op'  end-of-line              # End
+	
+		elif [[ ( $TERM == "linux" && $TERM_PROGRAM == iTerm.app ) ]];then
+	        bindkey '^[[1~'  beginning-of-line        # Home
+	        bindkey '^[[4~'  end-of-line              # End
+	
+	    elif [[ $TERM == ("ansi"|"xterm"|"xterm-color") ]]; then
+	        bindkey '^[[H'  beginning-of-line        # Home
+	        bindkey '^[[F'  end-of-line              # End
+	    else
+	        true
+	    fi
+	elif [[ $(uname) == "Linux" && -z $SSH_CONNECTION ]];then
+		if [[ $TERM == "xterm" ]];then
+		       bindkey '^[OH'  beginning-of-line        # Home
+		       bindkey '^[OF'  end-of-line              # End
+		fi
+	else
+	    true
+	fi
+
    
     # Key PageUp and Key PageDown
     # Note that PageUp and PageDown and/or
