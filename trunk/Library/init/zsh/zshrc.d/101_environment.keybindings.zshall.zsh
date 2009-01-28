@@ -127,7 +127,7 @@ if [[ -o interactive ]]; then
 		       bindkey '^[OH'  beginning-of-line        			# Home
 		       bindkey '^[OF'  end-of-line              			# End
 		
-	elif [[ -n $KONSOLE_DBUS_SERVICE ]]; then
+	elif [[ -n $KONSOLE_DBUS_SERVICE || $TERM_PROGRAM == konsole ]]; then
 	    bindkey '^[[H'  beginning-of-line        				# Home
 	    bindkey '^[[F'  end-of-line              				# End
 	
