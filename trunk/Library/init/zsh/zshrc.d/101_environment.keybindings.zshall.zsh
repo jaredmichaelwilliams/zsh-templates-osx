@@ -90,7 +90,7 @@ if [[ -o interactive ]]; then
     # Key Home and Key End
     # May have to be configured within the terminal emulator
 
-	if [[  ( $TERM_PROGRAM == iTerm.app ) || -n $SSH_CONNECTION ]];then
+	if [[  ( $TERM_PROGRAM == iTerm.app )  ]];then
 
 		#### iTerm.app on OS X possible options
 
