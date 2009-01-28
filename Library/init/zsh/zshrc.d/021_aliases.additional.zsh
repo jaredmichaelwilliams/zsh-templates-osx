@@ -79,6 +79,12 @@ if [[ -o interactive ]]; then
 	
 	# Konsole
 		alias konsole='TERM_PROGRAM="konsole" COLORTERM="" konsole'
+		
+	# Gnome-Terminal
+	    alias gnome-terminal='TERM_PROGRAM="gnome-terminal" gnome-terminal'
+	
+	# xfce4 Terminal
+	    alias terminal='TERM_PROGRAM="Terminal" COLORTERM="Terminal" terminal'
 
     ###############################################################################
 
