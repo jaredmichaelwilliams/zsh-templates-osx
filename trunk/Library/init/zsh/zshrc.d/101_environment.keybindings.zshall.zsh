@@ -57,6 +57,13 @@ if [[ -o interactive ]]; then
     # command zle -la  produces a list of possible commands
     # command bindkey -L produces a list of keys and their current bindings
 
+    # Fix weird sequence that rxvt produces
+    bindkey -s '^[[Z' '\t'
+
+    # alias no=ls  # for Dvorak
+
+    bindkey '^L' push-input
+
     bindkey -s '^X^Z' '%-^M'
     bindkey '^[e' expand-cmd-path
     #bindkey -s '^X?' '\eb=\ef\C-x*'
@@ -79,53 +86,69 @@ if [[ -o interactive ]]; then
     bindkey '\e\e[C' forward-word            # Right
     bindkey '\e\e[D' backward-word           # Left
 	
+	
     # Key Home and Key End
     # May have to be configured within the terminal emulator
-    
-    if [[ $(uname) == "Darwin" && -z $SSH_CONNECTION ]];then
-		if [[ ( $TERM == "xterm" && $COLORTERM == *rxvt* ) || ( $TERM == "xterm" && $TERM_PROGRAM == iTerm.app ) ]];then
-	        bindkey '^[[7~'  beginning-of-line        # Home
-	        bindkey '^[[8~'  end-of-line              # End
-	
-		elif [[ ( $TERM == "vt100" && $TERM_PROGRAM == iTerm.app ) ]];then
-			bindkey '^[Oq'  beginning-of-line        # Home
-			bindkey '^[Op'  end-of-line              # End
-	
-		elif [[ ( $TERM == "linux" && $TERM_PROGRAM == iTerm.app ) ]];then
-	        bindkey '^[[1~'  beginning-of-line        # Home
-	        bindkey '^[[4~'  end-of-line              # End
-	
-	    elif [[ $TERM == ("ansi"|"xterm"|"xterm-color") ]]; then
-	        bindkey '^[[H'  beginning-of-line        # Home
-	        bindkey '^[[F'  end-of-line              # End
-	    else
-	        true
-	    fi
-	elif [[ $(uname) == "Linux" && -z $SSH_CONNECTION ]];then
-		if [[ $TERM == "xterm" ]];then
-		       bindkey '^[OH'  beginning-of-line        # Home
-		       bindkey '^[OF'  end-of-line              # End
-		fi
-	else
-	    true
-	fi
 
+	if [[  ( $TERM_PROGRAM == iTerm.app ) || -n $SSH_CONNECTION ]];then
+
+		#### iTerm.app on OS X possible options
+
+		if [[ $TERM == "xterm" ]];then
+	    	bindkey '^[[7~'  beginning-of-line        				# Home
+	    	bindkey '^[[8~'  end-of-line              				# End
+		elif [[ $TERM == "vt100" ]];then
+			bindkey '^[Oq'  beginning-of-line         				# Home
+			bindkey '^[Op'  end-of-line               				# End
+		elif [[ $TERM == "linux" ]]; then
+	    	bindkey '^[[1~'  beginning-of-line        				# Home
+	    	bindkey '^[[4~'  end-of-line              				# End
+		elif [[ $TERM == "ansi" ]]; then
+		    bindkey '^[[H'  beginning-of-line        				# Home
+		    bindkey '^[[F'  end-of-line              				# End
+		else  
+	        true
+		fi
+
+	elif [[  $TERM_PROGRAM == (Apple_Terminal|Terminal)  ]]; then
+
+		#### Terminal.app on OS X possible options
+		# Needs to be configured within the Terminal.app Preferences
+		true
+	
+	elif [[ ( $TERM_PROGRAM == rxvt && $(uname) == "Darwin" ) || 
+	          $COLORTERM == *rxvt* ]]; then
+		#### rxvt  
+		bindkey '^[[7~'  beginning-of-line        					# Home
+		bindkey '^[[8~'  end-of-line              					# End
+		
+	elif [[ COLORTERM == (Terminal|gnome-terminal|xfce4-terminal) ]];then
+		#### xfce4 Terminal
+		       bindkey '^[OH'  beginning-of-line        			# Home
+		       bindkey '^[OF'  end-of-line              			# End
+		
+	elif [[ -n $KONSOLE_DBUS_SERVICE ]]; then
+	    bindkey '^[[H'  beginning-of-line        				# Home
+	    bindkey '^[[F'  end-of-line              				# End
+	
+	elif [[ ( $TERM_PROGRAM == xterm && $(uname) == "Darwin" ) ||
+	          $TERM == xterm ]]; then
+		#### xterm  
+	    bindkey '^[[H'  beginning-of-line        					# Home
+	    bindkey '^[[F'  end-of-line              					# End	
+	
+	else
+		# Other options?
+		true
+	fi
    
     # Key PageUp and Key PageDown
-    # Note that PageUp and PageDown and/or
-    # ^PageUp and ^PageDown are usually intercepted by the 
-    # terminal emulator.  Therefore, you will likely have to
-    # configure these within the terminal emulator itself.
-    # Typical xterm/linux values
-    # bindkey '^[[5~' foo  # PageUp
-    # bindkey '^[[6~' bar  # PageDown
+	    # Note that PageUp and PageDown and/or
+	    # ^PageUp and ^PageDown are usually intercepted by the 
+	    # terminal emulator.  Therefore, you will likely have to
+	    # configure these within the terminal emulator itself.
+	    # Typical xterm/linux values
+	    # bindkey '^[[5~' foo  # PageUp
+	    # bindkey '^[[6~' bar  # PageDown
 
-    # Fix weird sequence that rxvt produces
-    bindkey -s '^[[Z' '\t'
-
-    # alias no=ls  # for Dvorak
-
-    bindkey '^L' push-input
-
-    # }}}
 fi
