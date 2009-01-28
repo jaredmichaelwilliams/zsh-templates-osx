@@ -61,10 +61,13 @@ if [[ -o interactive ]]; then
 
     # rxvt settings to look like aqua (this might be system-dependent)
 
-    if [[ -x $SWPREFIX/bin/rxvt ]];then
-        alias rxvt='rxvt -bg black -fg white -cr grey -ls -geometry 80X25 -colorBD yellow \
+    if [[ -x $(which rxvt ) ]];then
+        alias rxvt='TERM_PROGRAM="rxvt" rxvt -bg black -fg white -cr grey -ls -geometry 80X25 -colorBD yellow \
            -troughColor grey -font 9x15 -sr -scrollColor RoyalBlue3 -internalBorder 5 &'
     fi
+
+    # xterm
+		alias xterm='TERM_PROGRAM="xterm" xterm'
 
     ###############################################################################
 
