@@ -110,7 +110,7 @@ if [[ -o interactive ]]; then
 	        true
 		fi
 
-	elif [[  $TERM_PROGRAM == (Apple_Terminal|Terminal)  ]]; then
+	elif [[  $TERM_PROGRAM == (Apple_Terminal)  ]]; then
 
 		#### Terminal.app on OS X possible options
 		# Needs to be configured within the Terminal.app Preferences
