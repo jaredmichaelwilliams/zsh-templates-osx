@@ -67,7 +67,10 @@ if [[ -o interactive ]]; then
     fi
 
     # xterm
-		alias xterm='TERM_PROGRAM="xterm" xterm'
+		alias xterm='TERM_PROGRAM="xterm" COLORTERM="" xterm'
+	
+	# Konsole
+		alias konsole='TERM_PROGRAM="konsole" COLORTERM="" konsole'
 
     ###############################################################################
 
