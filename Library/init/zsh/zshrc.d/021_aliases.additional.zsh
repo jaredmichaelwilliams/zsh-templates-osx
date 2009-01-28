@@ -59,11 +59,19 @@ if [[ -o interactive ]]; then
 
     ###############################################################################
 
+
+    # Aliases are set to aid in assigning keybindings to terminals spawned from other
+    # termianl sessions.
+
+
     # rxvt settings to look like aqua (this might be system-dependent)
 
-    if [[ -x $(which rxvt ) ]];then
+    if [[ -x $(which rxvt ) && $(uname) == Darwin ]];then
         alias rxvt='TERM_PROGRAM="rxvt" rxvt -bg black -fg white -cr grey -ls -geometry 80X25 -colorBD yellow \
            -troughColor grey -font 9x15 -sr -scrollColor RoyalBlue3 -internalBorder 5 &'
+    elif [[ -x $(which rxvt ) && $(uname) == Linux  ]];then
+        alias rxvt='TERM_PROGRAM="rxvt" rxvt -bg black -fg white -cr grey -ls -geometry 80X25 -colorBD yellow \
+           -troughColor grey -font 9x15 -sr -scrollColor RoyalBlue3 &'
     fi
 
     # xterm
@@ -141,3 +149,4 @@ if [[ -o interactive ]]; then
 
 
 fi
+
