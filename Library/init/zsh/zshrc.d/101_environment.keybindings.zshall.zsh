@@ -122,7 +122,7 @@ if [[ -o interactive ]]; then
 		bindkey '^[[7~'  beginning-of-line        					# Home
 		bindkey '^[[8~'  end-of-line              					# End
 		
-	elif [[ COLORTERM == (Terminal|gnome-terminal|xfce4-terminal) ]];then
+	elif [[ $COLORTERM == (Terminal|gnome-terminal|xfce4-terminal) ]];then
 		#### xfce4 Terminal
 		       bindkey '^[OH'  beginning-of-line        			# Home
 		       bindkey '^[OF'  end-of-line              			# End
