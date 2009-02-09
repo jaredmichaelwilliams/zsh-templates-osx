@@ -90,14 +90,14 @@ if [[ -o interactive ]]; then
  
 	    # Gary Kerbaugh's Java stuff   
 	    # {====>}
-	    JAVA_CMD=/usr/bin/java
-
-	    JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home 
-	    export JAVA_HOME
- 
-	    CLASSPATH=$CLASSPATH:/System/Library/Frameworks/JavaVM.framework/Home:/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Classes/ui.jar:.
- 
-	    export  CLASSPATH
+	    # JAVA_CMD=/usr/bin/java
+        # 
+	    # JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home 
+	    # export JAVA_HOME
+        # 
+	    # CLASSPATH=$CLASSPATH:/System/Library/Frameworks/JavaVM.framework/Home:/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Classes/ui.jar:.
+        # 
+	    # export  CLASSPATH
  
 	    # JBOSS_CLASSPATH=/Developer/jboss/bin
 	    # JIKESPATH=.:/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Classes/ui.jar:/Developer/jakarta-tomcat-4.0.3/common/lib/servlet.jar:/Developer/jakarta-tomcat-4.0.3/common/lib/xerces.jar:/Library/Java/Extensions/activation.jar:/Library/Java/Extensions/jdbc2_0-stdext.jar:/Library/Java/Extensions/pgjdbc2.jar:/System/Library/Frameworks/JavaVM.framework/Home/lib/dt.jar:/System/Library/Frameworks/JavaVM.framework/Home/lib/ext/jnet.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Home/lib/ext/jpda.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Home/lib/ext/jsse.jar
