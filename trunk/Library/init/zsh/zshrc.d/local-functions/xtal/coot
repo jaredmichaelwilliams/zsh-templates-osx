@@ -1,5 +1,8 @@
 #!/bin/zsh -f
 
+#set -x
+
+# For 0.6-pre-1 (revision 2170)
 
 # This is a zsh shell script or function that augments the coot command line 
 # experience. Just type "coot" followed by the names of your pdb files, map files, 
@@ -8,6 +11,23 @@
 # "screen -r coot". Using --pdb, --map, --data, --script and 
 # so on will have no detrimental effect.  These flags are just ignored.  The file 
 # type is determined from the file suffix.
+
+#        Usage: coot [--pdb pdb-file-name]
+#                    [--coords pdb/cif/shelx-filename]
+#                    [--map ccp4-map-file-name]
+#                    [--data mtz-file-name]
+#                    [--hklin mtz-file-name]
+#                    [--auto mtz-file-name]
+#                    [--script script-file-name]
+#                    [--no-state-script]
+#                    [--no-splash-screen]
+#                    [--no-graphics]
+#                    [--no-guano]
+#                    [--small-screen]
+#                    [--stereo]
+#                    [--zalman-stereo]
+#                    [--side-by-side]
+#                    [--version]
 
 # Define a function to convert xplor to ccp4 map on the fly
 
@@ -42,10 +62,12 @@ eof
 
 # Look for an rc file in the user's home directory
 
-if [[ -f ~/.coot ]];then
-	startupscript=( --script ~/.coot )	
-elif [[ -f ~/.cootrc ]];then
+# Note that ~/.coot is always read if it is present	
+
+if [[ -f ~/.cootrc ]];then
 	startupscript=( --script ~/.cootrc )	
+elif [[ -f ~/.coot_zalman.scm ]];then
+	startupscript=( --script ~/.coot_zalman.scm )
 else
 	startupscript=" "
 fi
@@ -78,7 +100,7 @@ for ((i = 1; i <= $LIMIT; i++ )) do
 	eval file="\$$i"
 	eval prevfile="\$$((i-1))"
       
-    if [[ $file == ("--no-state-script"|"--help"|"--stereo"|"--version"|"--no-guano"|"--side-by-side"|"--no-graphics")  ]];then
+    if [[ $file == ("--no-state-script"|"--help"|"--stereo"|"--version"|"--no-guano"|"--side-by-side"|"--no-graphics"|"--no-splash-screen"|"--small-screen"|"--zalman-stereo"|"--side-by-side")  ]];then
 		argarray+=( "$file" )
 	elif [[ $file:e == (pdb|ent|brk) ]]; then
 		pdbfilearray+=( --pdb $file )
@@ -105,11 +127,11 @@ for ((i = 1; i <= $LIMIT; i++ )) do
 		else
 			mapfilearray+=( --map $file )
 		fi
-	elif [[ $file:e == (script|coot|cootrc|scm) ]]; then
+	elif [[ $file:e == (script|coot|cootrc|scm|py) ]]; then
 		scriptfilearray+=( --script $file )
 	elif [[ $file == -s ]]; then
 		skipscroll='yes'   
-	elif [[ $file != (--help|--pdb|--coords|--map|--data|--hklin|--auto|--script|--no-state-script|--no-guano|--no-graphics|--stereo|--version) ]];then
+	elif [[ $file != (--help|--pdb|--coords|--map|--data|--hklin|--auto|--script|--no-state-script|--no-splash-screen|--no-guano|--no-graphics|--small-screen|--stereo|--zalman-stereo|--side-by-side|--version) ]];then
         
 		if [[ $(uname) == Darwin ]];then
 			say "WARNING: $file FILE TYPE is unrecognized!"
