@@ -200,6 +200,9 @@ if [[ -o interactive ]]; then
 
             # Change metadata (spotlight) attributes
             autoload -U mdattr
+
+            # Add full user access to a directory via ACL
+            autoload -U acl_adduser
             
             # Pasteboard interactions
             autoload -U  pbcp  
