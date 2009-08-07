@@ -35,6 +35,9 @@ if [[ -f  $HOME/Library/Preferences/com.binarynights.ForkLift.plist  ]]; then
 
 	if [[ -d "$1" ]];then
 		DIRECTORYNAME="$1"
+	elif [[ "$1" == "-f" || "$1" == "-F"  ]];then
+	    autoload -U posd
+		DIRECTORYNAME="$(posd)"	   
 	else
 		DIRECTORYNAME="$PWD"
 	fi
