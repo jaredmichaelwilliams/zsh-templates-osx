@@ -15,5 +15,6 @@
   (add-simple-coot-menu-menuitem
    menu "Zalman Full-Screen"
    (lambda ()
- (set-graphics-window-position 0 0)(set-graphics-window-size 1680 1050))))
+ (set-graphics-window-position 0 0)(set-graphics-window-size 1680 1000))))
  
+
