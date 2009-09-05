@@ -8,13 +8,13 @@
 
 
 
-if [[ -o interactive ]]; then
+if [[ -o interactive && $( id -Gn ) == *admin* ]]; then
 
 	# Check to see if locate_database exists, and if it is younger that two weeks old.   
 	# If not, prompt user to run the periodic maintenance scripts. These get run
 	# automatically if your computer is on at 3 am. Otherwise, you have to do it somehow:
 
-	if [[  $(uname) == Darwin &&  $( id -Gn ) == *admin* ]];then
+	if [[  $(uname) == Darwin &&  $(sw_vers -productVersion) < 10.6    ]];then
 		if [[ /var/db/locate.database == $( ls /var/db/locate.database(.mw-2) ) ]];then
 			:  # Do nothing, database is younger than two weeks old
 		else 
