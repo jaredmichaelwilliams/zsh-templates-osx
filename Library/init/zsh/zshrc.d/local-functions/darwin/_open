@@ -33,14 +33,13 @@ _open() {
 
   case "$state" in
     open_mac_applications)
-      if [[ $OSTYPE[7] -ge '8' ]]; then
-        _init_open_tiger
-        _alternative \
-            "commands: :_mac_applications" \
-            "files:: _open_absolute_application_path"
-
+      if [[ $(sw_vers -productVersion)  < 10.5 ]];then
+	      _init_open
+	      _alternative \
+	          "commands: :_mac_applications" \
+	          "files:: _open_absolute_application_path"
       else
-        _init_open
+        _init_open_tiger
         _alternative \
             "commands: :_mac_applications" \
             "files:: _open_absolute_application_path"
