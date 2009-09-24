@@ -68,7 +68,7 @@ fi
         absolutepath="$ZDOT/zshrc.d/local-functions/etc/Pashua.app/Contents/MacOS/Pashua"
     elif [[ -d "$SWPREFIX/share/zsh/templates/Library/init/zsh/zshrc.d/local-functions/etc/Pashua.app/Contents" && $WhichPashua == 'use_internal' ]];then
         absolutepath="$SWPREFIX/share/zsh/templates/Library/init/zsh/zshrc.d/local-functions/etc/Pashua.app/Contents/MacOS/Pashua"
-	elif [[ $OSTYPE[7] -ge '8' ]]; then
+	elif [[ -x /usr/bin/mdfind ]]; then
 		absolutepath=$( mdfind -onlyin /Applications Pashua.app | head -n 1 )/Contents/MacOS/Pashua
 		if [[ -z $absolutepath ]];then
 		      absolutepath=$( mdfind 'kMDItemContentType == "com.apple.application-bundle" && kMDItemDisplayName == "Pashua"' | head -n 1 )/Contents/MacOS/Pashua

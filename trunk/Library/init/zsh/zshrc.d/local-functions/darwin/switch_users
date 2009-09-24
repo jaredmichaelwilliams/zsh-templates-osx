@@ -1,8 +1,8 @@
 #!/bin/zsh -f
 
  
-if [[ $OSTYPE[7] -lt 7 ]];then
-     print "Fast User Switching is not available in OSX version $os_version"
+if [[ $(sw_vers -productVersion) < 10.4 ]];then
+     print "Fast User Switching is not available in OSX version $(sw_vers -productVersion) "
      return 1
 fi
 
