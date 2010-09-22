@@ -6,10 +6,7 @@
 # the current track in iTunes, and if a change is required, restart iTunes
 # track at the beginning in the original playlist.
 
-# Many thanks to "red menace" of the Apple bulletin board community and
-# many others for helpful suggestions and input.
-
-version="0.0.3"
+version="0.0.4"
 
 # revision 0.0.3 addresses a problem created by the use of commas as
 # decimal points in Audio MIDI (eg: hiface).
@@ -45,6 +42,8 @@ version="0.0.3"
 #
 ###############################################################################
 
+# Many thanks to "red menace" of the Apple bulletin board community and
+# several others for helpful suggestions and input.
 
 osascript <<-eof
 property upArrow : ASCII character 30
@@ -60,8 +59,7 @@ tell application "iTunes"
 end tell
 
 tell application "Audio MIDI Setup" to activate
-tell application "System Events"
-	
+tell application "System Events"	
 	tell application process "Audio MIDI Setup"
 		try -- make sure window is there
 			click menu item "Show Audio Window" of menu "Window" of menu bar item "Window" of menu bar 1
@@ -70,7 +68,9 @@ tell application "System Events"
 		set currentRate to (text 1 thru -3 of first word of (get value of comboBox)) as number
 		-- strip off Hz and the decimal point which can sometimes be a comma (.0 and ,0 are removed)
 		if desiredRate is not currentRate then
-			tell application "iTunes" to pause -- avoid listening to clicking when sampling frequency changes
+			tell application "iTunes" 
+			    pause -- avoid listening to clicking when sampling frequency changes
+			end tell
 			click button 1 of comboBox -- perform action "AXPress" to drop the list
 			set theChoices to value of text fields of list 1 of scroll area 1 of comboBox -- get all the values
 			keystroke upArrow using {option down} -- up to the top
@@ -81,8 +81,9 @@ tell application "System Events"
 			end repeat
 			keystroke return -- select and dismiss the list
 			tell application "iTunes" to quit -- we have to quit and restart iTunes for it to use the new sample freq
-			delay 5 -- iTunes reopens automatically (why?), but we need to give it a chance to get going
+			delay 10 -- iTunes reopens automatically (why?), but we need to give it a chance to get going
 			tell application "iTunes"
+			    launch
 				activate
 				set thePlaylist to some playlist whose persistent ID is playlistID
 				play (some track of thePlaylist whose persistent ID is trackID)
@@ -95,3 +96,5 @@ tell application "System Events"
 end tell
 
 eof
+
+
