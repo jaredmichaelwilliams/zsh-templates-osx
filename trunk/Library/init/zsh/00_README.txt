@@ -1,4 +1,4 @@
-** How to make modifications:
+** How to make modifications:   
    =========================
 
 	By far the best and most robust way to modify these files is to copy the file
