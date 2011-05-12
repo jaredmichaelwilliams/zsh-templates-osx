@@ -1,5 +1,6 @@
 #!/bin/zsh -f
 
+set -x 
 
 # shell script name: nyquist.zsh  
 # Use iTunes interace to play selected tracks in Decibel, a shareware
@@ -11,7 +12,7 @@
 
 # Decibel can be purchased and dowloaded here:  http://sbooth.org/Decibel/
 
-version="3.0.1"
+version="4.0.0"
 
 
 # Put this file in /Library/iTunes/etc
@@ -78,6 +79,7 @@ osascript <<-eof2
 -- I use a hack to activate a quit command by playing a track called "That's All Folks"
 tell application "iTunes"
 	set trackName to name of current track
+    set CurrentAlbum to album of current track
     if trackName is "That's All Folks" then
         tell application "Decibel" to quit
     end if
@@ -99,12 +101,18 @@ end tell
 tell application "iTunes"
 	next track
 	if  trackName is name of current track then
-	    tell application "Decibel" to play
 	    tell application "System Events" to set visible of process "iTunes" to false  -- hide iTunes
+	    tell application "Decibel" to play
         tell application "Decibel" to activate  -- Move the Decibel GUI to the frontmost window position
 	    return -- prevents endless repeat of the last song on the playlist
 	end if
-        play
+	if CurrentAlbum is not album of current track
+		tell application "System Events" to set visible of process "iTunes" to false  -- hide iTunes
+	    tell application "Decibel" to play
+        tell application "Decibel" to activate  -- Move the Decibel GUI to the frontmost window position
+	    return -- prevents selection of multiple albums (incompatible with playlists)
+	end if
+    play
 	pause
 end tell
 
