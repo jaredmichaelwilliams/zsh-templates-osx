@@ -11,7 +11,7 @@
 
 # Decibel can be purchased and dowloaded here:  http://sbooth.org/Decibel/
 
-version="3.0.1"
+version="4.0.2"
 
 
 # Put this file in /Library/iTunes/etc
@@ -79,10 +79,12 @@ osascript <<-eof2
 tell application "iTunes"
 	set trackName to name of current track
     if trackName is "That's All Folks" then
-        tell application "Decibel" to quit
-    end if
-	pause -- Now that we have the info, stop playing iTunes and use Decibel 
-	set filePath to location of current track
+        tell application "Decibel" to clearPlaylist
+        pause
+    else
+	    pause -- Now that we have the info, stop playing iTunes and use Decibel 
+	    set filePath to location of current track
+	end if
 end tell
 
 
@@ -100,8 +102,11 @@ tell application "iTunes"
 	next track
 	if  trackName is name of current track then
 	    tell application "Decibel" to play
-	    tell application "System Events" to set visible of process "iTunes" to false  -- hide iTunes
-        tell application "Decibel" to activate  -- Move the Decibel GUI to the frontmost window position
+            tell application "Decibel" to activate  -- Move the Decibel GUI to the frontmost window position
+            tell application "System Events"
+		         set visible of process "iTunes" to false
+		         set visible of process "Finder" to false
+            end tell
 	    return -- prevents endless repeat of the last song on the playlist
 	end if
         play
