@@ -11,7 +11,7 @@
 
 # Audirvana can be obtained here:  http://code.google.com/p/audirvana/
 
-version="3.1.1"
+version="3.1.0"
 
 
 # Put this file in /Library/iTunes/etc
@@ -73,20 +73,14 @@ if [[ $trackkind == 1 || $trackkind == 42 ]];then
 fi
 
 osascript <<-eof2
-
-on do_menu(app_name, menu_name, menu_item)
-	tell application app_name to activate
-	tell application "System Events"
-		tell menu menu_name of menu bar item menu_name of menu bar 1 of process app_name to click menu item menu_item
-	end tell
-end do_menu
  
 tell application "iTunes"
 	set trackName to name of current track
+	set CurrentAlbum to album of current track
     if trackName is "That's All Folks" then
         tell application "Audirvana" to quit
     end if
-	pause -- Now that we have the info, stop playing iTunes and use Audirvana
+	pause -- Now that we have the info, stop playing iTunes and use afplay after checking sample rate match
 	set filePath to location of current track
 end tell
 
@@ -96,32 +90,15 @@ tell application "Audirvana"
     open theTune
 end tell
 
-do_menu("Audirvana", "Play", "Stop")
-
--- do_menu("Audirvana", "Edit", "Select All")
--- do_menu("Audirvana", "Edit", "Delete")
-
 tell application "iTunes"
 	next track
 	if  trackName is name of current track then
-	    set x to 1
-	else 
-	  play
-	  pause
+	    tell application "System Events" to set visible of process "iTunes" to false  -- hide iTunes
+	    return -- prevents endless repeat of the last song on the playlist
 	end if
+    play
+	pause
 end tell
-
-if x = 1 then
-    do_menu("Audirvana", "Play", "Play/Pause")
-    do_menu("Audirvana", "Play", "Stop")
-    delay 5
-    do_menu("Audirvana", "Play", "Play/Pause")
-    delay 1
-    return -- prevents endless repeat of the last song on the playlist
-end if
-
- 
-
 
 
 eof2

@@ -2,16 +2,16 @@
 
 
 # shell script name: nyquist.zsh  
-# Use iTunes interace to play selected tracks in Decibel, a shareware
+# Use iTunes inteface to play selected tracks in Audirvana, an open-source
 # audiophile music player application that properly adjusts the sampling
 # frequency automatically.  The main utility of this hack is it allows one
 # to use Apple's iPod/iPad/iPhone Remote.app to initiate playback.  Currently,
 # once playback is initiated, it is beyond control of Remote.app, but using
 # a standard Apple Remote Control device permits further user interaction.
 
-# Decibel can be purchased and dowloaded here:  http://sbooth.org/Decibel/
+# Audirvana can be obtained here:  http://code.google.com/p/audirvana/
 
-version="3.0.1"
+version="3.1.0"
 
 
 # Put this file in /Library/iTunes/etc
@@ -20,10 +20,9 @@ version="3.0.1"
 #  Open iTunes and set the visualizer to use "iTunesPlugIn".
 
 
-
 ###############################################################################
  
-#  Created by William G. Scott on Sept 15, 2010. Revised to use Decibel
+#  Created by William G. Scott on Sept 15, 2010. Revised to use Audirvana
 #  instead of GUI scripting of Audio MIDI Setup and afplay, on Feb 9, 2011.
 #  Copyright (c) . All rights reserved.
 
@@ -51,7 +50,7 @@ version="3.0.1"
 # several others for helpful suggestions and input.
 
 # If it is a video or protected file, bail from this script and hand it back
-# to the iTunes player. Otherwise, pause iTunes, and play with Decibel.
+# to the iTunes player. Otherwise, pause iTunes, and play with Audirvana.
 
 trackkind=$(osascript <<-eof1
 tell application "iTunes" 
@@ -74,39 +73,37 @@ if [[ $trackkind == 1 || $trackkind == 42 ]];then
 fi
 
 osascript <<-eof2
-
--- I use a hack to activate a quit command by playing a track called "That's All Folks"
+ 
 tell application "iTunes"
 	set trackName to name of current track
+	set CurrentAlbum to album of current track
     if trackName is "That's All Folks" then
-        tell application "Decibel" to quit
+        tell application "Audirvana" to quit
     end if
-	pause -- Now that we have the info, stop playing iTunes and use Decibel 
+	pause -- Now that we have the info, stop playing iTunes and use afplay after checking sample rate match
 	set filePath to location of current track
 end tell
 
-
--- here we use Decibel rather than iTunes to play the selected tracks
--- Note that it will go down the whole list, loading them one by one into
--- the Decibel playlist window.
-
+-- here we use Audirvana rather than iTunes to play the track
 set theTune to POSIX path of filePath
-
-tell application "Decibel"
-    addFile theTune  -- fix to use syntax specific to Decibel.app
+tell application "Audirvana" 
+    open theTune
 end tell
 
 tell application "iTunes"
 	next track
+	if CurrentAlbum is not album of current track
+		tell application "System Events" to set visible of process "iTunes" to false  -- hide iTunes
+	    return -- prevents selection of multiple albums (incompatible with playlists)
+	end if
 	if  trackName is name of current track then
-	    tell application "Decibel" to play
 	    tell application "System Events" to set visible of process "iTunes" to false  -- hide iTunes
-        tell application "Decibel" to activate  -- Move the Decibel GUI to the frontmost window position
 	    return -- prevents endless repeat of the last song on the playlist
 	end if
-        play
+    play
 	pause
 end tell
+
 
 eof2
 return 0
