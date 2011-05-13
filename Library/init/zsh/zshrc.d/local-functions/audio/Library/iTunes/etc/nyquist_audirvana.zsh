@@ -115,6 +115,10 @@ if x = 1 then
     do_menu("Audirvana", "Play", "Play/Pause")
     do_menu("Audirvana", "Play", "Stop")
     do_menu("Audirvana", "Play", "Play/Pause")
+    tell application "System Events"
+         set visible of process "iTunes" to false
+         set visible of process "Finder" to false
+    end tell
     return -- prevents endless repeat of the last song on the playlist
 end if
 
