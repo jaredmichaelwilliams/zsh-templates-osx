@@ -91,7 +91,7 @@ if [[ -o interactive ]]; then
     # Some common aliases:
         alias back='cd "$OLDPWD";pwd'
         # alias rehash='hash -r'        # Now a shell built-in
-        alias purge="rm -i *~"          # Remove emacs guano
+        alias noguano="rm -i *~"          # Remove emacs guano
         alias rm="rm -i"                # Some people hate this, but it saved my arse many times.
     
         if [[ $(which dt) == "dt not found" ]];then
