@@ -11,7 +11,7 @@
 
 # Audirvana can be obtained here:  http://code.google.com/p/audirvana/
 
-version="4.0.2"
+version="4.0.3"
 
 
 # Put this file in /Library/iTunes/etc
@@ -74,14 +74,6 @@ fi
 
 osascript <<-eof2
 
-on do_menu(app_name, menu_name, menu_item)
-	tell application app_name to activate
-	tell application "System Events"
-		tell menu menu_name of menu bar item menu_name of menu bar 1 of process app_name to click menu item menu_item
-	end tell
-end do_menu
-
- 
 tell application "iTunes"
 	set trackName to name of current track
 	set CurrentAlbum to album of current track
@@ -96,9 +88,8 @@ end tell
 set theTune to POSIX path of filePath
 tell application "Audirvana" 
     open theTune
+    delay 1
 end tell
-
-do_menu("Audirvana", "Play", "Stop")
 
 
 tell application "iTunes"
@@ -112,9 +103,6 @@ tell application "iTunes"
 end tell
 
 if x = 1 then
-    do_menu("Audirvana", "Play", "Play/Pause")
-    do_menu("Audirvana", "Play", "Stop")
-    do_menu("Audirvana", "Play", "Play/Pause")
     tell application "System Events"
          set visible of process "iTunes" to false
          set visible of process "Finder" to false
