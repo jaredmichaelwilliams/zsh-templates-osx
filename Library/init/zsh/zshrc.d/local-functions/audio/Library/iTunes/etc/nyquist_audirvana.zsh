@@ -11,8 +11,9 @@
 
 # Audirvana can be obtained here:  http://code.google.com/p/audirvana/
 
-version="4.0.3"
+version="5.0"
 
+# version 5 fixes for OS X 10.7 and iTunes 10.4
 
 # Put this file in /Library/iTunes/etc
 # and the accompanying Plug-in into /Library/iTunes/iTunes Plug-ins 
@@ -22,8 +23,10 @@ version="4.0.3"
 
 ###############################################################################
  
-#  Created by William G. Scott on Sept 15, 2010. Revised to use Audirvana
+#  Created by William G. Scott and Robert Stern on Sept 15, 2010. 
+#  Revised to use Audirvana
 #  instead of GUI scripting of Audio MIDI Setup and afplay, on Feb 9, 2011.
+#  Revised for OS X 10.7 and iTunes 10.4 and 64-bit plug-in SDK on July 26, 2011.
 #  Copyright (c) . All rights reserved.
 
 
@@ -77,9 +80,6 @@ osascript <<-eof2
 tell application "iTunes"
 	set trackName to name of current track
 	set CurrentAlbum to album of current track
-    if trackName is "That's All Folks" then
-        tell application "Audirvana" to quit
-    end if
 	pause -- Now that we have the info, stop playing iTunes and use Audirvana
 	set filePath to location of current track
 end tell
@@ -98,8 +98,9 @@ tell application "iTunes"
 	if  (trackName is name of current track) then
 	    set x to 1
 	else 
-	  play
-	  pause
+	    set x to 0
+	    play
+	    pause
 	end if
 end tell
 
@@ -110,8 +111,6 @@ if x = 1 then
     end tell
     return -- prevents endless repeat of the last song on the playlist
 end if
-
-
 
 
 eof2
