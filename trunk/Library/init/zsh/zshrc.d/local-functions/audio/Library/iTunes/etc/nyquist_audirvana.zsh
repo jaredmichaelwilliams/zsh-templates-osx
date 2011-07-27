@@ -11,7 +11,7 @@
 
 # Audirvana can be obtained here:  http://code.google.com/p/audirvana/
 
-version="5.0"
+version="5.0.1"
 
 # version 5 fixes for OS X 10.7 and iTunes 10.4
 
@@ -80,6 +80,9 @@ osascript <<-eof2
 tell application "iTunes"
 	set trackName to name of current track
 	set CurrentAlbum to album of current track
+	if trackName is "That's All Folks" then
+        tell application "Audirvana" to quit
+    end if
 	pause -- Now that we have the info, stop playing iTunes and use Audirvana
 	set filePath to location of current track
 end tell
