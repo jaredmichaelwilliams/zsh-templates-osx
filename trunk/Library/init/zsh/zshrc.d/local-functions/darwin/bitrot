@@ -1,0 +1,201 @@
+#!/bin/zsh -f
+
+#  bitrot  
+
+   version="0.1.4"
+   # Revision history:
+
+   #  0.1.4         add logging option
+   #  0.1.3         add options to list and delete checksums for sanity checks
+   #  0.1.2         add check so we don't waste time on non-alac files.
+   #	            Fixed false negative bug due to lack of realtime feedback
+   #  0.1.1         add ability to recursively transverse directories
+   #  0.1.0         proof of concept
+                            
+   # To-do:         Create launchd script to run periodically
+   
+
+#################################################################################################
+#  bitrot is a zsh shell script/function that uses OS X built-in utilities to associate a       #
+#  SHA-1 checksum (or hash) of the audio data in an m4a file and writes the hash code into      #
+#  the resource fork associated with that file, using afhash and xattr. This has the            #
+#  advantage of not altering the audio file itself. This assumes you have stored your           #
+#  music on an HFS+ formatted (default OS X) hard drive, or some other resource-fork            #
+#  friendly filesystem (like zfs). To preserve resource forks, you need to use OS X copy        #
+#  utilities that are resource-fork aware.  Please note that checksum will only be              #
+#  computed for integer linear PCM or losslessly encoded data whose sample frequency is         #
+#  greater than or equal to 44100 Hz and bit depth is greater than or equal to 16, which        #
+#  are limitations imposed by the afhash utility in OS X.  man afhash for more info.            #
+#                                                                                               #
+#                                                                                               #
+#     How to use it:                                                                            #
+#                                                                                               #
+#  (a) To generate the checksums:     bitrot -w                                                 #
+#                                                                                               #
+#  Run bitrot from the top-level directory containing all your m4a music files. If you          #
+#  allow iTunes to organize your music, this will most likely be the directory                  #
+#   ~/Music/iTunes/iTunes\ Media/Music                                                          #
+#  Invoke bitrot with the -w flag to generate the checksums for each of the                     #
+#  audio files and to write these values into the associated resource fork.                     #
+#                                                                                               #
+#                                                                                               #
+#  (b) To check the integrity of files at a later time:     bitrot -c                           #
+#                                                                                               #
+#  Run bitrot from the top-level directory or the directory containing the music files          #
+#  in question. Invoke bitrot with the -c flag to compare the current checksum with             #
+#  what is stored in the resource fork.  If they don't match, this indicates the audio          #
+#  portion of the file has somehow changed.  The checksum should not change if you have         #
+#  only manipulated the tags or so-called metadata in iTunes or other tag-editing software.     #
+#  Mismatches are logged to dated logfiles in $bitrotlog                                        #
+#                                                                                               #
+#                                                                                               #
+#  (c) To view checksums added to the resource forks:     bitrot -l                             #
+#                                                                                               #
+#  Run bitrot from the top-level directory or the directory containing the music files          #
+#  in question using the -l flag to view checksums added to the resource forks.                 #
+#                                                                                               #
+#                                                                                               #
+#  (d) To delete the checksums from resource forks:     bitrot -d                               #
+#                                                                                               #
+#  Run bitrot from the top-level directory or the directory containing the music files          #
+#  in question. Invoke bitrot with the -d flag to remove the current checksum. Plese            #
+#  note that you never should have to do this. Re-running bitrot with -w will update the        #
+#  checksums.                                                                                   #
+#################################################################################################
+
+ 
+##################################################################################
+#                                                                                #
+#  Created by William G. Scott on January 21st, 2014                             #
+#  Copyright (c) . All rights reserved.                                          #
+#                                                                                #
+#                                                                                #
+#    This program is free software; you can redistribute it and/or modify        #
+#    it under the terms of the GNU General Public License as published by        #
+#    the Free Software Foundation; either version 2 of the License, or           #
+#    (at your option) any later version.                                         #
+#                                                                                #
+#    This program is distributed in the hope that it will be useful,             #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of              #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               #
+#    GNU General Public License for more details.                                #
+#                                                                                #
+#    You should have received a copy of the GNU General Public License           #
+#    along with this program; if not, write to the Free Software                 #
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301   #
+#    USA                                                                         #
+#                                                                                #
+#    cf. URL:   http://www.fsf.org/licensing/licenses/gpl.html                   #
+#                                                                                #
+##################################################################################
+
+
+
+flag="$@"
+
+
+# Edit this for where you want the bitrot log file to appear
+bitrotlog=~/Library/Logs/bitrot
+
+
+
+function GetHashAttr {
+    foreach m4afile in **/*.m4a 
+	  isALAC=($(afinfo -i "$m4afile" | grep format | grep alac))
+	  if [[ -n "$isALAC" ]]; then
+		 mdls -name kMDItemFSName -name kMDItemHash "$m4afile" | cut -d \= -f 2 | perl -p -e 's|"||g'
+	  fi
+    end
+}
+
+function AddHashAttr {
+  foreach m4afile in **/*.m4a 
+    isALAC=($(afinfo -i "$m4afile" | grep format | grep alac))
+    if [[ -n "$isALAC" ]]; then
+       xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+	   # GetHashAttr  # doesn't update in realtime.
+	fi
+  end
+}
+
+
+
+function CheckHash {
+  mkdir -p $bitrotlog
+  function datestamp { date +%b_%d_%Y }
+  foreach m4afile in **/*.m4a
+	 isALAC=($(afinfo -i "$m4afile" | grep format | grep alac))
+	 if [[ -n "$isALAC" ]]; then
+	    mdlsHash=($(mdls -name kMDItemHash "$m4afile" | cut -d \= -f 2 | perl -p -e 's|"||g'))
+	    afhashHash=($(afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}' | perl -p -e 's|"||g'))
+		if [[ "$mdlsHash" != "$afhashHash"  ]]; then
+		    print "\e[1m Warning\:\e[0m" \\\n "$m4afile"  has an checksum of "\e[1m $afhashHash \e[0m" but should have a checksum of "\e[1m $mdlsHash \e[0m"
+			print ""
+			print "$m4afile"  has an checksum of $afhashHash but should have a checksum of $mdlsHash >>|  $bitrotlog/$(datestamp).log
+		else
+		    print "\e[1m Looks OK\:\e[0m"  \\\n "$m4afile" has an checksum of "\e[1m $afhashHash \e[0m" which agrees with a checksum of "\e[1m $mdlsHash \e[0m"
+			print ""
+		fi
+	fi
+  end
+}
+
+
+
+
+function DeleteHashAttr {
+    foreach m4afile in **/*.m4a 
+	  isALAC=($(afinfo -i "$m4afile" | grep format | grep alac))
+	  if [[ -n "$isALAC" ]]; then
+		 xattr -d com.apple.metadata:kMDItemHash "$m4afile"  
+		 #GetHashAttr
+	  fi
+    end
+}
+
+
+if [[ "$flag" == "--check"  || "$flag" == "-c"  ]]; then
+	CheckHash
+elif [[ "$flag" == "--write"  || "$flag" == "-w"  ]]; then
+    AddHashAttr
+elif [[ "$flag" == "--list"  || "$flag" == "-l"   ]];then
+    GetHashAttr
+elif [[ "$flag" == "--delete"  || "$flag" == "-d"   ]];then
+    DeleteHashAttr
+else
+	print "\e[1m Usage\:\e[0m  bitrot [ -w | --write | -c | --check | -l | --list | -d | --delete | -h | --help ]	"
+	print ""
+	print ""
+	print "\e[1m  (a) To generate the checksums:     bitrot -w         \e[0m                           "
+	print "                                                                                            "
+	print "  Run bitrot from the top-level directory containing all your m4a music files. If you       "
+	print "  allow iTunes to organize your music, this will most likely be the directory               "
+	print "   ~/Music/iTunes/iTunes\ Media/Music                                                       "
+	print "  Invoke bitrot with the -w flag to generate the checksums for each of the                  "
+	print "  audio files and to write these values into the associated resource fork.                  "
+	print "                                                                                            "
+	print "                                                                                            "
+	print "\e[1m  (b) To view checksums added to the resource forks:     bitrot -l        \e[0m        "
+	print "                                                                                            "
+	print "  Run bitrot from the top-level directory or the directory containing the music files       "
+	print "  in question using the -l flag to view checksums added to the resource forks.              "
+	print "                                                                                            "
+	print "                                                                                            "
+	print "\e[1m  (c) To check the integrity of files at a later time:     bitrot -c        \e[0m      "
+	print "                                                                                            "
+	print "  Run bitrot from the top-level directory or the directory containing the music files       "
+	print "  in question. Invoke bitrot with the -c flag to compare the current checksum with          "
+	print "  what is stored in the resource fork.  If they don't match, this indicates the audio       "
+	print "  portion of the file has somehow changed.  The checksum should not change if you have      "
+	print "  only manipulated the tags or so-called metadata in iTunes or other tag-editing software.  "
+	print "  Mismatches are logged to dated logfiles in $bitrotlog                                     "
+	print "                                                                                            "
+	print "                                                                                            "
+	print "\e[1m  (d) To delete the checksums from resource forks:     bitrot -d        \e[0m          "
+	print "                                                                                            "
+	print "  Run bitrot from the top-level directory or the directory containing the music files       "
+	print "  in question. Invoke bitrot with the -d flag to remove the current checksum. Plese         "
+	print "  note that you never should have to do this. Re-running bitrot with -w will update the     "
+	print "  checksums."
+fi
+
