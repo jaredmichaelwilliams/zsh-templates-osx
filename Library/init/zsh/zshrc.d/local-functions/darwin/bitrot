@@ -2,9 +2,11 @@
 
 #  bitrot  
 
-   version="0.1.4"
+   version="0.1.5"
    # Revision history:
 
+   #  0.1.5         Provide example launchd plist file in comments section.
+   #                If a discrepency is logged, have Console.app open it.
    #  0.1.4         add logging option
    #  0.1.3         add options to list and delete checksums for sanity checks
    #  0.1.2         add check so we don't waste time on non-alac files.
@@ -12,82 +14,117 @@
    #  0.1.1         add ability to recursively transverse directories
    #  0.1.0         proof of concept
                             
-   # To-do:         Create launchd script to run periodically
    
 
-#################################################################################################
-#  bitrot is a zsh shell script/function that uses OS X built-in utilities to associate a       #
-#  SHA-1 checksum (or hash) of the audio data in an m4a file and writes the hash code into      #
-#  the resource fork associated with that file, using afhash and xattr. This has the            #
-#  advantage of not altering the audio file itself. This assumes you have stored your           #
-#  music on an HFS+ formatted (default OS X) hard drive, or some other resource-fork            #
-#  friendly filesystem (like zfs). To preserve resource forks, you need to use OS X copy        #
-#  utilities that are resource-fork aware.  Please note that checksum will only be              #
-#  computed for integer linear PCM or losslessly encoded data whose sample frequency is         #
-#  greater than or equal to 44100 Hz and bit depth is greater than or equal to 16, which        #
-#  are limitations imposed by the afhash utility in OS X.  man afhash for more info.            #
-#                                                                                               #
-#                                                                                               #
-#     How to use it:                                                                            #
-#                                                                                               #
-#  (a) To generate the checksums:     bitrot -w                                                 #
-#                                                                                               #
-#  Run bitrot from the top-level directory containing all your m4a music files. If you          #
-#  allow iTunes to organize your music, this will most likely be the directory                  #
-#   ~/Music/iTunes/iTunes\ Media/Music                                                          #
-#  Invoke bitrot with the -w flag to generate the checksums for each of the                     #
-#  audio files and to write these values into the associated resource fork.                     #
-#                                                                                               #
-#                                                                                               #
-#  (b) To check the integrity of files at a later time:     bitrot -c                           #
-#                                                                                               #
-#  Run bitrot from the top-level directory or the directory containing the music files          #
-#  in question. Invoke bitrot with the -c flag to compare the current checksum with             #
-#  what is stored in the resource fork.  If they don't match, this indicates the audio          #
-#  portion of the file has somehow changed.  The checksum should not change if you have         #
-#  only manipulated the tags or so-called metadata in iTunes or other tag-editing software.     #
-#  Mismatches are logged to dated logfiles in $bitrotlog                                        #
-#                                                                                               #
-#                                                                                               #
-#  (c) To view checksums added to the resource forks:     bitrot -l                             #
-#                                                                                               #
-#  Run bitrot from the top-level directory or the directory containing the music files          #
-#  in question using the -l flag to view checksums added to the resource forks.                 #
-#                                                                                               #
-#                                                                                               #
-#  (d) To delete the checksums from resource forks:     bitrot -d                               #
-#                                                                                               #
-#  Run bitrot from the top-level directory or the directory containing the music files          #
-#  in question. Invoke bitrot with the -d flag to remove the current checksum. Plese            #
-#  note that you never should have to do this. Re-running bitrot with -w will update the        #
-#  checksums.                                                                                   #
-#################################################################################################
+	#################################################################################################
+	#  bitrot is a zsh shell script/function that uses OS X built-in utilities to associate a       #
+	#  SHA-1 checksum (or hash) of the audio data in an m4a file and writes the hash code into      #
+	#  the resource fork associated with that file, using afhash and xattr. This has the            #
+	#  advantage of not altering the audio file itself. This assumes you have stored your           #
+	#  music on an HFS+ formatted (default OS X) hard drive, or some other resource-fork            #
+	#  friendly filesystem (like zfs). To preserve resource forks, you need to use OS X copy        #
+	#  utilities that are resource-fork aware.  Please note that checksum will only be              #
+	#  computed for integer linear PCM or losslessly encoded data whose sample frequency is         #
+	#  greater than or equal to 44100 Hz and bit depth is greater than or equal to 16, which        #
+	#  are limitations imposed by the afhash utility in OS X.  man afhash for more info.            #
+	#                                                                                               #
+	#                                                                                               #
+	#     How to use it:                                                                            #
+	#                                                                                               #
+	#  (a) To generate the checksums:     bitrot -w                                                 #
+	#                                                                                               #
+	#  Run bitrot from the top-level directory containing all your m4a music files. If you          #
+	#  allow iTunes to organize your music, this will most likely be the directory                  #
+	#   ~/Music/iTunes/iTunes\ Media/Music                                                          #
+	#  Invoke bitrot with the -w flag to generate the checksums for each of the                     #
+	#  audio files and to write these values into the associated resource fork.                     #
+	#                                                                                               #
+	#                                                                                               #
+	#  (b) To check the integrity of files at a later time:     bitrot -c                           #
+	#                                                                                               #
+	#  Run bitrot from the top-level directory or the directory containing the music files          #
+	#  in question. Invoke bitrot with the -c flag to compare the current checksum with             #
+	#  what is stored in the resource fork.  If they don't match, this indicates the audio          #
+	#  portion of the file has somehow changed.  The checksum should not change if you have         #
+	#  only manipulated the tags or so-called metadata in iTunes or other tag-editing software.     #
+	#  Mismatches are logged to dated logfiles in $bitrotlog                                        #
+	#                                                                                               #
+	#                                                                                               #
+	#  (c) To view checksums added to the resource forks:     bitrot -l                             #
+	#                                                                                               #
+	#  Run bitrot from the top-level directory or the directory containing the music files          #
+	#  in question using the -l flag to view checksums added to the resource forks.                 #
+	#                                                                                               #
+	#                                                                                               #
+	#  (d) To delete the checksums from resource forks:     bitrot -d                               #
+	#                                                                                               #
+	#  Run bitrot from the top-level directory or the directory containing the music files          #
+	#  in question. Invoke bitrot with the -d flag to remove the current checksum. Plese            #
+	#  note that you never should have to do this. Re-running bitrot with -w will update the        #
+	#  checksums.                                                                                   #
+	#                                                                                               #
+	#  An example launchd plist file is given below. You need to copy it and remove the # comments  #
+	#  in the left margin. You can name this local.bitrot.checker.plist and put it into             #
+	#  your user's ~/Library/LaunchAgents directory. Make sure you edit the WorkingDirectory        #
+	#  string entry first, providing your own username, and the actual path to where your music     #
+	#  files reside. This will check your files every sunday at 1 am. You may wish to adjust        #
+	#  this according to your listening habits and degree of paranoia.                              #
+	#                                                                                               #
+	#################################################################################################
+	
+	
+#  <?xml version="1.0" encoding="UTF-8"?>
+#  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+#  <plist version="1.0">
+#  <dict>
+#  	<key>Label</key>
+#  	<string>local.bitrot.checker</string>
+#  	<key>WorkingDirectory</key>
+#  	    <string>/Users/yourusername/Music/iTunes/iTunes Media/Music</string>
+#  	<key>ProgramArguments</key>
+#  	<array>
+#  		<string>/usr/local/bin/bitrot</string>
+#  		<string>-c</string>
+#  	</array>
+#  	<key>StartCalendarInterval</key>
+#  	<dict>
+#  		<key>Hour</key>
+#  		<integer>1</integer>
+#  		<key>Minute</key>
+#  		<integer>3</integer>
+#  		<key>Weekday</key>
+#  		<integer>0</integer>
+#  	</dict>
+#  </dict>
+#  </plist>
+
+  
 
  
-##################################################################################
-#                                                                                #
-#  Created by William G. Scott on January 21st, 2014                             #
-#  Copyright (c) . All rights reserved.                                          #
-#                                                                                #
-#                                                                                #
-#    This program is free software; you can redistribute it and/or modify        #
-#    it under the terms of the GNU General Public License as published by        #
-#    the Free Software Foundation; either version 2 of the License, or           #
-#    (at your option) any later version.                                         #
-#                                                                                #
-#    This program is distributed in the hope that it will be useful,             #
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of              #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               #
-#    GNU General Public License for more details.                                #
-#                                                                                #
-#    You should have received a copy of the GNU General Public License           #
-#    along with this program; if not, write to the Free Software                 #
-#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301   #
-#    USA                                                                         #
-#                                                                                #
-#    cf. URL:   http://www.fsf.org/licensing/licenses/gpl.html                   #
-#                                                                                #
-##################################################################################
+		##################################################################################
+		#                                                                                #
+		#  Created by William G. Scott on January 21st, 2014                             #
+		#  Copyright (c) . All rights reserved.                                          #
+		#                                                                                #
+		#                                                                                #
+		#    This program is free software; you can redistribute it and/or modify        #
+		#    it under the terms of the GNU General Public License as published by        #
+		#    the Free Software Foundation; either version 2 of the License, or           #
+		#    (at your option) any later version.                                         #
+		#                                                                                #
+		#    This program is distributed in the hope that it will be useful,             #
+		#    but WITHOUT ANY WARRANTY; without even the implied warranty of              #
+		#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               #
+		#    GNU General Public License for more details.                                #
+		#                                                                                #
+		#    You should have received a copy of the GNU General Public License           #
+		#    along with this program; if not, write to the Free Software                 #
+		#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301   #
+		#    USA                                                                         #
+		#                                                                                #
+		#    cf. URL:   http://www.fsf.org/licensing/licenses/gpl.html                   #
+		#                                                                                #
+		##################################################################################
 
 
 
@@ -138,6 +175,9 @@ function CheckHash {
 		fi
 	fi
   end
+  if [[ -f "$bitrotlog/$(datestamp).log" ]]; then
+  	        open -a Console "$bitrotlog/$(datestamp).log"
+  fi
 }
 
 
