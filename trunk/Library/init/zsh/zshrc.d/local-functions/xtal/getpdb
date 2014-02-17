@@ -64,7 +64,7 @@ fi
 eof-1
 }
 
-PDBDIRECTORY=$(GetPDBdir | cut -d: -f2 | cut -d, -f1)
+PDBDIRECTORY=$(GetPDBdir | cut -d: -f3)
 
 
 
