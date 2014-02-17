@@ -265,7 +265,13 @@ fi
 
 # Get the Project Name
 
-PROJECTNAME=$(GetProjectName | cut -d: -f2 | cut -d, -f1)
+# PROJECTNAME=$(GetProjectName | cut -d: -f2 | cut -d, -f1)
+if [[ $(sw_vers -productVersion)  < 10.9 ]];then
+    PROJECTNAME=$(GetProjectName | cut -d: -f2 | cut -d, -f1)
+else
+    PROJECTNAME=$(GetProjectName | cut -d: -f3)
+fi
+
 
    	if [[ $PROJECTNAME == "Cancelled." ]]; then
   	   print "Selection has been cancelled."
@@ -278,7 +284,12 @@ print "You have chosen $PROJECTNAME as the project name"
 
 # Get the estimated asymmetric unit content.
 
-nresidue=$(GetNumAA | cut -d: -f2 | cut -d, -f1)
+# nresidue=$(GetNumAA | cut -d: -f2 | cut -d, -f1)
+if [[ $(sw_vers -productVersion)  < 10.9 ]];then
+    nresidue=$(GetNumAA | cut -d: -f2 | cut -d, -f1)
+else
+    nresidue=$(GetNumAA | cut -d: -f3)
+fi
 
 
    	if [[ $nresidue == "Cancelled." ]]; then
@@ -290,7 +301,12 @@ nresidue=$(GetNumAA | cut -d: -f2 | cut -d, -f1)
  
 # Get the estimated asymmetric unit content.
 
-nresidueNT=$(GetNumNT | cut -d: -f2 | cut -d, -f1)
+# nresidueNT=$(GetNumNT | cut -d: -f2 | cut -d, -f1)
+if [[ $(sw_vers -productVersion)  < 10.9 ]];then
+    nresidueNT=$(GetNumNT | cut -d: -f2 | cut -d, -f1)
+else
+    nresidueNT=$(GetNumNT | cut -d: -f3)
+fi
 
 
    	if [[ $nresidueNT == "Cancelled." ]]; then
@@ -300,7 +316,12 @@ nresidueNT=$(GetNumNT | cut -d: -f2 | cut -d, -f1)
 
 # Get the estimated asymmetric unit content.
 
-nASU=$(GetNumASU | cut -d: -f2 | cut -d, -f1)
+# nASU=$(GetNumASU | cut -d: -f2 | cut -d, -f1)
+if [[ $(sw_vers -productVersion)  < 10.9 ]];then
+    nASU=$(GetNumASU | cut -d: -f2 | cut -d, -f1)
+else
+    nASU=$(GetNumASU | cut -d: -f3)
+fi
 
 
    	if [[ $nASU == "Cancelled." ]]; then
@@ -325,7 +346,12 @@ print "an absolute scale."
 
 # Assign the labels for the data used in truncate
 
-fobslabel=$(GetLabel | cut -d: -f2 | cut -d, -f1)
+# fobslabel=$(GetLabel | cut -d: -f2 | cut -d, -f1)
+if [[ $(sw_vers -productVersion)  < 10.9 ]];then
+    fobslabel=$(GetLabel | cut -d: -f2 | cut -d, -f1)
+else
+    fobslabel=$(GetLabel | cut -d: -f3)
+fi
 
    	if [[ $fobslabel == "Cancelled." ]]; then
 	   print "Selection has been cancelled."
