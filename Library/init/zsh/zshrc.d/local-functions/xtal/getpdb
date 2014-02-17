@@ -37,7 +37,7 @@ eof-1
 }
 
 
-PDBCODE=$(GetPDBcode | cut -d: -f2 | cut -d, -f1)
+PDBCODE=$(GetPDBcode | cut -d: -f3)
  
 fi
 
