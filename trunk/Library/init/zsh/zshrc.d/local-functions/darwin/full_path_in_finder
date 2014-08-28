@@ -2,7 +2,7 @@
 
 # Put full path in finder
 
-version="0.0.1"
+version="0.0.2"
 
 
 ###############################################################################
@@ -30,13 +30,10 @@ version="0.0.1"
 #
 ###############################################################################
 
-if [[ $(sw_vers -productVersion) < 10.5 ]]; then
-	print "Works on 10.5.X and above only."
-	return 10
-else
+ 
 	print "Adds the full path in the Finder title bar"
 	print "To remove, issue \e[1m $0 NO \e[0m "
-fi
+ 
 
 if [[ $1 == NO || $1 == no || $1 == No ]]; then
     defaults write com.apple.finder _FXShowPosixPathInTitle -bool NO
