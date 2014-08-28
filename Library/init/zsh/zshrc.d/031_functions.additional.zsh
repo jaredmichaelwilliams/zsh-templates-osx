@@ -305,11 +305,9 @@ if [[ -o interactive ]]; then
 
             # Toggle SPACES on and off
             
-            if [[ $(sw_vers -productVersion) < 10.5 ]]; then
-                /usr/bin/true
-            else
+             
                 autoload -U toggle_spaces switcher
-            fi
+             
 
             # These need to be invoked by an admin user.
             if [[ -n $(/usr/bin/id -p $USER | grep -w admin ) ]]; then

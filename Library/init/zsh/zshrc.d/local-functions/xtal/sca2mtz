@@ -1,6 +1,6 @@
 #!/bin/zsh -f
 # 
-version="0.3"
+version="0.5"
 
 ##  sca2mtz.zsh
 
@@ -191,11 +191,9 @@ fi
 
 # Get the Project Name
 
-if [[ $(sw_vers -productVersion)  < 10.9 ]];then
-    PROJECTNAME=$(GetProjectName | cut -d: -f2 | cut -d, -f1)
-else
+ 
     PROJECTNAME=$(GetProjectName | cut -d: -f3)
-fi
+ 
 
 print "You have chosen $PROJECTNAME as the project name"
  
@@ -203,11 +201,9 @@ print "You have chosen $PROJECTNAME as the project name"
 
 # Get the estimated asymmetric unit content.
 
-if [[ $(sw_vers -productVersion)  < 10.9 ]];then
-    nresidue=$(GetNumAA | cut -d: -f2 | cut -d, -f1)
-else
+
     nresidue=$(GetNumAA | cut -d: -f3)
-fi
+
 
 
 print "Estimate asymmetric unit content as $nresidue amino acids."
@@ -220,11 +216,8 @@ print "Estimate asymmetric unit content as $nresidue amino acids."
 
 # Assign the labels for the data used in truncate
 
-if [[ $(sw_vers -productVersion)  < 10.9 ]];then
-    fobslabel=$(GetLabel | cut -d: -f2 | cut -d, -f1)
-else
     fobslabel=$(GetLabel | cut -d: -f3)
-fi
+ 
 
 print "You have chosen the data label subscript $fobslabel"
 
@@ -232,11 +225,8 @@ print "You have chosen the data label subscript $fobslabel"
 
 # Get the space group
 
-if [[ $(sw_vers -productVersion)  < 10.9 ]];then
-    spacegroup=$(GetSpaceGroup | cut -d: -f2 | cut -d, -f1)
-else
     spacegroup=$(GetSpaceGroup | cut -d: -f3)
-fi
+ 
 
 print "You have chosen the data label subscript $spacegroup"
  

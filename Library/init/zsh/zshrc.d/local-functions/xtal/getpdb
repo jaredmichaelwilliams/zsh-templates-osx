@@ -36,11 +36,9 @@ if [[ -z $1 ]]; then
 eof-1
 }
 
-    if [[ $(sw_vers -productVersion)  < 10.9 ]];then
-        PDBCODE=$(GetPDBcode | cut -d: -f2 | cut -d, -f1)
-    else
+
         PDBCODE=$(GetPDBcode | cut -d: -f3)
-    fi
+ 
 
 fi
 
@@ -69,11 +67,9 @@ eof-1
 
 
 
-if [[ $(sw_vers -productVersion)  < 10.9 ]];then
-    PDBDIRECTORY=$(GetPDBdir | cut -d: -f2 | cut -d, -f1)
-else
+ 
     PDBDIRECTORY=$(GetPDBdir | cut -d: -f3)
-fi
+ 
 
 
 

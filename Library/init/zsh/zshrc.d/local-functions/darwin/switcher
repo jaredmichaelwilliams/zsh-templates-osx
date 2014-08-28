@@ -6,10 +6,7 @@ if [[ $(uname) != "Darwin" ]]; then
 	return 1
 fi
 
-if [[ $(sw_vers -productVersion) < 10.5 ]]; then
-	print "Spaces requires OS X v. 10.5 or newer"
-   
-else
+ 
 	if [[ $( defaults read  com.apple.dock workspaces ) = 1 ]]; then
 		open -a Spaces
 	else
@@ -19,4 +16,4 @@ else
 		sleep 1
 		open -a Spaces
     fi
-fi
+ 
