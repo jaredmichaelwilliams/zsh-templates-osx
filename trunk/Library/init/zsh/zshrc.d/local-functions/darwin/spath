@@ -139,7 +139,7 @@ fi
 
 SPATH=$reldir
 export SPATH
-echo -n "$SPATH" |perl -pi -e 's; ;\\\ ;g'  | pbcopy
+echo -n "$SPATH" |perl -p -e 's; ;\\\ ;g'  | pbcopy
  
 return_focus
 print "\$SPATH has been set to $SPATH and has been copied to the clipboard."

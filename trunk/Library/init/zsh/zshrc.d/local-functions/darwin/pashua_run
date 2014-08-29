@@ -101,8 +101,8 @@ fi
 	#-----------
 
 	result=( $( "$pashuapath" $pashua_configfile \
-	 | command perl -pi -e "s| |_SPACE_|g" \
-	 | command perl -pi -e "s|\[return\]|_RETURN_|g" \
+	 | command perl -p -e "s| |_SPACE_|g" \
+	 | command perl -p -e "s|\[return\]|_RETURN_|g" \
 	) )
 
 

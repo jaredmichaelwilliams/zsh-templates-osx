@@ -41,13 +41,13 @@ fi
 
 for ((i = 1; i <= $GLOBALDIRSIZE; i++ )) do         
 	if [[ -n $global_dirs[i] ]];then 
-		print $i $global_dirs[i] | perl -pi -e 's|_SPACE_|\\\ |g'
-                dir_index=$(print $global_dirs[i] | perl -pi -e 's|_SPACE_|\\\ |g' )
+		print $i $global_dirs[i] | perl -p -e 's|_SPACE_|\\\ |g'
+                dir_index=$(print $global_dirs[i] | perl -p -e 's|_SPACE_|\\\ |g' )
                 alias cd$i="cd $dir_index ; command pwd " 
-                dir_index_chomp=$(print -n $global_dirs[i] | perl -pi -e 's|_SPACE_|\\\ |g' )
+                dir_index_chomp=$(print -n $global_dirs[i] | perl -p -e 's|_SPACE_|\\\ |g' )
 
-		alias cp$i="echo -n $dir_index_chomp |perl -pi -e 's; ;\\\ ;g' | pbcopy "
-		alias cpath$i="echo -n $dir_index_chomp |perl -pi -e 's; ;\\\ ;g' | pbcopy "
+		alias cp$i="echo -n $dir_index_chomp |perl -p -e 's; ;\\\ ;g' | pbcopy "
+		alias cpath$i="echo -n $dir_index_chomp |perl -p -e 's; ;\\\ ;g' | pbcopy "
 
 	else 
 		return 0
