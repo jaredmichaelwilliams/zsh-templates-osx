@@ -80,8 +80,8 @@ if [[ $open_completion_behavior == override || -f ~/.zsh/zshapplist ]];then
     #
     myapps=$(cat ~/.zsh/zshapplist | grep -v  \' )
     mkdir -p ~/.zsh/cache/$HOST
-    print _mac_apps\=\(\'"$myapps[@]"\'\) | perl -pi -e "s|\)\n|\)|g" | \
-           perl -pi -e "s|\n|' '|g" >| ~/.zsh/cache/$HOST/Mac_applications
+    print _mac_apps\=\(\'"$myapps[@]"\'\) | perl -p -e "s|\)\n|\)|g" | \
+           perl -p -e "s|\n|' '|g" >| ~/.zsh/cache/$HOST/Mac_applications
   } 
  
 

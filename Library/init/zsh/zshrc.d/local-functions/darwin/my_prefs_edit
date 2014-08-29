@@ -162,7 +162,7 @@ cat ~/.zsh/my_edit_rc
 
 print ""
 
-perl -pi -e 's|Adobe Photoshop 7|Adobe Photoshop 7.0|g' ~/.zsh/my_edit_rc
-perl -pi -e 's|Adobe Reader 6.0|Adobe Reader 6.0.app|g' ~/.zsh/my_edit_rc
+perl -p -e 's|Adobe Photoshop 7|Adobe Photoshop 7.0|g' ~/.zsh/my_edit_rc
+perl -p -e 's|Adobe Reader 6.0|Adobe Reader 6.0.app|g' ~/.zsh/my_edit_rc
 
  

@@ -27,7 +27,7 @@ function ChooseFromStack {
 # =========>
 #
 
-	filelist=($(print $global_dirs | perl -pi -e 's| |\n|g' | perl -pi -e 's|_SPACE_|\*|g' ) )
+	filelist=($(print $global_dirs | perl -p -e 's| |\n|g' | perl -p -e 's|_SPACE_|\*|g' ) )
 
 	item_list="" 
 
