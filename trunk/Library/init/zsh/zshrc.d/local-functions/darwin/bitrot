@@ -2,9 +2,10 @@
 
 #  bitrot  
 
-   version="0.1.6"
+   version="0.1.7"
    # Revision history:
 
+   #  0.1.7         De-write-protect and reprotect after adding hashtags if needed.
    #  0.1.6         Warn or add missing hashtags.
    #  0.1.5         Provide example launchd plist file in comments section.
    #                If a discrepency is logged, have Console.app open it.
@@ -150,7 +151,13 @@ function AddHashAttr {
   foreach m4afile in **/*.m4a 
     isALAC=($(afinfo -i "$m4afile" | grep format | grep alac))
     if [[ -n "$isALAC" ]]; then
-       xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+        if [[ -w "$m4afile" ]]; then       
+            xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+        else
+            chmod +w "$m4afile"
+            xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+            chmod a-w "$m4afile"
+        fi
 	   # GetHashAttr  # doesn't update in realtime.
 	fi
   end
@@ -169,8 +176,14 @@ function CheckHash {
 		if [[ "$mdlsHash" != "$afhashHash"  ]]; then
             if [[ $mdlsHash == "(null)" ]];then
 	            print "\e[1m Warning\:\e[0m" \\\n Adding a checksum of "\e[1m $afhashHash \e[0m" to the file "$m4afile"  
-		        print ""             
-                xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+		        print ""    
+                if [[ -w "$m4afile" ]]; then       
+                    xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+                else
+                    chmod +w "$m4afile"
+                    xattr -w com.apple.metadata:kMDItemHash $( afhash "$m4afile" | grep "Hash of audio data" | awk '{print $NF}') "$m4afile"
+                    chmod a-w "$m4afile"
+                fi
             else
 		        print "\e[1m Warning\:\e[0m" \\\n "$m4afile"  has an checksum of "\e[1m $afhashHash \e[0m" but should have a checksum of "\e[1m $mdlsHash \e[0m"
 			    print ""
